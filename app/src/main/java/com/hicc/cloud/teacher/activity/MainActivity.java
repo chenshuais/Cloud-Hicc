@@ -12,8 +12,8 @@ import com.hicc.cloud.teacher.fragment.BaseFragment;
 import com.hicc.cloud.teacher.fragment.FriendFragment;
 import com.hicc.cloud.teacher.fragment.HomeFragment;
 import com.hicc.cloud.teacher.fragment.InformationFragment;
-import com.hicc.cloud.teacher.view.TabItem;
 import com.hicc.cloud.teacher.view.MyTabLayout;
+import com.hicc.cloud.teacher.view.TabItem;
 
 import java.util.ArrayList;
 
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         initView();
         initData();
+
     }
 
     private void initView(){
