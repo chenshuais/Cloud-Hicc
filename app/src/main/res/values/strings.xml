@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Cloud-Hicc</string>
+    <string name="app_name">云上工商</string>
+    <string name="tab_home">主页</string>
+    <string name="tab_friend">朋友</string>
+    <string name="tab_information">我</string>
 </resources>
