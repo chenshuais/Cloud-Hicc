@@ -1,7 +1,9 @@
-package cn.hbu.cloud_hicc;
+package com.hicc.cloud.teacher.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.hicc.cloud.R;
 
 public class MainActivity extends AppCompatActivity {
 

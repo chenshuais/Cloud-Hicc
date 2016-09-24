@@ -1,4 +1,4 @@
-package cn.hbu.cloud_hicc;
+package com.hicc.cloud;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
