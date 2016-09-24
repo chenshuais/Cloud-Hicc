@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import com.hicc.cloud.R;
 
+import static android.R.attr.windowSoftInputMode;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
