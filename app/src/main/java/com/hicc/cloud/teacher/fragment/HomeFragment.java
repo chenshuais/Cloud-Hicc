@@ -35,7 +35,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_home_bak, container, false);
+        View view = inflater.inflate(R.layout.layout_home, container, false);
         gridView = (GridView) view.findViewById(R.id.gv_menu);
         PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
         gridView.setAdapter(adapter);
