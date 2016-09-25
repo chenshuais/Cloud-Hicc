@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private File file = new File(ConstantValue.downloadpathName);
     private BmobFile mBmobfile;
     private static Boolean isExit = false;
+    private final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         // 检测更新
         checkVersionCode();
-
     }
 
     private void initView(){

@@ -10,10 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.activity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_home, container, false);
+        View view = inflater.inflate(R.layout.layout_home_bak, container, false);
         gridView = (GridView) view.findViewById(R.id.gv_menu);
         PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
         gridView.setAdapter(adapter);
