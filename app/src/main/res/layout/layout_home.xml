@@ -77,8 +77,8 @@
 
                     <ImageView
                         android:id="@+id/scan"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:clickable="true"
                         android:src="@drawable/icon_scan" />
 
@@ -89,7 +89,7 @@
                         android:layout_marginTop="8dp"
                         android:text="扫一扫"
                         android:textColor="#ffffff"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -103,8 +103,8 @@
 
                     <ImageView
                         android:id="@+id/shake"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:clickable="true"
                         android:src="@drawable/icon_shake" />
 
@@ -115,7 +115,7 @@
                         android:layout_marginTop="8dp"
                         android:text="摇一摇"
                         android:textColor="#ffffff"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -129,8 +129,8 @@
 
                     <ImageView
                         android:id="@+id/record"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:clickable="true"
                         android:src="@drawable/icon_record" />
 
@@ -141,7 +141,7 @@
                         android:layout_marginTop="8dp"
                         android:text="记录"
                         android:textColor="#ffffff"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
