@@ -13,6 +13,7 @@ import com.hicc.cloud.teacher.fragment.FriendFragment;
 import com.hicc.cloud.teacher.fragment.HomeFragment;
 import com.hicc.cloud.teacher.fragment.InformationFragment;
 import com.hicc.cloud.teacher.view.MyTabLayout;
+import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.hicc.cloud.teacher.view.TabItem;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{
     private MyTabLayout mTabLayout;
     BaseFragment fragment;
-    ViewPager mViewPager;
+    ScrollViewPager mViewPager;
     ArrayList<TabItem>tabs;
 
     @Override
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
     private void initView(){
         mTabLayout=(MyTabLayout)findViewById(R.id.tablayout);
-        mViewPager=(ViewPager)findViewById(R.id.viewpager);
+        mViewPager=(ScrollViewPager)findViewById(R.id.viewpager);
+        mViewPager.setNoScroll(true);
     }
 
     private void initData(){
