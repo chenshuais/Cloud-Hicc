@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
     private void initData(){
         tabs=new ArrayList<TabItem>();
-        tabs.add(new TabItem(R.mipmap.ic_launcher, R.string.tab_home, HomeFragment.class));
-        tabs.add(new TabItem(R.mipmap.ic_launcher, R.string.tab_friend, FriendFragment.class));
-        tabs.add(new TabItem(R.mipmap.ic_launcher, R.string.tab_information, InformationFragment.class));
+        tabs.add(new TabItem(R.drawable.selector_tab_home, R.string.tab_home, HomeFragment.class));
+        tabs.add(new TabItem(R.drawable.selector_tab_friend, R.string.tab_friend, FriendFragment.class));
+        tabs.add(new TabItem(R.drawable.selector_tab_infomation, R.string.tab_information, InformationFragment.class));
 
         mTabLayout.initData(tabs, this);
         mTabLayout.setCurrentTab(0);
