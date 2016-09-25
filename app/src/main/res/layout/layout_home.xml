@@ -40,7 +40,7 @@
                     android:id="@+id/scan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="25dp"
                     android:background="@mipmap/scan"
                     android:clickable="true" />
 
@@ -48,7 +48,7 @@
                     android:id="@+id/shake"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginLeft="95dp"
                     android:background="@mipmap/shake"
                     android:clickable="true" />
 
@@ -56,7 +56,7 @@
                     android:id="@+id/record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginLeft="95dp"
                     android:layout_marginRight="20dp"
                     android:background="@mipmap/record"
                     android:clickable="true" />
@@ -73,7 +73,7 @@
                     android:id="@+id/textView_sc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
+                    android:layout_marginLeft="16dp"
                     android:text="扫一扫"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -82,7 +82,7 @@
                     android:id="@+id/textView_sh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="86dp"
+                    android:layout_marginLeft="89dp"
                     android:text="摇一摇"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -116,6 +116,29 @@
                     >
                 </com.hicc.cloud.teacher.view.MyGridView>
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+<ImageButton
+    android:id="@+id/ib_0"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/hp"/>
+
+                <TextView
+                    android:id="@+id/tv_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="记录班级成长"
+                    android:layout_toRightOf="@id/ib_0"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/camera"/>
+
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

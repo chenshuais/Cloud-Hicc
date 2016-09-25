@@ -8,6 +8,9 @@ import android.widget.GridView;
  * Created by 野 on 2016/9/25.
  */
 
+/**
+ * 解决ScrollView嵌套GridView只显示一行的问题
+ */
 public class MyGridView extends GridView {
     public MyGridView(Context context, AttributeSet attrs) {
         super(context,attrs);
