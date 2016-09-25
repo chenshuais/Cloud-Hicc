@@ -5,26 +5,116 @@
     android:orientation="vertical">
 
     <ScrollView
+        android:id="@+id/sv_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/ll_0"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/editText0"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
-                android:hint="搜索"
-                android:textSize="22dp"
                 android:layout_marginLeft="158dp"
                 android:layout_marginTop="10dp"
-                />
+                android:background="@null"
+                android:drawableLeft="@mipmap/search"
+                android:hint="搜索"
+                android:textSize="22dp" />
 
+
+            <LinearLayout
+                android:id="@+id/ll_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/scan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:background="@mipmap/scan"
+                    android:clickable="true" />
+
+                <ImageButton
+                    android:id="@+id/shake"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:background="@mipmap/shake"
+                    android:clickable="true" />
+
+                <ImageButton
+                    android:id="@+id/record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@mipmap/record"
+                    android:clickable="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_sc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:text="扫一扫"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView_sh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="86dp"
+                    android:text="摇一摇"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView_r"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="97dp"
+                    android:layout_marginRight="20dp"
+                    android:text="记录"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <com.hicc.cloud.teacher.view.MyGridView
+                    android:id="@+id/gv_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:numColumns="4"
+                    android:verticalSpacing="4dp"
+                    android:columnWidth="80dp"
+                    android:gravity="center"
+                    >
+                </com.hicc.cloud.teacher.view.MyGridView>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
