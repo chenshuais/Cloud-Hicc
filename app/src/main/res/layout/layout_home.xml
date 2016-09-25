@@ -85,7 +85,8 @@
                     android:layout_marginLeft="89dp"
                     android:text="摇一摇"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                  />
 
                 <TextView
                     android:id="@+id/textView_r"
@@ -109,37 +110,91 @@
                     android:id="@+id/gv_menu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:numColumns="4"
-                    android:verticalSpacing="4dp"
                     android:columnWidth="80dp"
                     android:gravity="center"
-                    >
+                    android:numColumns="4"
+                    android:verticalSpacing="4dp">
+
                 </com.hicc.cloud.teacher.view.MyGridView>
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-<ImageButton
-    android:id="@+id/ib_0"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@mipmap/hp"/>
-
-                <TextView
-                    android:id="@+id/tv_0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="记录班级成长"
-                    android:layout_toRightOf="@id/ib_0"/>
 
                 <ImageButton
+                    android:id="@+id/imageButton_0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/camera"/>
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@mipmap/hp" />
+
+                <TextView
+                    android:id="@+id/textView_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/imageView_0"
+                    android:layout_toEndOf="@+id/imageView_0"
+                    android:layout_toRightOf="@+id/imageView_0"
+                    android:text="记录班级成长"
+                    android:textColor="#CFCFCF" />
+
+                <ImageButton
+                    android:id="@+id/imageButton_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="210dp"
+                    android:layout_toRightOf="@+id/textView_0"
+                    android:background="@mipmap/camera" />
+
+                <ImageView
+                    android:id="@+id/imageView_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageButton_0"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@mipmap/news" />
+
+                <TextView
+                    android:id="@+id/textView_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/imageView_0"
+                    android:layout_toEndOf="@+id/imageView_0"
+                    android:layout_toRightOf="@+id/imageView_0"
+                    android:text="新闻动态" />
+
+                <TextView
+                    android:id="@+id/textView_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView_0"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:text="news" />
+
+                <TextView
+                    android:id="@+id/textView_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_3"
+                    android:clickable="true"
+                    android:gravity="center_horizontal"
+                    android:text="更多" />
+
 
             </RelativeLayout>
+
+
         </LinearLayout>
     </ScrollView>
+
 
 </LinearLayout>
