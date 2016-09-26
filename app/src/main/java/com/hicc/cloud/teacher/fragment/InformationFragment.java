@@ -27,6 +27,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
     public TextView tvPepartment;
     public Button btEsc;
 
+
     @Override
     public void fetchData() {
 
