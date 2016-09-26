@@ -64,6 +64,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
             case R.id.set:
                 break;
             case R.id.esc:
+
                 break;
             case R.id.department:
                 break;
