@@ -40,7 +40,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
 
         return view;
     }
-
     private void initUI(View view) {
         ivPicture = (ImageView) view.findViewById(R.id.picture);
         tvName = (TextView) view.findViewById(R.id.name);
