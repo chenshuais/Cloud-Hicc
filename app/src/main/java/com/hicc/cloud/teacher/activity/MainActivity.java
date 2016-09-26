@@ -69,13 +69,14 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         // 检测更新
         checkVersionCode();
+
     }
 
     private void initView(){
         mTabLayout=(MyTabLayout)findViewById(R.id.tablayout);
         mViewPager=(ScrollViewPager)findViewById(R.id.viewpager);
         // 设置viewpager是否禁止滑动
-        mViewPager.setNoScroll(true);
+        mViewPager.setNoScroll(false);
     }
 
     private void initData(){

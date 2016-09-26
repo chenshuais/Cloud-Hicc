@@ -1,18 +1,14 @@
 package com.hicc.cloud.teacher.fragment;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Administrator on 2016/9/24/024.
