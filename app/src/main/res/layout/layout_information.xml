@@ -10,145 +10,145 @@
         android:weightSum="1">
 
         <ImageView
-            android:padding="10dp"
-            android:clickable="true"
-            android:background="@drawable/selector_news_bg"
             android:id="@+id/picture"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
-            />
+            android:background="@drawable/selector_news_bg"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@mipmap/ic_launcher" />
 
 
         <TextView
-            android:clickable="true"
-            android:background="@drawable/selector_news_bg"
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:background="@drawable/selector_news_bg"
+            android:clickable="true"
             android:gravity="center"
             android:text="我的名字"
             android:textSize="25sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:background="@drawable/selector_news_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_news_bg"
+        android:clickable="true">
 
         <ImageView
-            android:padding="15dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:padding="15dp"
             android:src="@mipmap/department" />
 
         <TextView
-            android:padding="10dp"
             android:id="@+id/department"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
+            android:padding="10dp"
             android:text="我的部门"
             android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:background="@drawable/selector_news_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_news_bg"
+        android:clickable="true">
 
         <ImageView
-            android:padding="15dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:padding="15dp"
             android:src="@mipmap/position" />
 
         <TextView
-            android:padding="10dp"
             android:id="@+id/position"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
+            android:padding="10dp"
             android:text="我的职位"
             android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:background="@drawable/selector_news_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_news_bg"
+        android:clickable="true">
 
         <ImageView
-            android:padding="15dp"
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/phe"
-            android:id="@+id/imageView" />
+            android:padding="15dp"
+            android:src="@mipmap/phe" />
 
         <TextView
-            android:layout_marginLeft="10dp"
-            android:padding="10dp"
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
+            android:padding="10dp"
             android:text="我的电话"
             android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:background="@drawable/selector_news_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_news_bg"
+        android:clickable="true">
 
         <ImageView
-            android:padding="15dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:padding="15dp"
             android:src="@mipmap/set" />
 
         <TextView
-            android:padding="15dp"
             android:id="@+id/set"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
-            android:layout_marginRight="10dp"
+            android:padding="10dp"
             android:text="设置"
             android:textSize="18sp" />
     </LinearLayout>
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/selector_news_bg"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-    <Button
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:id="@+id/esc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bt_esc"
-        android:text="注销"
-        android:textSize="18sp" />
+        android:background="@drawable/selector_news_bg">
+
+        <Button
+            android:id="@+id/esc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bt_esc"
+            android:text="注销"
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>
