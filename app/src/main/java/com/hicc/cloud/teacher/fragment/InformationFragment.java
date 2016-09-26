@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
@@ -17,14 +18,14 @@ import org.w3c.dom.Text;
  * Created by Administrator on 2016/9/24/024.
  */
 
-public class InformationFragment extends BaseFragment {
-    public ImageView picture;
-    public TextView name;
-    public TextView position;
-    public TextView phone;
-    public TextView set;
-    public TextView department;
-    public Button esc;
+public class InformationFragment extends BaseFragment implements View.OnClickListener{
+    public ImageView ivPicture;
+    public TextView tvName;
+    public TextView tvPosition;
+    public TextView tvPhone;
+    public TextView tvSet;
+    public TextView tvPepartment;
+    public Button btEsc;
 
     @Override
     public void fetchData() {
@@ -40,13 +41,34 @@ public class InformationFragment extends BaseFragment {
     }
 
     private void initUI(View view) {
-        picture = (ImageView) view.findViewById(R.id.picture);
-        name = (TextView) view.findViewById(R.id.name);
-        position = (TextView) view.findViewById(R.id.position);
-        phone = (TextView) view.findViewById(R.id.phone);
-        set = (TextView) view.findViewById(R.id.set);
-        esc = (Button) view.findViewById(R.id.esc);
-        department = (TextView) view.findViewById(R.id.department);
+        ivPicture = (ImageView) view.findViewById(R.id.picture);
+        tvName = (TextView) view.findViewById(R.id.name);
+        tvPosition = (TextView) view.findViewById(R.id.position);
+        tvPhone = (TextView) view.findViewById(R.id.phone);
+        tvSet = (TextView) view.findViewById(R.id.set);
+        btEsc = (Button) view.findViewById(R.id.esc);
+        tvPepartment = (TextView) view.findViewById(R.id.department);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.picture:
+                break;
+            case R.id.name:
+                break;
+            case R.id.position:
+                break;
+            case R.id.phone:
+                break;
+            case R.id.set:
+                break;
+            case R.id.esc:
+                break;
+            case R.id.department:
+                break;
+            default:
+                break;
+        }
+    }
 }
