@@ -33,29 +33,29 @@ public class FriendFragment extends BaseFragment {
         return view;
     }
     private void initFriends() {
-    Firend a = new Firend("A", R.drawable.icon_friend);
+    Firend a = new Firend("A", R.drawable.ic_launcher);
     firendList.add(a);
-    Firend b = new Firend("B", R.drawable.icon_friend);
+    Firend b = new Firend("B", R.drawable.ic_launcher);
     firendList.add(b);
-    Firend c = new Firend("C", R.drawable.icon_friend);
+    Firend c = new Firend("C", R.drawable.ic_launcher);
     firendList.add(c);
-    Firend d = new Firend("D", R.drawable.icon_friend);
+    Firend d = new Firend("D", R.drawable.ic_launcher);
     firendList.add(d);
-    Firend e = new Firend("E", R.drawable.icon_friend);
+    Firend e = new Firend("E", R.drawable.ic_launcher);
     firendList.add(e);
-    Firend f = new Firend("F", R.drawable.icon_friend);
+    Firend f = new Firend("F", R.drawable.ic_launcher);
     firendList.add(f);
-    Firend g = new Firend("G", R.drawable.icon_friend);
+    Firend g = new Firend("G", R.drawable.ic_launcher);
     firendList.add(g);
-    Firend h = new Firend("H", R.drawable.icon_friend);
+    Firend h = new Firend("H", R.drawable.ic_launcher);
     firendList.add(h);
-    Firend i = new Firend("I", R.drawable.icon_friend);
+    Firend i = new Firend("I", R.drawable.ic_launcher);
     firendList.add(i);
-    Firend j = new Firend("J", R.drawable.icon_friend);
+    Firend j = new Firend("J", R.drawable.ic_launcher);
     firendList.add(j);
-    Firend k = new Firend("K", R.drawable.icon_friend);
+    Firend k = new Firend("K", R.drawable.ic_launcher);
     firendList.add(k);
-    Firend l = new Firend("L", R.drawable.icon_friend);
+    Firend l = new Firend("L", R.drawable.ic_launcher);
     firendList.add(l);
 
 }
