@@ -25,7 +25,8 @@
             android:layout_height="100dp"
             android:background="@drawable/selector_news_bg"
             android:clickable="true"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
             android:text="我的名字"
             android:textSize="25sp" />
     </LinearLayout>
