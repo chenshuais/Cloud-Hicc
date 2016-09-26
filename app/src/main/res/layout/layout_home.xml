@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#EBEEEF"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -77,8 +77,8 @@
 
                     <ImageView
                         android:id="@+id/scan"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:clickable="true"
                         android:src="@drawable/icon_scan" />
 
@@ -103,8 +103,8 @@
 
                     <ImageView
                         android:id="@+id/shake"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:clickable="true"
                         android:src="@drawable/icon_shake" />
 
@@ -129,8 +129,8 @@
 
                     <ImageView
                         android:id="@+id/record"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:clickable="true"
                         android:src="@drawable/icon_record" />
 
@@ -148,14 +148,11 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="#F0F0F0" />
-
 
             <com.hicc.cloud.teacher.view.MyGridView
+                android:layout_marginTop="8dp"
                 android:id="@+id/gv_menu"
+                android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnWidth="80dp"
@@ -165,12 +162,11 @@
                 android:verticalSpacing="4dp">
             </com.hicc.cloud.teacher.view.MyGridView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="#F0F0F0" />
+
 
             <LinearLayout
+                android:layout_marginTop="8dp"
+                android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -195,13 +191,12 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="#F0F0F0" />
+
 
 
             <LinearLayout
+                android:layout_marginTop="8dp"
+                android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -213,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:background="@mipmap/news" />
+                    android:background="@mipmap/icon_news" />
 
                 <TextView
                     android:id="@+id/textView_2"
@@ -251,6 +246,7 @@
                     android:layout_alignBottom="@id/iv_news"
                     android:layout_below="@id/tv_title"
                     android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
                     android:layout_toRightOf="@id/iv_news"
                     android:maxLines="2"
                     android:text="内容摘要，内容摘要，内容摘要，内容摘要，内容摘要，内容摘要，"
@@ -258,12 +254,18 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#f0f0f0"/>
+
             <TextView
                 android:id="@+id/tv_more"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_news_bg"
-                android:clickable="true"
+                android:background="#ffffff"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="更多" />

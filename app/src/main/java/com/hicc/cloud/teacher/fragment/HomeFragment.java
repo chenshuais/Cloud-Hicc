@@ -24,8 +24,8 @@ import java.util.List;
 public class HomeFragment extends BaseFragment {
     private GridView gridView;
     private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "点名", "社团", "班级成长", "学生档案", "全部"};
-    private int[] images = new int[]{R.mipmap.score, R.mipmap.dormscore, R.mipmap.leaveback, R.mipmap.calltoroll, R.mipmap.
-            club, R.mipmap.classes, R.mipmap.files, R.mipmap.all};
+    private int[] images = new int[]{R.mipmap.icon_score, R.mipmap.dormscore, R.mipmap.leaveback, R.mipmap.calltoroll, R.mipmap.
+            club, R.mipmap.classes, R.mipmap.files, R.mipmap.icon_all};
 
     @Override
     public void fetchData() {
