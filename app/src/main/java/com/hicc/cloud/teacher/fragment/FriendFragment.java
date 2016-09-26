@@ -4,22 +4,59 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ListView;
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.db.Firend;
+import com.hicc.cloud.teacher.adapter.FirendAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/24/024.
  */
 
 public class FriendFragment extends BaseFragment {
+    private List<Firend> firendList = new ArrayList<Firend>();
     @Override
     public void fetchData() {
 
     }
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_firend, container, false);
+        initFriends();
+        FirendAdapter adapter = new FirendAdapter(
+                getActivity(), R.layout.firend_item, firendList);
+        ListView listView = (ListView) view.findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
         return view;
     }
+    private void initFriends() {
+    Firend a = new Firend("A", R.drawable.icon_friend);
+    firendList.add(a);
+    Firend b = new Firend("B", R.drawable.icon_friend);
+    firendList.add(b);
+    Firend c = new Firend("C", R.drawable.icon_friend);
+    firendList.add(c);
+    Firend d = new Firend("D", R.drawable.icon_friend);
+    firendList.add(d);
+    Firend e = new Firend("E", R.drawable.icon_friend);
+    firendList.add(e);
+    Firend f = new Firend("F", R.drawable.icon_friend);
+    firendList.add(f);
+    Firend g = new Firend("G", R.drawable.icon_friend);
+    firendList.add(g);
+    Firend h = new Firend("H", R.drawable.icon_friend);
+    firendList.add(h);
+    Firend i = new Firend("I", R.drawable.icon_friend);
+    firendList.add(i);
+    Firend j = new Firend("J", R.drawable.icon_friend);
+    firendList.add(j);
+    Firend k = new Firend("K", R.drawable.icon_friend);
+    firendList.add(k);
+    Firend l = new Firend("L", R.drawable.icon_friend);
+    firendList.add(l);
+
+}
 }
