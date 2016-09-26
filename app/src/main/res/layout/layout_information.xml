@@ -54,7 +54,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:text="我的部门"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -80,7 +80,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:text="我的职位"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -99,15 +99,15 @@
             android:id="@+id/imageView" />
 
         <TextView
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginLeft="1dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:text="我的电话"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -134,18 +134,21 @@
             android:gravity="center_vertical"
             android:layout_marginRight="10dp"
             android:text="设置"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:background="@drawable/selector_news_bg"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
     <Button
-
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/esc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:background="@drawable/bt_esc"
         android:text="注销"
-        android:textSize="30sp" />
+        android:textSize="18sp" />
+    </LinearLayout>
 </LinearLayout>
