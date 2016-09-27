@@ -39,9 +39,9 @@ public class FriendFragment extends BaseFragment {
     firendList.add(b);
     Firend c = new Firend("王老师","明天去市里，大家把最近的工作状态汇报一下，做个总结，然后一起吃个饭。","9月24日 15:20", R.drawable.ic_test_friend12);
     firendList.add(c);
-    Firend d = new Firend("小鸿","老师，最近有点事情","9月23日 09:24", R.drawable.ic_test_friend3);
+    Firend d = new Firend("小崔","老师，最近有点事情","9月23日 09:24", R.drawable.ic_test_friend3);
     firendList.add(d);
-    Firend e = new Firend("小张","老师，一会我把报告给您","9月22日 10:11", R.drawable.ic_test_friend4);
+    Firend e = new Firend("小王","老师，一会我把报告给您","9月22日 10:11", R.drawable.ic_test_friend4);
     firendList.add(e);
     Firend f = new Firend("小陈","老师你好","9月21日 16:28", R.drawable.ic_test_friend5);
     firendList.add(f);
@@ -51,7 +51,7 @@ public class FriendFragment extends BaseFragment {
     firendList.add(h);
     Firend i = new Firend("周老师","早上一起跑个步吧","9月19日 06:55", R.drawable.ic_test_friend8);
     firendList.add(i);
-    Firend j = new Firend("小武","老师，一会把东西发给你","9月18日 15:13", R.drawable.ic_test_friend9);
+    Firend j = new Firend("小田","老师，一会把东西发给你","9月18日 15:13", R.drawable.ic_test_friend9);
     firendList.add(j);
     Firend k = new Firend("丛老师","中午一起开个会","9月17日 09:23", R.drawable.ic_test_friend10);
     firendList.add(k);

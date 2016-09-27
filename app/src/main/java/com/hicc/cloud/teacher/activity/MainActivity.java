@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         // 检测更新
         checkVersionCode();
-
     }
 
     private void initView(){
@@ -251,7 +250,16 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         intent.addCategory("android.intent.category.DEFAULT");
         //文件作为数据源
         intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        startActivity(intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityForResult(intent,0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        checkVersionCode();
     }
 
     // 获取本应用版本号
