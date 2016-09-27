@@ -2,17 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EBEEEF"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:padding="8dp"
         android:weightSum="1">
 
         <ImageView
             android:id="@+id/picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/selector_news_bg"
             android:clickable="true"
             android:padding="10dp"
@@ -21,13 +26,14 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/selector_news_bg"
             android:clickable="true"
             android:gravity="center_vertical"
             android:text="我的名字"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -35,25 +41,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_news_bg"
-        android:clickable="true">
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:padding="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="10dp"
-            android:padding="15dp"
             android:src="@mipmap/department" />
 
         <TextView
             android:id="@+id/department"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:padding="10dp"
             android:text="我的部门"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,25 +66,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_news_bg"
-        android:clickable="true">
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:padding="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="10dp"
-            android:padding="15dp"
             android:src="@mipmap/position" />
 
         <TextView
             android:id="@+id/position"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:padding="10dp"
             android:text="我的职位"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -87,26 +91,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_news_bg"
-        android:clickable="true">
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="10dp"
-            android:padding="15dp"
             android:src="@mipmap/phe" />
 
         <TextView
             android:id="@+id/phone"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:padding="10dp"
             android:text="我的电话"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -114,32 +117,32 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_news_bg"
-        android:clickable="true">
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:padding="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="10dp"
-            android:padding="15dp"
             android:src="@mipmap/set" />
 
         <TextView
             android:id="@+id/set"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:padding="10dp"
             android:text="设置"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/selector_news_bg">
+        android:background="#ffffff"
+        android:padding="10dp">
 
         <Button
             android:id="@+id/esc"
@@ -148,7 +151,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/bt_esc"
-            android:text="注销"
+            android:text="注   销"
+            android:textColor="#ffffff"
             android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

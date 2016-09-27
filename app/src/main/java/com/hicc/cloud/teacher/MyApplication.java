@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import cn.bmob.v3.Bmob;
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Administrator on 2016/9/24/024.
@@ -19,6 +20,9 @@ public class MyApplication extends Application {
         super.onCreate();
         // 初始化Bmob
         Bmob.initialize(this, "8266a5af2719a5062d139b829922d2d4");
+
+        JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);     		// 初始化 JPush
 
         // 捕获全局未捕获的异常
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
