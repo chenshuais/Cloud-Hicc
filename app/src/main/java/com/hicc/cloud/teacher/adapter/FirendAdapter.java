@@ -28,8 +28,12 @@ public class FirendAdapter extends ArrayAdapter<Firend> {
         View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
         ImageView fruitImage = (ImageView) view.findViewById(R.id.firend_image);
         TextView fruitName = (TextView) view.findViewById(R.id.firend_name);
+        TextView firend_content = (TextView) view.findViewById(R.id.firend_content);
+        TextView firend_time = (TextView) view.findViewById(R.id.firend_time);
         fruitImage.setImageResource(firend.getImageId());
         fruitName.setText(firend.getName());
+        firend_content.setText(firend.getContent());
+        firend_time.setText(firend.getTime());
         return view;
     }
 

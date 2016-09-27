@@ -16,17 +16,17 @@
 
         <ImageView
             android:id="@+id/iv_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="-17dp"
+            android:layout_marginRight="-2dp"
             android:src="@drawable/icon_add" />
 
         <ImageView
             android:id="@+id/iv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-17dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="-0dp"
             android:src="@drawable/icon_content" />
 
         <EditText
@@ -37,6 +37,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/iv_add"
             android:layout_toRightOf="@id/iv_content"
+            android:layout_marginLeft="2dp"
             android:background="@drawable/search_bg"
             android:drawableLeft="@drawable/icon_search"
             android:gravity="center"

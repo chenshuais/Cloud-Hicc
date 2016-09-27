@@ -6,16 +6,18 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:clickable="true"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff">
+        android:background="@drawable/selector_news_bg">
 
         <ImageView
             android:id="@+id/picture"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="10dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_test_friend13" />
 
         <TextView
             android:id="@+id/name"
@@ -24,7 +26,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@id/picture"
-            android:text="姓名"
+            android:text="王晶"
             android:textSize="18sp" />
 
         <TextView
@@ -34,8 +36,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/picture"
-            android:text="我的职位"
-            android:textSize="16sp" />
+            android:text="职位：讲师"
+            android:textColor="#b9b5b5"
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -48,8 +51,8 @@
         android:clickable="true">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@mipmap/department" />
 
         <TextView
@@ -57,8 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="我的部门"
-            android:textSize="18sp" />
+            android:text="部门：计算机学院"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <View
@@ -76,8 +79,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@mipmap/phe" />
 
         <TextView
@@ -85,8 +88,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="我的电话"
-            android:textSize="18sp" />
+            android:text="电话：13463120036"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -99,8 +102,8 @@
         android:clickable="true">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@mipmap/set" />
 
         <TextView
@@ -109,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:text="设置"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -127,9 +130,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/bt_exit"
-            android:text="注销"
+            android:text="注   销"
             android:textColor="#ffffff"
-            android:textSize="20dp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 

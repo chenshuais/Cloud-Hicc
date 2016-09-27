@@ -33,29 +33,29 @@ public class FriendFragment extends BaseFragment {
         return view;
     }
     private void initFriends() {
-    Firend a = new Firend("A", R.drawable.ic_launcher);
+    Firend a = new Firend("李老师","今天下午在B2—212开全体大会","9月26日 10:20", R.drawable.ic_test_friend1);
     firendList.add(a);
-    Firend b = new Firend("B", R.drawable.ic_launcher);
+    Firend b = new Firend("张老师","今天中午一起吃个饭","9月25日 12:20", R.drawable.ic_test_friend2);
     firendList.add(b);
-    Firend c = new Firend("C", R.drawable.ic_launcher);
+    Firend c = new Firend("王老师","明天去市里，大家把最近的工作状态汇报一下，做个总结，然后一起吃个饭。","9月24日 15:20", R.drawable.ic_test_friend12);
     firendList.add(c);
-    Firend d = new Firend("D", R.drawable.ic_launcher);
+    Firend d = new Firend("小鸿","老师，最近有点事情","9月23日 09:24", R.drawable.ic_test_friend3);
     firendList.add(d);
-    Firend e = new Firend("E", R.drawable.ic_launcher);
+    Firend e = new Firend("小张","老师，一会我把报告给您","9月22日 10:11", R.drawable.ic_test_friend4);
     firendList.add(e);
-    Firend f = new Firend("F", R.drawable.ic_launcher);
+    Firend f = new Firend("小陈","老师你好","9月21日 16:28", R.drawable.ic_test_friend5);
     firendList.add(f);
-    Firend g = new Firend("G", R.drawable.ic_launcher);
+    Firend g = new Firend("赵老师","老王，早上一起去吃个早餐","9月20日 06:24", R.drawable.ic_test_friend6);
     firendList.add(g);
-    Firend h = new Firend("H", R.drawable.ic_launcher);
+    Firend h = new Firend("于老师","今天检查学生宿舍","9月19日 09:50", R.drawable.ic_test_friend7);
     firendList.add(h);
-    Firend i = new Firend("I", R.drawable.ic_launcher);
+    Firend i = new Firend("周老师","早上一起跑个步吧","9月19日 06:55", R.drawable.ic_test_friend8);
     firendList.add(i);
-    Firend j = new Firend("J", R.drawable.ic_launcher);
+    Firend j = new Firend("小武","老师，一会把东西发给你","9月18日 15:13", R.drawable.ic_test_friend9);
     firendList.add(j);
-    Firend k = new Firend("K", R.drawable.ic_launcher);
+    Firend k = new Firend("丛老师","中午一起开个会","9月17日 09:23", R.drawable.ic_test_friend10);
     firendList.add(k);
-    Firend l = new Firend("L", R.drawable.ic_launcher);
+    Firend l = new Firend("田老师","老王，最近干什么呢","9月16日 10:11", R.drawable.ic_test_friend11);
     firendList.add(l);
 
 }
