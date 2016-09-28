@@ -19,7 +19,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="-2dp"
+            android:layout_marginRight="-3dp"
             android:src="@drawable/icon_add" />
 
         <ImageView
@@ -27,7 +27,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="-0dp"
-            android:src="@drawable/icon_content" />
+            android:src="@drawable/icon_envelope" />
 
         <EditText
             android:id="@+id/editText0"
@@ -37,7 +37,8 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/iv_add"
             android:layout_toRightOf="@id/iv_content"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="3dp"
             android:background="@drawable/search_bg"
             android:drawableLeft="@drawable/icon_search"
             android:gravity="center"
@@ -59,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#e2e1e1"/>
+
     <com.hicc.cloud.teacher.view.MyTabLayout
         android:id="@+id/tablayout"
         android:layout_width="match_parent"

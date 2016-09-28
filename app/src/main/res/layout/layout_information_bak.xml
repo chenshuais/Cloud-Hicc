@@ -8,6 +8,8 @@
     <RelativeLayout
         android:clickable="true"
         android:layout_marginTop="10dp"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_news_bg">
@@ -34,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:layout_toRightOf="@id/picture"
             android:text="职位：讲师"
             android:textColor="#b9b5b5"
@@ -46,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="16dp"
         android:background="@drawable/selector_news_bg"
         android:clickable="true">
 
@@ -73,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="16dp"
         android:background="@drawable/selector_news_bg"
         android:clickable="true">
 
@@ -95,7 +97,7 @@
     <LinearLayout
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_news_bg"
@@ -117,11 +119,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
         android:layout_marginTop="40dp"
-        android:background="#ffffff"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_gravity="bottom"
+        android:background="#EBEEEF"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:padding="10dp">
 
         <Button
             android:id="@+id/esc"
@@ -133,6 +145,7 @@
             android:text="注   销"
             android:textColor="#ffffff"
             android:textSize="16sp" />
+            </LinearLayout>
     </LinearLayout>
 
 

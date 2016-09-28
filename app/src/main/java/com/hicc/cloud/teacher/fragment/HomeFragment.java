@@ -1,6 +1,7 @@
 package com.hicc.cloud.teacher.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +24,8 @@ import java.util.List;
 
 public class HomeFragment extends BaseFragment {
     private GridView gridView;
-    private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "点名", "社团", "班级成长", "学生档案", "全部"};
-    private int[] images = new int[]{R.mipmap.icon_score, R.mipmap.dormscore, R.mipmap.leaveback, R.mipmap.calltoroll, R.mipmap.
+    private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "全部"};
+    private int[] images = new int[]{R.drawable.icon_stu_ach, R.drawable.icon_room_ach, R.mipmap.leaveback, R.drawable.icon_check, R.mipmap.
             club, R.mipmap.classes, R.mipmap.files, R.mipmap.icon_all};
 
     @Override
@@ -87,7 +88,7 @@ public class HomeFragment extends BaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.layout_items, null);
+                convertView = inflater.inflate(R.layout.home_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.title = (TextView) convertView.findViewById(R.id.title);
                 viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
@@ -97,6 +98,10 @@ public class HomeFragment extends BaseFragment {
             }
             viewHolder.title.setText(pictures.get(position).getTitle());
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
+            if(position == 2 || position == 3 || position == 4 || position == 5){
+                viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
+
+            }
             return convertView;
         }
 

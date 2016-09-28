@@ -32,10 +32,10 @@
         android:layout_marginRight="20dp"
         android:layout_toRightOf="@id/firend_image"
         android:ellipsize="end"
-        android:textColor="#bab7b7"
+        android:textColor="#a5a3a3"
         android:maxLines="1"
-        android:text="今天下午在B2—212开全体大会"
-        android:textSize="12sp" />
+        android:text=""
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/firend_time"

@@ -5,6 +5,92 @@
     android:background="#EBEEEF"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/ll_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/scan"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:src="@drawable/icon_scan" />
+
+            <TextView
+                android:id="@+id/textView_sc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="扫一扫"
+                android:textColor="#ffffff"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/shake"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:src="@drawable/icon_shake" />
+
+            <TextView
+                android:id="@+id/textView_sh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="摇一摇"
+                android:textColor="#ffffff"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/record"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:src="@drawable/icon_record" />
+
+            <TextView
+                android:id="@+id/textView_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="记录"
+                android:textColor="#ffffff"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/sv_0"
         android:layout_width="match_parent"
@@ -16,96 +102,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
-            <LinearLayout
-                android:id="@+id/ll_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:orientation="horizontal"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/scan"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:clickable="true"
-                        android:src="@drawable/icon_scan" />
-
-                    <TextView
-                        android:id="@+id/textView_sc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="扫一扫"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/shake"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:clickable="true"
-                        android:src="@drawable/icon_shake" />
-
-                    <TextView
-                        android:id="@+id/textView_sh"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="摇一摇"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/record"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:clickable="true"
-                        android:src="@drawable/icon_record" />
-
-                    <TextView
-                        android:id="@+id/textView_r"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="记录"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
             <com.hicc.cloud.teacher.view.MyGridView
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/gv_menu"
                 android:background="#ffffff"
                 android:layout_width="match_parent"
@@ -113,36 +111,36 @@
                 android:columnWidth="80dp"
                 android:gravity="center"
                 android:numColumns="4"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:verticalSpacing="4dp">
             </com.hicc.cloud.teacher.view.MyGridView>
 
 
 
             <LinearLayout
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="8dp">
 
                 <ImageButton
                     android:id="@+id/imageButton_0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@mipmap/hp" />
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/icon_camera" />
 
                 <TextView
                     android:id="@+id/textView_0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
                     android:text="记录班级成长"
-                    android:textColor="#CFCFCF" />
+                    android:textColor="#b2afaf" />
 
             </LinearLayout>
 
@@ -150,19 +148,19 @@
 
 
             <LinearLayout
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="3dp">
+                android:padding="5dp">
 
                 <ImageView
                     android:layout_marginTop="2dp"
                     android:id="@+id/imageView_0"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_marginLeft="20dp"
                     android:background="@mipmap/icon_news" />
 
@@ -172,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:textColor="#686868"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:text="新闻动态" />
             </LinearLayout>
 
@@ -181,7 +179,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_news_bg"
                 android:clickable="true"
-                android:padding="5dp">
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_news"
@@ -227,7 +228,7 @@
                 android:background="#ffffff"
                 android:gravity="center"
                 android:padding="5dp"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textColor="#918e8e"
                 android:text="更多" />
 
