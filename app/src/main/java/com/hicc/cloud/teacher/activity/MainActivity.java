@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         mTabLayout.initData(tabs, this);
         mTabLayout.setCurrentTab(0);
 
-        FragAdapter adapter = new FragAdapter(getSupportFragmentManager());
+        final FragAdapter adapter = new FragAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -26,12 +26,11 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void fetchData() {
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_information_bak, container, false);
+        View view = inflater.inflate(R.layout.information_fragment, container, false);
         initUI(view);
 
         return view;
@@ -60,7 +59,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
             case R.id.set:
                 break;
             case R.id.esc:
-
                 break;
             case R.id.department:
                 break;
