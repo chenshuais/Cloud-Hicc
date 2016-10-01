@@ -1,25 +1,25 @@
-package com.hicc.cloud.teacher.db;
+package com.hicc.cloud.teacher.bean;
 
 
 public class Firend {
     private String name;
-    private String content;
+    private String phone;
     private String time;
     private int imageId;
 
-    public Firend(String name, String content, String time, int imageId) {
+    public Firend(String name, String phone, String time, int imageId) {
         this.name = name;
-        this.content = content;
+        this.phone = phone;
         this.time = time;
         this.imageId = imageId;
     }
 
-    public String getContent() {
-        return content;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getName() {

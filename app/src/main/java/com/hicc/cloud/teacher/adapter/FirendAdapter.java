@@ -10,31 +10,47 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.db.Firend;
+import com.hicc.cloud.teacher.bean.Firend;
 
 import java.util.List;
 
 public class FirendAdapter extends ArrayAdapter<Firend> {
     private int resourceId;
 
-    public FirendAdapter(Context context, int textViewResourceId,
-                        List<Firend> objects) {
+    public FirendAdapter(Context context, int textViewResourceId, List<Firend> objects) {
         super(context, textViewResourceId, objects);
         resourceId = textViewResourceId;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Firend firend = getItem(position);
-        View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
-        ImageView fruitImage = (ImageView) view.findViewById(R.id.firend_image);
-        TextView fruitName = (TextView) view.findViewById(R.id.firend_name);
-        TextView firend_content = (TextView) view.findViewById(R.id.firend_content);
-        TextView firend_time = (TextView) view.findViewById(R.id.firend_time);
-        fruitImage.setImageResource(firend.getImageId());
-        fruitName.setText(firend.getName());
-        firend_content.setText(firend.getContent());
-        firend_time.setText(firend.getTime());
-        return view;
+        ViewHolder viewHolder = null;
+
+        if(convertView == null){
+            convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
+            viewHolder = new ViewHolder();
+            viewHolder.iv_friend = (ImageView) convertView.findViewById(R.id.firend_image);
+            viewHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            viewHolder.tv_phone = (TextView) convertView.findViewById(R.id.tv_phone);
+            viewHolder.tv_time = (TextView) convertView.findViewById(R.id.firend_time);
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        viewHolder.iv_friend.setImageResource(firend.getImageId());
+        viewHolder.tv_name.setText(firend.getName());
+        viewHolder.tv_phone.setText(firend.getPhone());
+        viewHolder.tv_time.setText(firend.getTime());
+
+        return convertView;
+    }
+
+    static class ViewHolder{
+        TextView tv_name;
+        TextView tv_phone;
+        TextView tv_time;
+        ImageView iv_friend;
     }
 
 }
