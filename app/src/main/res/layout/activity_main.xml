@@ -30,7 +30,7 @@
             android:src="@drawable/icon_envelope" />
 
         <EditText
-            android:id="@+id/editText0"
+            android:id="@+id/et_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"

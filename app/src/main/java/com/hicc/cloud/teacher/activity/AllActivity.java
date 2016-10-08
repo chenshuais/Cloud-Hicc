@@ -1,9 +1,10 @@
-package com.hicc.cloud.teacher.fragment;
+package com.hicc.cloud.teacher.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,41 +15,44 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.activity.AllActivity;
-import com.hicc.cloud.teacher.activity.ClassCheckActivity;
-import com.hicc.cloud.teacher.activity.ClassGrowUpActivity;
-import com.hicc.cloud.teacher.activity.LeaveBackActivity;
-import com.hicc.cloud.teacher.activity.StudentCommunityActivity;
 import com.hicc.cloud.teacher.bean.Picture;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/9/24/024.
- * Alter by i_cassell on 2016/9/25.
+ * Created by Administrator on 2016/10/8/008.
  */
+public class AllActivity extends AppCompatActivity {
 
-public class HomeFragment extends BaseFragment {
+    private ImageView iv_back;
     private GridView gridView;
-    private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "全部"};
+    private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "学生缴费"};
     private int[] images = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
             R.mipmap.leaveback, R.drawable.icon_check,
             R.mipmap.club, R.mipmap.classes,
-            R.drawable.icon_file, R.mipmap.icon_all};
+            R.drawable.icon_file, R.drawable.icon_payment};
 
-    // 加载数据
     @Override
-    public void fetchData() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_all);
+
+        initUI();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment, container, false);
+    private void initUI() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        gridView = (GridView) view.findViewById(R.id.gv_menu);
+        gridView = (GridView) findViewById(R.id.gv_menu);
 
-        PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
+        PictureAdapter adapter = new PictureAdapter(titles, images, getApplicationContext());
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,27 +64,25 @@ public class HomeFragment extends BaseFragment {
                     case 1:
                         break;
                     case 2:
-                        startActivity(new Intent(getContext(),LeaveBackActivity.class));
+                        startActivity(new Intent(getApplicationContext(),LeaveBackActivity.class));
                         break;
                     case 3:
-                        startActivity(new Intent(getContext(),ClassCheckActivity.class));
+                        startActivity(new Intent(getApplicationContext(),ClassCheckActivity.class));
                         break;
                     case 4:
-                        startActivity(new Intent(getContext(),StudentCommunityActivity.class));
+                        startActivity(new Intent(getApplicationContext(),StudentCommunityActivity.class));
                         break;
                     case 5:
-                        startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
+                        startActivity(new Intent(getApplicationContext(),ClassGrowUpActivity.class));
                         break;
                     case 6:
                         break;
                     case 7:
-                        startActivity(new Intent(getContext(),AllActivity.class));
+                        startActivity(new Intent(getApplicationContext(),PaymentActivity.class));
                         break;
                 }
             }
         });
-
-        return view;
     }
 
     //自定义适配器
@@ -131,9 +133,8 @@ public class HomeFragment extends BaseFragment {
             }
             viewHolder.title.setText(pictures.get(position).getTitle());
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
-            if(position == 2 || position == 3 || position == 4 || position == 5){
+            if(position == 2 || position == 3 || position == 4 || position == 5 || position == 7){
                 viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
-
             }
             return convertView;
         }
@@ -144,5 +145,4 @@ public class HomeFragment extends BaseFragment {
         public TextView title;
         public ImageView image;
     }
-
 }
