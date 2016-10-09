@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
@@ -18,6 +19,7 @@ import com.hicc.cloud.teacher.activity.AllActivity;
 import com.hicc.cloud.teacher.activity.ClassCheckActivity;
 import com.hicc.cloud.teacher.activity.ClassGrowUpActivity;
 import com.hicc.cloud.teacher.activity.LeaveBackActivity;
+import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.activity.StudentCommunityActivity;
 import com.hicc.cloud.teacher.bean.Picture;
 
@@ -29,13 +31,16 @@ import java.util.List;
  * Alter by i_cassell on 2016/9/25.
  */
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private GridView gridView;
     private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "全部"};
     private int[] images = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
             R.mipmap.leaveback, R.drawable.icon_check,
             R.mipmap.club, R.mipmap.classes,
             R.drawable.icon_file, R.mipmap.icon_all};
+    private LinearLayout ll_scan;
+    private LinearLayout ll_shake;
+    private LinearLayout ll_record;
 
     // 加载数据
     @Override
@@ -46,7 +51,7 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
 
-        gridView = (GridView) view.findViewById(R.id.gv_menu);
+        initUI(view);
 
         PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
         gridView.setAdapter(adapter);
@@ -81,6 +86,41 @@ public class HomeFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    private void initUI(View view) {
+        gridView = (GridView) view.findViewById(R.id.gv_menu);
+        ll_scan = (LinearLayout) view.findViewById(R.id.ll_scan);
+        ll_shake = (LinearLayout) view.findViewById(R.id.ll_shake);
+        ll_record = (LinearLayout) view.findViewById(R.id.ll_record);
+
+        ImageView iv_scan = (ImageView) view.findViewById(R.id.iv_scan);
+        ImageView iv_shake = (ImageView) view.findViewById(R.id.iv_shake);
+        ImageView iv_record = (ImageView) view.findViewById(R.id.iv_record);
+
+        ll_scan.setOnClickListener(this);
+        ll_shake.setOnClickListener(this);
+        ll_record.setOnClickListener(this);
+
+        iv_scan.setOnClickListener(this);
+        iv_shake.setOnClickListener(this);
+        iv_record.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ll_scan:
+            case R.id.iv_scan:
+                break;
+            case R.id.ll_shake:
+            case R.id.iv_shake:
+                startActivity(new Intent(getContext(), ShakeActivity.class));
+                break;
+            case R.id.ll_record:
+            case R.id.iv_record:
+                break;
+        }
     }
 
     //自定义适配器

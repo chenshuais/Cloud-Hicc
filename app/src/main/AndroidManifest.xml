@@ -37,6 +37,7 @@
         <activity android:name=".teacher.activity.ClassGrowUpActivity"/>
         <activity android:name=".teacher.activity.AllActivity"/>
         <activity android:name=".teacher.activity.PaymentActivity"/>
+        <activity android:name=".teacher.activity.ShakeActivity"/>
 
 
         <service android:name=".teacher.service.UpdataService"/>
