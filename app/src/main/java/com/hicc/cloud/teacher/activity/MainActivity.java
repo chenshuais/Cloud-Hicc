@@ -18,6 +18,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.hicc.cloud.R;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private BmobFile mBmobfile;
     private static Boolean isExit = false;
     private final String TAG = "MainActivity";
+    private EditText et_search;
+    private boolean isCheck = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,20 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         mViewPager=(ScrollViewPager)findViewById(R.id.viewpager);
         // 设置viewpager是否禁止滑动
         mViewPager.setNoScroll(false);
+
+        et_search = (EditText) findViewById(R.id.et_search);
+        et_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isCheck){
+                    et_search.setHint("");
+                    isCheck = !isCheck;
+                }else{
+                    et_search.setHint("搜索");
+                    isCheck = !isCheck;
+                }
+            }
+        });
     }
 
     private void initData(){

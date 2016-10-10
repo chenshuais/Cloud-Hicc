@@ -21,16 +21,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="请销假"
+            android:text="摇一摇"
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </LinearLayout>
 
-    <TextView
+    <ImageView
+        android:background="#0EAE5F"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="正在开发中"
-        android:textSize="50sp" />
+        android:src="@drawable/icon_shake_bg"/>
 
 </LinearLayout>

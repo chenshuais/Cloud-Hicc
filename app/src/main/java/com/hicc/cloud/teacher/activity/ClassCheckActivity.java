@@ -8,21 +8,18 @@ import android.widget.ImageView;
 import com.hicc.cloud.R;
 
 /**
- * Created by Administrator on 2016/9/29/029.
+ * Created by Administrator on 2016/10/8/008.
  */
-public class LeaveBackActivity extends AppCompatActivity {
+public class ClassCheckActivity extends AppCompatActivity {
 
     private ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leaveback);
+        setContentView(R.layout.activity_classcheck);
 
         initUI();
-
-
-
     }
 
     private void initUI() {

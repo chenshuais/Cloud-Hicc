@@ -22,6 +22,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+
         <activity android:name="com.hicc.cloud.teacher.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +32,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".teacher.activity.LeaveBackActivity"/>
+        <activity android:name=".teacher.activity.ClassCheckActivity"/>
+        <activity android:name=".teacher.activity.StudentCommunityActivity"/>
+        <activity android:name=".teacher.activity.ClassGrowUpActivity"/>
+        <activity android:name=".teacher.activity.AllActivity"/>
+        <activity android:name=".teacher.activity.PaymentActivity"/>
+        <activity android:name=".teacher.activity.ShakeActivity"/>
+
 
         <service android:name=".teacher.service.UpdataService"/>
 
