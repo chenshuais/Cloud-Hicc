@@ -3,6 +3,8 @@ package com.hicc.cloud.teacher;
 import android.app.Application;
 import android.os.Environment;
 
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -23,6 +25,8 @@ public class MyApplication extends Application {
 
         JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);     		// 初始化 JPush
+
+        ZXingLibrary.initDisplayOpinion(this);  //二维码扫描
 
         // 捕获全局未捕获的异常
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

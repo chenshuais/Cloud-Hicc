@@ -38,6 +38,7 @@
         <activity android:name=".teacher.activity.AllActivity"/>
         <activity android:name=".teacher.activity.PaymentActivity"/>
         <activity android:name=".teacher.activity.ShakeActivity"/>
+        <activity android:name=".teacher.activity.ScanActivity"/>
 
 
         <service android:name=".teacher.service.UpdataService"/>
