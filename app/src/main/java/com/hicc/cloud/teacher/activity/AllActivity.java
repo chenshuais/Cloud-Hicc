@@ -133,7 +133,7 @@ public class AllActivity extends AppCompatActivity {
             }
             viewHolder.title.setText(pictures.get(position).getTitle());
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
-            if(position == 2 || position == 3 || position == 4 || position == 5 || position == 7){
+            if(position == 1 || position == 2 || position == 3 || position == 4 || position == 5 || position == 7){
                 viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
             }
             return convertView;
