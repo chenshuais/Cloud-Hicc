@@ -138,7 +138,6 @@ public class AllActivity extends AppCompatActivity {
             }
             return convertView;
         }
-
     }
 
     class ViewHolder {
