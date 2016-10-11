@@ -18,10 +18,12 @@ import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AllActivity;
 import com.hicc.cloud.teacher.activity.ClassCheckActivity;
 import com.hicc.cloud.teacher.activity.ClassGrowUpActivity;
+import com.hicc.cloud.teacher.activity.DormitoryScoreActivity;
 import com.hicc.cloud.teacher.activity.LeaveBackActivity;
 import com.hicc.cloud.teacher.activity.ScanActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.activity.StudentCommunityActivity;
+import com.hicc.cloud.teacher.activity.StudentProfileActivity;
 import com.hicc.cloud.teacher.bean.Picture;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -67,6 +69,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     case 0:
                         break;
                     case 1:
+                        startActivity(new Intent(getContext(),DormitoryScoreActivity.class));
                         break;
                     case 2:
                         startActivity(new Intent(getContext(),LeaveBackActivity.class));
@@ -81,6 +84,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
                         break;
                     case 6:
+                        startActivity(new Intent(getContext(),StudentProfileActivity.class));
                         break;
                     case 7:
                         startActivity(new Intent(getContext(),AllActivity.class));

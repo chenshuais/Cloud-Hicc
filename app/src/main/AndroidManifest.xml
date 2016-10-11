@@ -37,6 +37,8 @@
         <activity android:name=".teacher.activity.ClassGrowUpActivity"/>
         <activity android:name=".teacher.activity.AllActivity"/>
         <activity android:name=".teacher.activity.PaymentActivity"/>
+        <activity android:name=".teacher.activity.DormitoryScoreActivity"/>
+        <activity android:name=".teacher.activity.StudentProfileActivity"/>
         <activity android:name=".teacher.activity.ShakeActivity"/>
         <activity android:name=".teacher.activity.ScanActivity"/>
 

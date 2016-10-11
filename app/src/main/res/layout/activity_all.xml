@@ -58,7 +58,19 @@
         android:text="其他应用"
         android:textSize="14sp" />
 
-    <LinearLayout
+    <com.hicc.cloud.teacher.view.MyGridView
+        android:id="@+id/gv_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:columnWidth="80dp"
+        android:gravity="center"
+        android:numColumns="3"
+        android:padding="10dp"
+        android:verticalSpacing="4dp">
+    </com.hicc.cloud.teacher.view.MyGridView>
+
+   <!-- <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="#ffffff"
@@ -141,7 +153,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 </LinearLayout>
