@@ -4,13 +4,16 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 import cn.bmob.v3.Bmob;
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Administrator on 2016/9/24/024.
@@ -27,6 +30,15 @@ public class MyApplication extends Application {
         JPushInterface.init(this);     		// 初始化 JPush
 
         ZXingLibrary.initDisplayOpinion(this);  //二维码扫描
+
+        // okhttp网络请求工具配置信息
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .addInterceptor(new LoggerInterceptor("TAG"))
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                //其他配置
+                .build();
+        OkHttpUtils.initClient(okHttpClient);
 
         // 捕获全局未捕获的异常
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

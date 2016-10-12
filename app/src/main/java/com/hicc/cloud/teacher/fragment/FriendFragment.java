@@ -41,7 +41,7 @@ public class FriendFragment extends BaseFragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.firend_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_firend, container, false);
 
         listView = (ListView) view.findViewById(R.id.list_view);
         ll_progress = (LinearLayout) view.findViewById(R.id.ll_progress);
