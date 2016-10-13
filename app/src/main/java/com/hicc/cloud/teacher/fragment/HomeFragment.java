@@ -18,10 +18,15 @@ import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AllActivity;
 import com.hicc.cloud.teacher.activity.ClassCheckActivity;
 import com.hicc.cloud.teacher.activity.ClassGrowUpActivity;
+import com.hicc.cloud.teacher.activity.DormitoryScoreActivity;
 import com.hicc.cloud.teacher.activity.LeaveBackActivity;
+import com.hicc.cloud.teacher.activity.ScanActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.activity.StudentCommunityActivity;
+import com.hicc.cloud.teacher.activity.StudentProfileActivity;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,7 @@ import java.util.List;
  */
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
+    private static final int SCAN_CODE = 0;
     private GridView gridView;
     private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "全部"};
     private int[] images = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
@@ -49,7 +55,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initUI(view);
 
@@ -63,6 +69,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     case 0:
                         break;
                     case 1:
+                        startActivity(new Intent(getContext(),DormitoryScoreActivity.class));
                         break;
                     case 2:
                         startActivity(new Intent(getContext(),LeaveBackActivity.class));
@@ -77,6 +84,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
                         break;
                     case 6:
+                        startActivity(new Intent(getContext(),StudentProfileActivity.class));
                         break;
                     case 7:
                         startActivity(new Intent(getContext(),AllActivity.class));
@@ -112,6 +120,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.ll_scan:
             case R.id.iv_scan:
+                startActivityForResult(new Intent(getContext(), ScanActivity.class),SCAN_CODE);
                 break;
             case R.id.ll_shake:
             case R.id.iv_shake:
@@ -120,6 +129,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.ll_record:
             case R.id.iv_record:
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /**
+         * 处理二维码扫描结果
+         */
+        if (requestCode == SCAN_CODE) {
+            //处理扫描结果（在界面上显示）
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    // TODO 解析后操作
+                    ToastUtli.show(getContext(),"解析结果:" + result);
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    ToastUtli.show(getContext(),"解析二维码失败");
+                }
+            }
         }
     }
 
@@ -171,7 +204,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
             viewHolder.title.setText(pictures.get(position).getTitle());
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
-            if(position == 2 || position == 3 || position == 4 || position == 5){
+            if(position == 1 || position == 2 || position == 3 || position == 4 || position == 5){
                 viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
 
             }

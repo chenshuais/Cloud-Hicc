@@ -26,12 +26,16 @@ import java.util.List;
 public class AllActivity extends AppCompatActivity {
 
     private ImageView iv_back;
-    private GridView gridView;
-    private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "学生缴费"};
-    private int[] images = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
+    private GridView gv_menu;
+    private GridView gv_other;
+    private String[] mTitles1 = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "学生缴费"};
+    private int[] mImages1 = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
             R.mipmap.leaveback, R.drawable.icon_check,
             R.mipmap.club, R.mipmap.classes,
             R.drawable.icon_file, R.drawable.icon_payment};
+
+    private String[] mTitles2 = new String[]{"网上报道", "现场报道", "问卷调查"};
+    private int[] mImages2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_questionnaire,};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +54,20 @@ public class AllActivity extends AppCompatActivity {
             }
         });
 
-        gridView = (GridView) findViewById(R.id.gv_menu);
+        gv_menu = (GridView) findViewById(R.id.gv_menu);
+        gv_other = (GridView) findViewById(R.id.gv_other);
 
-        PictureAdapter adapter = new PictureAdapter(titles, images, getApplicationContext());
-        gridView.setAdapter(adapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // 常用应用
+        PictureAdapter adapter1 = new PictureAdapter(mTitles1, mImages1, getApplicationContext(), 1);
+        gv_menu.setAdapter(adapter1);
+        gv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //未设置点击事件
+                //点击事件
                 switch (position){
                     case 0:
                         break;
                     case 1:
+                        startActivity(new Intent(getApplicationContext(),DormitoryScoreActivity.class));
                         break;
                     case 2:
                         startActivity(new Intent(getApplicationContext(),LeaveBackActivity.class));
@@ -76,9 +82,27 @@ public class AllActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(),ClassGrowUpActivity.class));
                         break;
                     case 6:
+                        startActivity(new Intent(getApplicationContext(),StudentProfileActivity.class));
                         break;
                     case 7:
                         startActivity(new Intent(getApplicationContext(),PaymentActivity.class));
+                        break;
+                }
+            }
+        });
+
+        // 其他应用
+        PictureAdapter adapter2 = new PictureAdapter(mTitles2, mImages2, getApplicationContext(), 2);
+        gv_other.setAdapter(adapter2);
+        gv_other.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //点击事件
+                switch (position){
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
                         break;
                 }
             }
@@ -89,11 +113,13 @@ public class AllActivity extends AppCompatActivity {
     class PictureAdapter extends BaseAdapter {
         private LayoutInflater inflater;
         private List<Picture> pictures;
+        private int type;
 
-        public PictureAdapter(String[] titles, int[] images, Context context) {
+        public PictureAdapter(String[] titles, int[] images, Context context, int type) {
             super();
             pictures = new ArrayList<Picture>();
             inflater = LayoutInflater.from(context);
+            this.type = type;
             for (int i = 0; i < images.length; i++) {
                 Picture picture = new Picture(titles[i], images[i]);
                 pictures.add(picture);
@@ -133,12 +159,21 @@ public class AllActivity extends AppCompatActivity {
             }
             viewHolder.title.setText(pictures.get(position).getTitle());
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
-            if(position == 2 || position == 3 || position == 4 || position == 5 || position == 7){
-                viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
+
+            if(type == 1){
+                if(position == 1 || position == 2 || position == 3 || position == 4 || position == 5 || position == 7){
+                    viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
+                }
             }
+
+            if(type == 2){
+                if(position == 2){
+                    viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
+                }
+            }
+
             return convertView;
         }
-
     }
 
     class ViewHolder {
