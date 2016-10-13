@@ -23,16 +23,29 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.bean.Clas;
+import com.hicc.cloud.teacher.bean.Division;
+import com.hicc.cloud.teacher.bean.Grade;
+import com.hicc.cloud.teacher.bean.Professional;
+import com.hicc.cloud.teacher.db.StudentInfoDB;
 import com.hicc.cloud.teacher.db.UpdateFile;
 import com.hicc.cloud.teacher.fragment.BaseFragment;
 import com.hicc.cloud.teacher.fragment.FriendFragment;
 import com.hicc.cloud.teacher.fragment.HomeFragment;
 import com.hicc.cloud.teacher.fragment.InformationFragment;
 import com.hicc.cloud.teacher.utils.ConstantValue;
+import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.view.MyTabLayout;
 import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.hicc.cloud.teacher.view.TabItem;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,8 +58,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.FindListener;
-
-
+import okhttp3.Call;
 
 
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{
@@ -62,17 +74,119 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private final String TAG = "MainActivity";
     private EditText et_search;
     private boolean isCheck = true;
+    private final String URL = "http://suguan.hicc.cn/hiccphonet/getCode";
+    private StudentInfoDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = StudentInfoDB.getInstance(this);
+
         initView();
         initData();
 
         // 检测更新
         checkVersionCode();
+
+        // 加载数据到数据库中
+        creatData();
+    }
+
+    private void creatData() {
+        if(SpUtils.getBoolSp(this,ConstantValue.FIRST_DATA,true)){
+            // 发送GET请求
+            OkHttpUtils
+                    .get()
+                    .url(URL)
+                    .addParams("code", "16")
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            Logs.i(e.toString());
+                            ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                            et_search.setText("");
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            Logs.i(response);
+                            // 解析json
+                            getJsonInfo(response);
+                        }
+                    });
+
+        }
+    }
+
+    private void getJsonInfo(final String response) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean sucessed = jsonObject.getBoolean("sucessed");
+                    if(sucessed){
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        for(int i=13; i <= 16; i++){
+                            JSONArray Grade = data.getJSONArray("Description_"+i);
+                            for(int j=0; j < Grade.length(); j++){
+                                JSONObject info = Grade.getJSONObject(j);
+
+                                // 年级
+                                com.hicc.cloud.teacher.bean.Grade grade = new Grade();
+                                int GradeCode = info.getInt("GradeCode");
+                                grade.setGradeCode(GradeCode);
+                                db.saveGrade(grade);
+
+                                // 学部
+                                Division division = new Division();
+                                String DivisionDes = info.getString("DivisionDescription");
+                                division.setDivisionDes(DivisionDes);
+                                if(!DivisionDes.equals("null")){
+                                    int DivisionCode = info.getInt("DivisionCode");
+                                    division.setDivisionCode(DivisionCode);
+                                }
+                                int gradeCode = info.getInt("GradeCode");
+                                division.setGradeCode(gradeCode);
+                                db.saveDivision(division);
+
+                                // 专业
+                                Professional professional = new Professional();
+                                String ProfessionalDes = info.getString("ProfessionalDescription");
+                                professional.setProfessionalDes(ProfessionalDes);
+                                if(!ProfessionalDes.equals("null")){
+                                    int ProfessionCode = info.getInt("ProfessionalId");
+                                    professional.setProfessionalCode(ProfessionCode);
+                                    int divisionCode = info.getInt("DivisionCode");
+                                    professional.setDivisionCode(divisionCode);
+                                }
+                                db.saveProfessional(professional);
+
+                                // 班级
+                                Clas clas = new Clas();
+                                String ClassDes = info.getString("ClassDescription");
+                                clas.setClassDes(ClassDes);
+                                if(!ProfessionalDes.equals("null")){
+                                    int professionCode = info.getInt("ProfessionalId");
+                                    clas.setProfessionalCode(professionCode);
+                                }
+                                db.saveClass(clas);
+                            }
+                        }
+                        Logs.i("加载数据成功");
+                        SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,false);
+                    }else{
+                        SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     private void initView(){
