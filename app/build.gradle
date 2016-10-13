@@ -50,4 +50,6 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.zhy:okhttputils:2.6.2'
+
+    compile 'com.github.vipulasri:timelineview:1.0.3'
 }

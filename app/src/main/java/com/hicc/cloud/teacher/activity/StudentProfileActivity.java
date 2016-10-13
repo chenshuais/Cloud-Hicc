@@ -119,6 +119,10 @@ public class StudentProfileActivity extends AppCompatActivity {
                 // 班级
                 String classDes = dataInfo.getString("ClassDescription");
                 tv_class.setText("班级："+classDes);
+                // 毕业学校
+                String oldSchool = dataInfo.getString("OldSchool");
+                // 入学时间
+                String inTime = dataInfo.getString("EnrollmentDate");
             }else{
                 tv_name.setText("姓名：");
                 tv_stu_num.setText("学号：");
