@@ -65,6 +65,7 @@ public class AllActivity extends AppCompatActivity {
                 //点击事件
                 switch (position){
                     case 0:
+                        startActivity(new Intent(getApplicationContext(),StudentMarkActivity.class));
                         break;
                     case 1:
                         startActivity(new Intent(getApplicationContext(),DormitoryScoreActivity.class));

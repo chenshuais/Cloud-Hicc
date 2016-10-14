@@ -4,50 +4,38 @@ package com.hicc.cloud.teacher.bean;
  * Created by 野 on 2016/10/13.
  */
 
-public class Mark {
-    private String name;
-    private String[] course;
-    private String[] mark;
-    private String[] teacher;
+import java.io.Serializable;
 
-    public Mark(String name,String[] course,String[] mark,String[] teacher){
+/**
+ * 封装学生成绩数据
+ */
 
-        this.name=name;
-        this.course=course;
-        this.mark=mark;
-        this.teacher=teacher;
+public class Mark implements Serializable {
+    private String course;
+    private int mark;
+    private String teacher;
 
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String[] getCourse() {
+    public String getCourse() {
         return course;
     }
 
-    public void setCourse(String[] course) {
+    public void setCourse(String course) {
         this.course = course;
     }
 
-    public String[] getMark() {
+    public int getMark() {
         return mark;
     }
 
-    public void setMark(String[] mark) {
+    public void setMark(int mark) {
         this.mark = mark;
     }
 
-    public String[] getTeacher() {
+    public String getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(String[] teacher) {
+    public void setTeacher(String teacher) {
         this.teacher = teacher;
     }
 }

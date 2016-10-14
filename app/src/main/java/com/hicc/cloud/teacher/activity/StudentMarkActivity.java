@@ -1,5 +1,6 @@
 package com.hicc.cloud.teacher.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.bean.Mark;
 import com.hicc.cloud.teacher.fragment.MarkThisTermFragment;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
@@ -22,9 +24,11 @@ import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +51,12 @@ public class StudentMarkActivity extends AppCompatActivity {
     private TextView tv_course;
     private TextView tv_teacher;
     private TextView tv_mark;
-    private String URL = "http://suguan.hicc.cn/hiccphonet/getStudentInfo";
+    private String URL = "http://suguan.hicc.cn/hiccphonet/getGrade";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_studentprofile_bak);
+        setContentView(R.layout.activity_studentmark);
 
         initUI();
 
@@ -98,31 +102,67 @@ public class StudentMarkActivity extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(response);
             boolean sucessed = jsonObject.getBoolean("sucessed");
+            List<Mark> markList = new ArrayList<Mark>();
             if (sucessed) {
                 et_search.setText("");
 
                 JSONObject data = jsonObject.getJSONObject("data");
-                JSONObject dataInfo = data.getJSONObject("dataInfo");
-                // 学生姓名
-                String stuName = dataInfo.getString("StudentName");
-                tv_name.setText("姓名：" + stuName);
-                // 年级
-                String grade = dataInfo.getString("GradeDescription");
-                // 学号
-                String stuNum = dataInfo.getString("StudentNu");
-                tv_stu_num.setText("学号：" + stuNum);
-                // 班级
-                String classDes = dataInfo.getString("ClassDescription");
-                tv_class.setText("班级：" + classDes);
-                //课程名
-                String course = dataInfo.getString("KCM");
-                tv_course.setText("课程" +course);
-                //任课老师
-                String teacher = dataInfo.getString("SKJS");
-                tv_teacher.setText("任课老师"+teacher);
-                //成绩
-                String mark = dataInfo.getString("KCCJ");
-                tv_mark.setText("成绩"+mark);
+                JSONArray electiveArray = data.getJSONArray("Elective");
+                for (int i = 0; i < electiveArray.length(); i++) {
+                    Mark studentmark = new Mark();
+                    JSONObject jsonObject1 = electiveArray.getJSONObject(i);
+                    // 学生姓名
+                    String stuName = jsonObject1.getString("StudentName");
+                    tv_name.setText("姓名：" + stuName);
+                    // 学号00
+                    String stuNum = jsonObject1.getString("StudentNu");
+                    tv_stu_num.setText("学号：" + stuNum);
+                    // 班级
+                    String classDes = jsonObject1.getString("BJH");
+                    tv_class.setText("班级：" + classDes);
+
+                    //课程名
+                    String course = jsonObject1.getString("KCM");
+                    studentmark.setCourse(course);
+                    //任课老师
+                    String teacher = jsonObject1.getString("SKJS");
+                    studentmark.setTeacher(teacher);
+                    //成绩
+                    int mark = jsonObject1.getInt("KCCJ");
+                    studentmark.setMark(mark);
+                    markList.add(studentmark);
+                }
+
+                JSONArray requiredArray = data.getJSONArray("Required");
+                for (int i = 0; i < requiredArray.length(); i++) {
+                    Mark studentmark = new Mark();
+                    JSONObject jsonObject1 = requiredArray.getJSONObject(i);
+                    // 学生姓名
+                    String stuName = jsonObject1.getString("StudentName");
+                    tv_name.setText("姓名：" + stuName);
+                    // 学号00
+                    String stuNum = jsonObject1.getString("StudentNu");
+                    tv_stu_num.setText(stuNum);
+                    // 班级
+                    String classDes = jsonObject1.getString("BJH");
+                    tv_class.setText("班级：" + classDes);
+                    //课程名
+                    String course = jsonObject1.getString("KCM");
+                    studentmark.setCourse(course);
+                    //任课老师
+                    String teacher = jsonObject1.getString("SKJS");
+                    studentmark.setTeacher(teacher);
+                    //成绩
+                    int mark = jsonObject1.getInt("KCCJ");
+                    studentmark.setMark(mark);
+                    markList.add(studentmark);
+                }
+
+                Intent intent = new Intent();
+                intent.setAction("SET_DATA");
+                intent.putExtra("marklist", (Serializable) markList);
+                sendBroadcast(intent);
+
 
             } else {
                 tv_name.setText("姓名：");
