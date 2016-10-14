@@ -9,7 +9,16 @@ public class Clas {
     private int id;
     private String classDes;
     private int classCode;
+    private int gradeCode;
     private int professionalCode;
+
+    public int getGradeCode() {
+        return gradeCode;
+    }
+
+    public void setGradeCode(int gradeCode) {
+        this.gradeCode = gradeCode;
+    }
 
     public int getId() {
         return id;

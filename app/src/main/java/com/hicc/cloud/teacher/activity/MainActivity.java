@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         }
     }
 
+    // 解析json
     private void getJsonInfo(final String response) {
         new Thread(){
             @Override
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                                 Clas clas = new Clas();
                                 String ClassDes = info.getString("ClassDescription");
                                 clas.setClassDes(ClassDes);
+                                clas.setGradeCode(gradeCode);
                                 if(!ProfessionalDes.equals("null")){
                                     int professionCode = info.getInt("ProfessionalId");
                                     clas.setProfessionalCode(professionCode);

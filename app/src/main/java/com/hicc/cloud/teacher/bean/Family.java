@@ -1,11 +1,13 @@
 package com.hicc.cloud.teacher.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/10/13/013.
  * 家庭表
  */
 
-public class Family {
+public class Family implements Serializable {
     private int id;
     // 学生学号
     private String studentNum;

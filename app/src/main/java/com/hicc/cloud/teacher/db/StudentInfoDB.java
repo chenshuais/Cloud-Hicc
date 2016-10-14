@@ -73,6 +73,7 @@ public class StudentInfoDB {
 
             list.add(grade);
         }
+        cursor.close();
         return list;
     }
 
@@ -107,6 +108,7 @@ public class StudentInfoDB {
 
             list.add(division);
         }
+        cursor.close();
         return list;
     }
 
@@ -141,6 +143,7 @@ public class StudentInfoDB {
 
             list.add(professional);
         }
+        cursor.close();
         return list;
     }
 
@@ -154,6 +157,7 @@ public class StudentInfoDB {
             values.put("class_des", clas.getClassDes());
             values.put("class_code", clas.getClassCode());
             values.put("professional_code", clas.getProfessionalCode());
+            values.put("grade_code", clas.getGradeCode());
             db.insert("Clas",null,values);
         }
     }
@@ -171,11 +175,30 @@ public class StudentInfoDB {
             clas.setId(cursor.getInt(cursor.getColumnIndex("id")));
             clas.setClassDes(cursor.getString(cursor.getColumnIndex("class_des")));
             clas.setClassCode(cursor.getInt(cursor.getColumnIndex("class_code")));
+            clas.setGradeCode(cursor.getInt(cursor.getColumnIndex("grade_code")));
             clas.setProfessionalCode(cursor.getInt(cursor.getColumnIndex("professional_code")));
 
             list.add(clas);
         }
+        cursor.close();
         return list;
+    }
+
+    /**
+     * 获取指定班级的 id
+     * @param calssDes 班级描述
+     * @param gradeCode 年级代码
+     * @return int 类型 id
+     */
+    public int getClasIdForDB(String calssDes, int gradeCode){
+        Cursor cursor = db.query("Clas", new String[]{"id","grade_code"}, "class_des = ?", new String[]{calssDes}, null, null, null);
+        int id = -1;
+        while (cursor.moveToNext()){
+            if(cursor.getInt(cursor.getColumnIndex("grade_code")) == gradeCode){
+                id = cursor.getInt(cursor.getColumnIndex("id"));
+            }
+        }
+        return id;
     }
 
     /**
@@ -199,17 +222,14 @@ public class StudentInfoDB {
             values.put("weight", student.getWeight());
             values.put("phone", student.getYourPhone());
             values.put("grade_des", student.getGradeDescription());
-            values.put("examinee_type", student.getExamineeTypeDescription());
+            values.put("grade_code", student.getGradeCode());
             values.put("bed_number", student.getBedNumber());
-            values.put("former_name", student.getFormerName());
             values.put("height", student.getHeight());
             values.put("old_school", student.getOldSchool());
             values.put("birth_date", student.getBirthDate());
-            values.put("foreign_languages", student.getForeignLanguagesDescription());
             values.put("id_number", student.getIdNumber());
             values.put("enrollment_date", student.getEnrollmentDate());
             values.put("home_address", student.getHomeAddress());
-            values.put("fixed_telephone", student.getFixedTelephone());
             values.put("politics_status", student.getPoliticsStatusDescription());
             values.put("native_place", student.getNativePlace());
             values.put("live_report", student.getLiveReportStatueDescription());
@@ -244,6 +264,7 @@ public class StudentInfoDB {
             student.setWeight(cursor.getString(cursor.getColumnIndex("weight")));
             student.setYourPhone(cursor.getString(cursor.getColumnIndex("phone")));
             student.setGradeDescription(cursor.getString(cursor.getColumnIndex("grade_des")));
+            student.setGradeCode(cursor.getInt(cursor.getColumnIndex("grade_code")));
             student.setExamineeTypeDescription(cursor.getString(cursor.getColumnIndex("examinee_type")));
             student.setBedNumber(cursor.getString(cursor.getColumnIndex("bed_number")));
             student.setFormerName(cursor.getString(cursor.getColumnIndex("former_name")));
@@ -262,6 +283,7 @@ public class StudentInfoDB {
 
             list.add(student);
         }
+        cursor.close();
         return list;
     }
 
@@ -307,6 +329,49 @@ public class StudentInfoDB {
 
             list.add(family);
         }
+        cursor.close();
         return list;
+    }
+
+    /**
+     * 获取对应学号的学生对象
+     * @param stuNum 学号
+     * @return Student 对象
+     */
+    public Student getStudent(String stuNum) {
+        Student student = null;
+        Cursor cursor = db.query("Student", null, "student_nu = ?", new String[]{stuNum}, null, null, null);
+        while (cursor.moveToNext()){
+            student = new Student();
+            student.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            student.setClassId(cursor.getInt(cursor.getColumnIndex("class_code")));
+            student.setStudentName(cursor.getString(cursor.getColumnIndex("student_name")));
+            student.setStudentNu(cursor.getString(cursor.getColumnIndex("student_nu")));
+            student.setProfessionalDescription(cursor.getString(cursor.getColumnIndex("professional_des")));
+            student.setGenderDescription(cursor.getString(cursor.getColumnIndex("gender_des")));
+            student.setClassDescription(cursor.getString(cursor.getColumnIndex("class_des")));
+            student.setPaymentStausDescription(cursor.getString(cursor.getColumnIndex("payment_staus")));
+            student.setNationalDescription(cursor.getString(cursor.getColumnIndex("national_des")));
+            student.setProvinceDescription(cursor.getString(cursor.getColumnIndex("province_des")));
+            student.setDormitoryDescription(cursor.getString(cursor.getColumnIndex("dormitory_des")));
+            student.setDivisionDescription(cursor.getString(cursor.getColumnIndex("division_des")));
+            student.setWeight(cursor.getString(cursor.getColumnIndex("weight")));
+            student.setYourPhone(cursor.getString(cursor.getColumnIndex("phone")));
+            student.setGradeDescription(cursor.getString(cursor.getColumnIndex("grade_des")));
+            student.setGradeCode(cursor.getInt(cursor.getColumnIndex("grade_code")));
+            student.setBedNumber(cursor.getString(cursor.getColumnIndex("bed_number")));
+            student.setHeight(cursor.getString(cursor.getColumnIndex("height")));
+            student.setOldSchool(cursor.getString(cursor.getColumnIndex("old_school")));
+            student.setBirthDate(cursor.getString(cursor.getColumnIndex("birth_date")));
+            student.setIdNumber(cursor.getString(cursor.getColumnIndex("id_number")));
+            student.setEnrollmentDate(cursor.getString(cursor.getColumnIndex("enrollment_date")));
+            student.setHomeAddress(cursor.getString(cursor.getColumnIndex("home_address")));
+            student.setPoliticsStatusDescription(cursor.getString(cursor.getColumnIndex("politics_status")));
+            student.setNativePlace(cursor.getString(cursor.getColumnIndex("native_place")));
+            student.setLiveReportStatueDescription(cursor.getString(cursor.getColumnIndex("live_report")));
+            student.setOnlineReportStatueDescription(cursor.getString(cursor.getColumnIndex("online_report")));
+        }
+        cursor.close();
+        return student;
     }
 }
