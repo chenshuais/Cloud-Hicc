@@ -97,8 +97,8 @@ public class DetailedInfoFragment extends BaseFragment {
         tv_height.setText("身高："+height);
         tv_weight.setText("体重："+weight);
         tv_paymentstaus.setText("缴费状态："+paymentstaus);
-        tv_onlinereport.setText("网上报道："+onlinereport);
-        tv_liveseportstatue.setText("现场报道："+liveseportstatue);
+        tv_onlinereport.setText("网上报到："+onlinereport);
+        tv_liveseportstatue.setText("现场报到："+liveseportstatue);
     }
 
     private void initUI(View view) {

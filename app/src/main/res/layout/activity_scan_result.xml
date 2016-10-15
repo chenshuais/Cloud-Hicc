@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_second"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/fl_my_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#e02c93de"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
-        android:layout_gravity="top|center_horizontal"
         android:orientation="horizontal">
 
         <ImageView
@@ -32,14 +25,12 @@
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </LinearLayout>
-    <Button
-        android:id="@+id/linear1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="10dp"
-        android:background="@drawable/selector_news_bg"
-        android:text="闪光灯"
-        android:textSize="18sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+</LinearLayout>

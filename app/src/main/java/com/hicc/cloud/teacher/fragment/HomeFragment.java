@@ -21,6 +21,7 @@ import com.hicc.cloud.teacher.activity.ClassGrowUpActivity;
 import com.hicc.cloud.teacher.activity.DormitoryScoreActivity;
 import com.hicc.cloud.teacher.activity.LeaveBackActivity;
 import com.hicc.cloud.teacher.activity.ScanActivity;
+import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.activity.StudentCommunityActivity;
 import com.hicc.cloud.teacher.activity.StudentMarkActivity;
@@ -151,7 +152,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     // TODO 解析后操作
-                    ToastUtli.show(getContext(),"解析结果:" + result);
+                    //ToastUtli.show(getContext(),"解析结果:" + result);
+                    Intent intent = new Intent(getContext(),ScanResultActivity.class);
+                    intent.putExtra("result",result);
+                    startActivity(intent);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     ToastUtli.show(getContext(),"解析二维码失败");
                 }

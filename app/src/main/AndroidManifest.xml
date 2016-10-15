@@ -45,6 +45,10 @@
 
         <activity android:name=".teacher.activity.ShakeActivity"/>
         <activity android:name=".teacher.activity.ScanActivity"/>
+        <activity android:name=".teacher.activity.ScanResultActivity"/>
+
+        <activity android:name=".teacher.activity.ColumnChartActivity"/>
+        <activity android:name=".teacher.activity.PieChartActivity"/>
 
 
         <service android:name=".teacher.service.UpdataService"/>

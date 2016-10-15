@@ -34,7 +34,7 @@ public class AllActivity extends AppCompatActivity {
             R.mipmap.club, R.mipmap.classes,
             R.drawable.icon_file, R.drawable.icon_payment};
 
-    private String[] mTitles2 = new String[]{"网上报道", "现场报道", "问卷调查"};
+    private String[] mTitles2 = new String[]{"网上报到", "现场报到", "问卷调查"};
     private int[] mImages2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_questionnaire,};
 
     @Override
@@ -99,10 +99,15 @@ public class AllActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //点击事件
                 switch (position){
+                    // 网上报到
                     case 0:
+                        startActivity(new Intent(getApplicationContext(),ColumnChartActivity.class));
                         break;
+                    // 现场报到
                     case 1:
+                        startActivity(new Intent(getApplicationContext(),PieChartActivity.class));
                         break;
+                    // 问卷调查
                     case 2:
                         break;
                 }
