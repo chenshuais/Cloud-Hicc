@@ -1,6 +1,7 @@
 package com.hicc.cloud.teacher.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -353,6 +354,11 @@ public class StudentProfileActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("正在加载...");
             progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
         }
         progressDialog.show();
     }

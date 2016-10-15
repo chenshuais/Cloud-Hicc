@@ -32,7 +32,6 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.bmob.v3.Bmob.getApplicationContext;
 
 /**
  * Created by Administrator on 2016/9/24/024.
@@ -70,7 +69,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 //未设置点击事件
                 switch (position){
                     case 0:
-                        startActivity(new Intent(getApplicationContext(),StudentMarkActivity.class));
+                        startActivity(new Intent(getContext(),StudentMarkActivity.class));
                         break;
                     case 1:
                         startActivity(new Intent(getContext(),DormitoryScoreActivity.class));

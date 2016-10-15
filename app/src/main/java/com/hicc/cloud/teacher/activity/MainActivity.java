@@ -55,7 +55,6 @@ import java.util.TimerTask;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.FindListener;
 import okhttp3.Call;
@@ -117,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                             getJsonInfo(response);
                         }
                     });
-
         }
     }
 
@@ -274,7 +272,8 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     // 检测更新
     private void checkVersionCode() {
         if(bmobQuery != null){
-            bmobQuery.findObjects(new FindListener<UpdateFile>() {
+            // 旧版本
+            /*bmobQuery.findObjects(new FindListener<UpdateFile>() {
                 @Override
                 public void done(List<UpdateFile> object, BmobException e) {
                     if(e==null){
@@ -293,6 +292,30 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                     }else{
                         Log.i("Bmob文件传输","查询失败："+e.getMessage());
                     }
+                }
+            });*/
+
+            // TODO 旧版本方法
+            bmobQuery.findObjects(this, new FindListener<UpdateFile>() {
+                @Override
+                public void onSuccess(List<UpdateFile> list) {
+                    for (UpdateFile updatefile : list) {
+                        // 如果服务器的版本号大于本地的  就更新
+                        if(updatefile.getVersion() > getVersionCode()){
+                            BmobFile bmobfile = updatefile.getFile();
+                            mBmobfile = bmobfile;
+                            // 文件路径不为null  并且sd卡可用
+                            if(file != null && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                                // 展示下载对话框
+                                showUpDataDialog(updatefile.getDescription(),bmobfile,file);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    Log.i("Bmob文件传输","查询失败："+s);
                 }
             });
         }
@@ -349,14 +372,21 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         progressDialog = new ProgressDialog(this);
         progressDialog.setIcon(R.mipmap.ic_launcher);
         progressDialog.setTitle("下载安装包中");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            }
+        });
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.show();
     }
 
     // 下载文件
     private void downLoadApk(BmobFile bmobfile, final File file) {
         //调用bmobfile.download方法
-        bmobfile.download(file, new DownloadFileListener() {
+        // 新版本方法
+        /*bmobfile.download(file, new DownloadFileListener() {
             @Override
             public void done(String s, BmobException e) {
                 if(e==null){
@@ -374,6 +404,24 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
             @Override
             public void onProgress(Integer integer, long l) {
                 progressDialog.setProgress(integer);
+            }
+        });*/
+
+        // TODO 旧版本方法
+        bmobfile.download(this, file, new DownloadFileListener() {
+            @Override
+            public void onSuccess(String s) {
+                ToastUtli.show(getApplicationContext(),"下载成功,保存路径:"+ ConstantValue.downloadpathName);
+                Log.i("Bmob文件下载","下载成功,保存路径:"+ConstantValue.downloadpathName);
+                installApk(file);
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                ToastUtli.show(getApplicationContext(),"下载失败："+s+","+s);
+                Log.i("Bmob文件下载","下载失败："+i+","+s);
+                progressDialog.dismiss();
             }
         });
     }
