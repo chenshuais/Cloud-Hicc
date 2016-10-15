@@ -35,14 +35,14 @@ public class StudentInfoOpenHelper extends SQLiteOpenHelper {
             "student_nu text, professional_des text, gender_des text, class_des text, " +
             // 缴费状态             民族              省份                  年级代码
             "payment_staus text, national_des text, province_des text, grade_code integer, " +
-            // 宿舍               学部                  体重          电话          年级
+            // 宿舍楼               学部                  体重          电话          年级
             "dormitory_des text, division_des text, weight text, phone text, grade_des text, " +
             // 床号           身高          毕业学校            生日
             "bed_number text, height text, old_school text, birth_date text, " +
             // 身份证号         入学时间                家庭住址            政治面貌
             "id_number text, enrollment_date text, home_address text, politics_status text, " +
-            // 籍贯               现场报道            网上报道
-            "native_place text, live_report text, online_report text)";
+            // 籍贯               现场报道            网上报道            宿舍号
+            "native_place text, live_report text, online_report text, dormitory_no integer)";
     /**
      * 创建家庭表语句
      */

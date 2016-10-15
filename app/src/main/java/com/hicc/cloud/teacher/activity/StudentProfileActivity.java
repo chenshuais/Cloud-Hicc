@@ -51,7 +51,7 @@ public class StudentProfileActivity extends AppCompatActivity {
     private ImageButton ib_search;
     private TextView tv_name;
     private TextView tv_class;
-    private TextView tv_teacher;
+    private TextView tv_sex;
     private TextView tv_stu_num;
     private String URL = "http://suguan.hicc.cn/hiccphonet/getStudentInfo";
     private ProgressDialog progressDialog;
@@ -67,6 +67,7 @@ public class StudentProfileActivity extends AppCompatActivity {
             switch (msg.what){
                 case 0:
                     tv_name.setText("姓名："+ stuName);
+                    tv_sex.setText("性别：" + sex);
                     tv_stu_num.setText("学号："+ stuNum);
                     tv_class.setText("班级："+ classDes);
                     closeProgressDialog();
@@ -74,16 +75,19 @@ public class StudentProfileActivity extends AppCompatActivity {
                 case 1:
                     closeProgressDialog();
                     tv_name.setText("姓名：");
+                    tv_sex.setText("性别：");
                     tv_stu_num.setText("学号：");
                     tv_class.setText("班级：");
                     ToastUtli.show(getApplicationContext(),"学号错误，请检查无误后输入");
                     break;
                 case 2:
+                    closeProgressDialog();
                     ToastUtli.show(getApplicationContext(),"查询失败");
                     break;
             }
         }
     };
+    private String sex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                 String num = et_search.getText().toString().trim();
                 if(!num.equals("")){
                     showProgressDialog();
+                    // 查询学号   优先从数据库中查询  没有再请求网络查询
                     queryStudent(num);
                 }else{
                     ToastUtli.show(getApplicationContext(),"学号不能为空");
@@ -119,6 +124,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         if(student != null){
             Logs.i("从数据库中查询");
             tv_name.setText("姓名："+student.getStudentName());
+            tv_sex.setText("性别：" + student.getGenderDescription());
             tv_class.setText("班级："+ student.getClassDescription());
             tv_stu_num.setText("学号："+ student.getStudentNu());
 
@@ -142,6 +148,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         }
     }
 
+    // 网络查询
     private void queryFromServer(String stuNum) {
         Student student = new Student();
         // 发送GET请求
@@ -185,85 +192,91 @@ public class StudentProfileActivity extends AppCompatActivity {
 
                         Student student = new Student();
 
-                        // 学生姓名
+                        // **学生姓名
                         stuName = dataInfo.getString("StudentName");
                         student.setStudentName(stuName);
                         //tv_name.setText("姓名："+ stuName);
-                        // 学号
+                        // **学号
                         stuNum = dataInfo.getString("StudentNu");
                         student.setStudentNu(stuNum);
                         //tv_stu_num.setText("学号："+ stuNum);
-                        // 专业
+                        // -专业
                         String professional = dataInfo.getString("ProfessionalDescription");
                         student.setProfessionalDescription(professional);
-                        // 性别
-                        String sex = dataInfo.getString("GenderDescription");
+                        // **性别
+                        sex = dataInfo.getString("GenderDescription");
                         student.setGenderDescription(sex);
-                        // 班级
+                        //tv_sex.setText("性别："+sex);
+                        // **班级
                         classDes = dataInfo.getString("ClassDescription");
                         student.setClassDescription(classDes);
                         //tv_class.setText("班级："+ classDes);
-                        // 缴费状态
+                        // -缴费状态
                         String paymentStausDes = dataInfo.getString("PaymentStausDescription");
                         student.setPaymentStausDescription(paymentStausDes);
-                        // 民族
+                        // -民族
                         String nationalDes = dataInfo.getString("NationalDescription");
                         student.setNationalDescription(nationalDes);
-                        // 省份
+                        // -省份
                         String provinceDes = dataInfo.getString("ProvinceDescription");
                         student.setProvinceDescription(provinceDes);
-                        // 年级代码
+                        // **年级代码
                         int gradeCode = dataInfo.getInt("GradeCode");
                         student.setGradeCode(gradeCode);
-                        // 宿舍
+                        // -宿舍
                         String dormitoryDes = dataInfo.getString("DormitoryDescription");
                         student.setDormitoryDescription(dormitoryDes);
-                        // 学部
+                        // 宿舍号
+                        if(!dataInfo.getString("DormitoryNo").equals("null")){
+                            int dormitoryNo = dataInfo.getInt("DormitoryNo");
+                            student.setDormitoryNo(dormitoryNo);
+                        }
+                        // -学部
                         String division = dataInfo.getString("DivisionDescription");
                         student.setDivisionDescription(division);
-                        // 体重
+                        // -体重
                         String weight = dataInfo.getString("Weight");
                         student.setWeight(weight);
-                        // 电话
+                        // -电话
                         String phone = dataInfo.getString("YourPhone");
                         student.setYourPhone(phone);
-                        // 年级
+                        // -年级
                         String grade = dataInfo.getString("GradeDescription");
                         student.setGradeDescription(grade);
-                        // 床号
+                        // -床号
                         String bedNumber = dataInfo.getString("BedNumber");
                         student.setBedNumber(bedNumber);
-                        // 身高
+                        // -身高
                         String height = dataInfo.getString("Height");
                         student.setHeight(height);
-                        // 毕业学校
+                        // **毕业学校
                         String oldSchool = dataInfo.getString("OldSchool");
                         student.setOldSchool(oldSchool);
-                        // 生日
+                        // -生日
                         String birthDate = dataInfo.getString("BirthDate");
                         student.setBirthDate(birthDate);
-                        // 身份证号
+                        // -身份证号
                         String idNumber = dataInfo.getString("IdNumber");
                         student.setIdNumber(idNumber);
-                        // 入学时间
+                        // **入学时间
                         String inTime = dataInfo.getString("EnrollmentDate");
                         student.setEnrollmentDate(inTime);
-                        // 家庭住址
+                        // -家庭住址
                         String homeAddress = dataInfo.getString("HomeAddress");
                         student.setHomeAddress(homeAddress);
-                        // 政治面貌
+                        // -政治面貌
                         String politicsStatusDes = dataInfo.getString("PoliticsStatusDescription");
                         student.setPoliticsStatusDescription(politicsStatusDes);
-                        // 籍贯
+                        // -籍贯
                         String nativePlace = dataInfo.getString("NativePlace");
                         student.setNativePlace(nativePlace);
-                        // 现场报道
+                        // -现场报道
                         String liveReportStatueDes = dataInfo.getString("LiveReportStatueDescription");
                         student.setLiveReportStatueDescription(liveReportStatueDes);
-                        // 网上报道
+                        // -网上报道
                         String onlineReportStatueDes = dataInfo.getString("OnlineReportStatueDescription");
                         student.setOnlineReportStatueDescription(onlineReportStatueDes);
-                        // 班级代码
+                        // **班级代码
                         int classId = db.getClasIdForDB(classDes,gradeCode);
                         if(classId >= 0){
                             student.setClassId(classId);
@@ -365,7 +378,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         ib_search = (ImageButton) findViewById(R.id.ib_search);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_class = (TextView) findViewById(R.id.tv_class);
-        tv_teacher = (TextView) findViewById(R.id.tv_teacher);
+        tv_sex = (TextView) findViewById(R.id.tv_sex);
         tv_stu_num = (TextView) findViewById(R.id.tv_stu_num);
 
         // 设置viewpager

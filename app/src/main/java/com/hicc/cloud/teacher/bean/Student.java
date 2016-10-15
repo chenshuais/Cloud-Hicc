@@ -29,8 +29,8 @@ public class Student implements Serializable {
     private int Nid;
     // 爱好
     private String Habit;
-    // 宿舍
-    private String DormitoryNo;
+    // 宿舍号
+    private int DormitoryNo;
     // 姓名
     private String StudentName;
     // 国家代码
@@ -79,7 +79,7 @@ public class Student implements Serializable {
     private String CandidateNumber;
     // 外语语种
     private String ForeignLanguagesDescription;
-    // 宿舍
+    // 宿舍楼
     private String DormitoryDescription;
     private int LiveStatusReportCode;
     private String BarCode;
@@ -182,11 +182,11 @@ public class Student implements Serializable {
         this.Habit = Habit;
     }
 
-    public String getDormitoryNo() {
+    public int getDormitoryNo() {
         return DormitoryNo;
     }
 
-    public void setDormitoryNo(String DormitoryNo) {
+    public void setDormitoryNo(int DormitoryNo) {
         this.DormitoryNo = DormitoryNo;
     }
 

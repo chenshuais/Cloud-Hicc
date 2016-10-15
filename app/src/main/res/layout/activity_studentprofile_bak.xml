@@ -87,10 +87,21 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_class"
+                android:id="@+id/tv_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
+                android:layout_marginLeft="3dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="性别："
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_sex"
                 android:layout_marginLeft="3dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
@@ -98,21 +109,10 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_teacher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_class"
-                android:layout_marginLeft="3dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="导员："
-                android:textSize="16sp" />
-
-            <TextView
                 android:id="@+id/tv_stu_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_teacher"
+                android:layout_below="@id/tv_class"
                 android:layout_marginLeft="3dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"

@@ -29,6 +29,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions{
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
 }
 
 dependencies {
@@ -49,6 +55,8 @@ dependencies {
     compile 'cn.yipianfengye.android:zxing-library:1.9'
 
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    //compile 'com.squareup.okhttp:okhttp:2.7.5'
+    //compile 'com.squareup.okio:okio:1.11.0'
     compile 'com.zhy:okhttputils:2.6.2'
 
     compile 'com.github.vipulasri:timelineview:1.0.3'

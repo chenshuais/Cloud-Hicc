@@ -218,6 +218,7 @@ public class StudentInfoDB {
             values.put("national_des", student.getNationalDescription());
             values.put("province_des", student.getProvinceDescription());
             values.put("dormitory_des", student.getDormitoryDescription());
+            values.put("dormitory_no", student.getDormitoryNo());
             values.put("division_des", student.getDivisionDescription());
             values.put("weight", student.getWeight());
             values.put("phone", student.getYourPhone());
@@ -260,6 +261,7 @@ public class StudentInfoDB {
             student.setNationalDescription(cursor.getString(cursor.getColumnIndex("national_des")));
             student.setProvinceDescription(cursor.getString(cursor.getColumnIndex("province_des")));
             student.setDormitoryDescription(cursor.getString(cursor.getColumnIndex("dormitory_des")));
+            student.setDormitoryNo(cursor.getInt(cursor.getColumnIndex("dormitory_no")));
             student.setDivisionDescription(cursor.getString(cursor.getColumnIndex("division_des")));
             student.setWeight(cursor.getString(cursor.getColumnIndex("weight")));
             student.setYourPhone(cursor.getString(cursor.getColumnIndex("phone")));
@@ -354,6 +356,7 @@ public class StudentInfoDB {
             student.setNationalDescription(cursor.getString(cursor.getColumnIndex("national_des")));
             student.setProvinceDescription(cursor.getString(cursor.getColumnIndex("province_des")));
             student.setDormitoryDescription(cursor.getString(cursor.getColumnIndex("dormitory_des")));
+            student.setDormitoryNo(cursor.getInt(cursor.getColumnIndex("dormitory_no")));
             student.setDivisionDescription(cursor.getString(cursor.getColumnIndex("division_des")));
             student.setWeight(cursor.getString(cursor.getColumnIndex("weight")));
             student.setYourPhone(cursor.getString(cursor.getColumnIndex("phone")));
