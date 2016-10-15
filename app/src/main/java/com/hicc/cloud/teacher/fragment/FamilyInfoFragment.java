@@ -38,6 +38,30 @@ public class FamilyInfoFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_family_info, container, false);
 
+        initUI(view);
+
+        // 动态注册广播
+        mBroadcastReceiver = new MyBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("ACTION_UPDATA_UI");
+        getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+
+        return view;
+    }
+
+    // 广播接收者
+    class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Logs.i("家庭界面收到广播了吗？？？？？？");
+            familyList = (List<Family>) intent.getSerializableExtra("family");
+
+            myBaseAdapter = new FamilyAdapter(familyList);
+            mRecyclerView.setAdapter(myBaseAdapter);
+        }
+    }
+
+    private void initUI(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
@@ -49,30 +73,11 @@ public class FamilyInfoFragment extends BaseFragment {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-
-        // 动态注册广播
-        mBroadcastReceiver = new MyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("ACTION_UPDATA_UI");
-        getContext().registerReceiver(mBroadcastReceiver, intentFilter);
-
-        return view;
     }
 
     private LinearLayoutManager getLinearLayoutManager() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         return linearLayoutManager;
-    }
-
-    class MyBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Logs.i("家庭界面收到广播了吗？？？？？？");
-            familyList = (List<Family>) intent.getSerializableExtra("family");
-
-            myBaseAdapter = new FamilyAdapter(familyList);
-            mRecyclerView.setAdapter(myBaseAdapter);
-        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EBEEEF"
@@ -24,17 +24,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="学生档案"
+            android:text="学生成绩"
             android:textColor="#ffffff"
             android:textSize="20sp" />
-   </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
-        android:focusableInTouchMode="true"
-        android:background="#ffffff"
-        android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="#ffffff"
+        android:focusableInTouchMode="true"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="8dp">
@@ -71,60 +71,47 @@
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="@dimen/cardview_default_elevation">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:paddingTop="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
                 android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="姓名："
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_class"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_name"
-                android:layout_marginLeft="3dp"
-                android:paddingTop="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
                 android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="班级："
                 android:textSize="16sp" />
-
-
 
 
             <TextView
                 android:id="@+id/tv_stu_number"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="10dp"
                 android:text="学号："
-                android:textSize="16sp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_stu_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:textSize="16sp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_toRightOf="@+id/tv_stu_number"
-                />
-
-
-        </RelativeLayout>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <android.support.design.widget.TabLayout
@@ -135,6 +122,40 @@
         android:layout_marginTop="5dp"
         android:background="#ffffff"
         app:tabIndicatorColor="#e1e0ed" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="课程名"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="任课教师"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="成绩"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <com.hicc.cloud.teacher.view.ScrollViewPager
         android:id="@+id/viewpager"

@@ -1,5 +1,6 @@
 package com.hicc.cloud.teacher.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Mark;
+import com.hicc.cloud.teacher.fragment.MarkHistoryTermFragment;
 import com.hicc.cloud.teacher.fragment.MarkThisTermFragment;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
@@ -34,9 +36,6 @@ import java.util.List;
 
 import okhttp3.Call;
 
-import com.hicc.cloud.teacher.fragment.MarkThisTermFragment;
-import com.hicc.cloud.teacher.fragment.MarkHistoryTermFragment;
-
 /**
  * Created by 野 on 2016/10/13.
  */
@@ -47,11 +46,9 @@ public class StudentMarkActivity extends AppCompatActivity {
     private ImageButton ib_search;
     private TextView tv_name;
     private TextView tv_class;
-    private TextView tv_stu_num;
-    private TextView tv_course;
-    private TextView tv_teacher;
-    private TextView tv_mark;
+    private TextView tv_stu_number;
     private String URL = "http://suguan.hicc.cn/hiccphonet/getGrade";
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +65,9 @@ public class StudentMarkActivity extends AppCompatActivity {
         ib_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 显示进度对话框
+                showProgressDialog();
+
                 String num = et_search.getText().toString().trim();
                 if (!num.equals("")) {
                     // 发送GET请求
@@ -80,8 +80,10 @@ public class StudentMarkActivity extends AppCompatActivity {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
                                     Logs.i(e.toString());
+                                    // 关闭进度对话框
+                                    closeProgressDialog();
+
                                     ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
-                                    et_search.setText("");
                                 }
 
                                 @Override
@@ -116,7 +118,7 @@ public class StudentMarkActivity extends AppCompatActivity {
                     tv_name.setText("姓名：" + stuName);
                     // 学号00
                     String stuNum = jsonObject1.getString("StudentNu");
-                    tv_stu_num.setText("学号：" + stuNum);
+                    tv_stu_number.setText("学号：" + stuNum);
                     // 班级
                     String classDes = jsonObject1.getString("BJH");
                     tv_class.setText("班级：" + classDes);
@@ -142,7 +144,7 @@ public class StudentMarkActivity extends AppCompatActivity {
                     tv_name.setText("姓名：" + stuName);
                     // 学号00
                     String stuNum = jsonObject1.getString("StudentNu");
-                    tv_stu_num.setText(stuNum);
+                    tv_stu_number.setText("学号：" + stuNum);
                     // 班级
                     String classDes = jsonObject1.getString("BJH");
                     tv_class.setText("班级：" + classDes);
@@ -158,20 +160,43 @@ public class StudentMarkActivity extends AppCompatActivity {
                     markList.add(studentmark);
                 }
 
+                // 发送广播
                 Intent intent = new Intent();
                 intent.setAction("SET_DATA");
                 intent.putExtra("marklist", (Serializable) markList);
                 sendBroadcast(intent);
 
+                // 解析完成  关闭对话框
+                closeProgressDialog();
 
             } else {
                 tv_name.setText("姓名：");
-                tv_stu_num.setText("学号：");
+                tv_stu_number.setText("学号：");
                 tv_class.setText("班级：");
+                closeProgressDialog();
                 ToastUtli.show(getApplicationContext(), "学号错误，请检查无误后输入");
             }
         } catch (JSONException e) {
+            closeProgressDialog();
+            ToastUtli.show(getApplicationContext(),"查询失败");
             e.printStackTrace();
+        }
+    }
+
+    // 显示进度对话框
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("正在加载...");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+
+    // 关闭进度对话框
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 
@@ -189,7 +214,7 @@ public class StudentMarkActivity extends AppCompatActivity {
         ib_search = (ImageButton) findViewById(R.id.ib_search);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_class = (TextView) findViewById(R.id.tv_class);
-        tv_stu_num = (TextView) findViewById(R.id.tv_stu_num);
+        tv_stu_number = (TextView) findViewById(R.id.tv_stu_number);
 
 
         // 设置viewpager

@@ -1,6 +1,5 @@
 package com.hicc.cloud.teacher.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ public class MarkThisTermFragment extends BaseFragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_family_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_thismark, container, false);
 
         return view;
     }

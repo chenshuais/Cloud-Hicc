@@ -1,29 +1,24 @@
 package com.hicc.cloud.teacher.fragment;
 
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.adapter.MyBaseAdapter;
+import com.hicc.cloud.teacher.adapter.MarkHistoryAdapter;
 import com.hicc.cloud.teacher.bean.Mark;
 import com.hicc.cloud.teacher.utils.Logs;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.id.list;
-import static cn.bmob.v3.Bmob.getApplicationContext;
 
 /**
  * Created by 野 on 2016/10/13.
@@ -31,8 +26,10 @@ import static cn.bmob.v3.Bmob.getApplicationContext;
 
 public class MarkHistoryTermFragment extends BaseFragment {
 
-    private List<Mark> listObj = new ArrayList<Mark>();
-    private MyBaseAdapter adapter;
+    private List<Mark> markList = new ArrayList<Mark>();
+    private MarkHistoryAdapter adapter;
+    private RecyclerView mRecyclerView;
+    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     public void fetchData() {
@@ -41,88 +38,58 @@ public class MarkHistoryTermFragment extends BaseFragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_historymark, container, false);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("SET_DATA");
-        getContext().registerReceiver(myReceiver, filter);
-        ListView listview = (ListView) view.findViewById(R.id.lv_mark);
-        adapter = new MyBaseAdapter(listObj);
-        listview.setAdapter(adapter);
+
+        initUI(view);
+
+        // 动态注册广播
+        mBroadcastReceiver = new MyBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("SET_DATA");
+        getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+
+
         return view;
     }
 
-    private BroadcastReceiver myReceiver = new BroadcastReceiver() {
-
+    // 广播接收者
+    class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logs.i("123123");
-            listObj = (ArrayList<Mark>) intent.getSerializableExtra("marklist");
-            adapter.notifyDataSetChanged();
+            Logs.i("历史成绩界面收到广播了吗？？？？？？");
+
+            markList = (List<Mark>) intent.getSerializableExtra("marklist");
+
+            // 接收到广播  设置适配器
+            adapter = new MarkHistoryAdapter(markList);
+            mRecyclerView.setAdapter(adapter);
         }
-
-    };
-
-    class MyBaseAdapter extends BaseAdapter {
-        private List<Mark> mList;
-
-        MyBaseAdapter(List<Mark> mList) {
-            this.mList = mList;
-        }
-
-        @Override
-        public int getCount() {
-            return mList.size();
-        }
-
-        @Override
-        public Mark getItem(int position) {
-            return mList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                convertView = View.inflate(getApplicationContext(), R.layout.item_historymark, null);
-
-                viewHolder = new ViewHolder();
-                viewHolder.tv_course = (TextView) convertView.findViewById(R.id.tv_course);
-                viewHolder.tv_mark = (TextView) convertView.findViewById(R.id.tv_mark);
-                viewHolder.tv_teacher = (TextView) convertView.findViewById(R.id.tv_teacher);
-
-                // 将存有findViewById的viewHolder存到convertView中
-                convertView.setTag(viewHolder);
-            } else {
-                // 复用convertView里存的viewHolder
-                viewHolder = (ViewHolder) convertView.getTag();
-
-            }
-
-            viewHolder.tv_teacher.setText(getItem(position).getTeacher());
-            viewHolder.tv_mark.setText(getItem(position).getMark());
-            viewHolder.tv_course.setText(getItem(position).getCourse());
-            return null;
-        }
-
-
     }
 
-    static class ViewHolder {
+    private void initUI(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(getLinearLayoutManager());
+        mRecyclerView.setHasFixedSize(true);
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 4;
+            }
+        });
+        mRecyclerView.setLayoutManager(manager);
+    }
 
-        TextView tv_mark;
-        TextView tv_teacher;
-        TextView tv_course;
+    private LinearLayoutManager getLinearLayoutManager() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        return linearLayoutManager;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (myReceiver != null) {
-            getContext().unregisterReceiver(myReceiver);
+        // 取消注册广播
+        if (mBroadcastReceiver != null) {
+            getContext().unregisterReceiver(mBroadcastReceiver);
         }
     }
 }
