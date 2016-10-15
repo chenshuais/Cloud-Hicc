@@ -1,18 +1,25 @@
 package com.hicc.cloud.teacher.activity;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +29,7 @@ import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/10/15/008.
@@ -31,6 +39,11 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class PieChartActivity extends AppCompatActivity {
 
     private ImageView iv_back;
+    private ProgressDialog progressDialog;
+    private static final String URL = "http://home.hicc.cn/PhoneInterface/SceneReportService.asmx/Getscenereportnum";
+    private int all;
+    private int yes;
+    private int no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +52,75 @@ public class PieChartActivity extends AppCompatActivity {
 
         initUI();
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
+        // 请求数据
+        queryFromServer(savedInstanceState);
+    }
+
+    // 从网络请求数据
+    private void queryFromServer(final Bundle savedInstanceState) {
+        showProgressDialog();
+        // 发送GET请求
+        OkHttpUtils
+                .get()
+                .url(URL)
+                .addParams("userno", "1001")
+                .addParams("num", "20465")
+                .addParams("userlevelcode", "11")
+                .addParams("account", "hicc")
+                .addParams("pas", "123")
+                .addParams("timeCode", "16")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        closeProgressDialog();
+                        Logs.i(e.toString());
+                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        // 解析json
+                        Logs.i("解析json");
+                        getJsonInfo(response,savedInstanceState);
+                    }
+                });
+    }
+
+    // 解析json数据
+    private void getJsonInfo(String response, Bundle savedInstanceState) {
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            for (int i=0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                all = jsonObject.getInt("All");
+                yes = jsonObject.getInt("Yes");
+                no = jsonObject.getInt("No");
+            }
+            if (savedInstanceState == null && all > 0) {
+                getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment(yes,no)).commit();
+                closeProgressDialog();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * A fragment containing a pie chart.
-     */
-    public static class PlaceholderFragment extends Fragment {
 
+    public static class PlaceholderFragment extends Fragment {
         private PieChartView chart;
         private PieChartData data;
+        private int yes;
+        private int no;
 
-        private boolean hasLabels = true;
-        private boolean hasLabelsOutside = false;
-        private boolean hasLabelForSelected = false;
+        @SuppressLint("ValidFragment")
+        public PlaceholderFragment(int yes, int no) {
+            this.yes = yes;
+            this.no = no;
+        }
+
+        public PlaceholderFragment(){}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,73 +135,59 @@ public class PieChartActivity extends AppCompatActivity {
             return rootView;
         }
 
-        // MENU
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.pie_chart, menu);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == R.id.action_toggle_selection_mode) {
-                toggleLabelForSelected();
-                ToastUtli.show(getContext(),"Selection mode set to " + chart.isValueSelectionEnabled() + " select any point.");
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-
+        // 设置数据
         private void generateData() {
             List<SliceValue> values = new ArrayList<SliceValue>();
 
-            SliceValue sliceValue1 = new SliceValue(48, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到"+48+"人");
+            SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
+            sliceValue1.setLabel("已报到"+yes+"人");
             values.add(sliceValue1);
 
-            SliceValue sliceValue2 = new SliceValue(2, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到"+2+"人");
+            SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
+            sliceValue2.setLabel("未报到"+no+"人");
             values.add(sliceValue2);
 
-
             data = new PieChartData(values);
-            data.setHasLabels(hasLabels);
-            data.setHasLabelsOnlyForSelected(hasLabelForSelected);
-            data.setHasLabelsOutside(hasLabelsOutside);
+            data.setHasLabels(true);
+            data.setHasLabelsOnlyForSelected(false);
+            data.setHasLabelsOutside(false);
+            chart.setValueSelectionEnabled(true);
+            chart.setCircleFillRatio(1.0f);
 
             chart.setPieChartData(data);
         }
 
-
-        private void toggleLabelForSelected() {
-            hasLabelForSelected = !hasLabelForSelected;
-
-            chart.setValueSelectionEnabled(hasLabelForSelected);
-
-            if (hasLabelForSelected) {
-                hasLabels = false;
-                hasLabelsOutside = false;
-
-                if (hasLabelsOutside) {
-                    chart.setCircleFillRatio(0.7f);
-                } else {
-                    chart.setCircleFillRatio(1.0f);
-                }
-            }
-            generateData();
-        }
-
-
         private class ValueTouchListener implements PieChartOnValueSelectListener {
             @Override
             public void onValueSelected(int arcIndex, SliceValue value) {
-                ToastUtli.show(getContext(),"选中: " + value);
+                // 点击事件
             }
 
             @Override
             public void onValueDeselected() {
-                // TODO Auto-generated method stub
             }
+        }
+    }
+
+    // 显示进度对话框
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("正在加载...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
+        }
+        progressDialog.show();
+    }
+
+    // 关闭进度对话框
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 

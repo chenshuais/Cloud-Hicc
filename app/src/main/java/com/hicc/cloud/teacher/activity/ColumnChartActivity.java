@@ -1,31 +1,37 @@
 package com.hicc.cloud.teacher.activity;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.ColumnChartView;
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/10/15/008.
@@ -33,8 +39,12 @@ import lecho.lib.hellocharts.view.ColumnChartView;
  * 柱形图
  */
 public class ColumnChartActivity extends AppCompatActivity {
-
     private View iv_back;
+    private static final String URL = "http://home.hicc.cn/PhoneInterface/OnlineReportService.asmx/Getonlinereportnum";
+    private int all;
+    private int yes;
+    private int no;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +53,81 @@ public class ColumnChartActivity extends AppCompatActivity {
 
         initUI();
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
+        // 请求数据
+        queryFromServer(savedInstanceState);
+    }
+
+    private void queryFromServer(final Bundle savedInstanceState) {
+        showProgressDialog();
+        // 发送GET请求
+        OkHttpUtils
+                .get()
+                .url(URL)
+                .addParams("userno", "1001")
+                .addParams("num", "20465")
+                .addParams("userlevelcode", "11")
+                .addParams("account", "hicc")
+                .addParams("pas", "123")
+                .addParams("timeCode", "16")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        closeProgressDialog();
+                        Logs.i(e.toString());
+                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        // 解析json
+                        Logs.i("解析json");
+                        getJsonInfo(response,savedInstanceState);
+                    }
+                });
+    }
+
+    // 解析json数据
+    private void getJsonInfo(String response, Bundle savedInstanceState) {
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            for (int i=0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                all = jsonObject.getInt("All");
+                yes = jsonObject.getInt("Yes");
+                no = jsonObject.getInt("No");
+            }
+            if (savedInstanceState == null && all > 0) {
+                getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment(all,yes,no)).commit();
+                closeProgressDialog();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * A fragment containing a column chart.
-     */
     public static class PlaceholderFragment extends Fragment {
-
-        private static final int DEFAULT_DATA = 0;
-        private static final int SUBCOLUMNS_DATA = 1;
-        private static final int STACKED_DATA = 2;
-        private static final int NEGATIVE_SUBCOLUMNS_DATA = 3;
-        private static final int NEGATIVE_STACKED_DATA = 4;
-
         private ColumnChartView chart;
         private ColumnChartData data;
+
         private boolean hasAxes = true;
         private boolean hasAxesNames = true;
-        private boolean hasLabels = false;
+        private boolean hasLabels = true;
         private boolean hasLabelForSelected = false;
-        private int dataType = DEFAULT_DATA;
 
-        public PlaceholderFragment() {
+        private int all;
+        private int yes;
+        private int no;
+
+        @SuppressLint("ValidFragment")
+        public PlaceholderFragment(int all, int yes, int no) {
+            this.all = all;
+            this.yes = yes;
+            this.no = no;
         }
+
+        public PlaceholderFragment(){}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,214 +137,46 @@ public class ColumnChartActivity extends AppCompatActivity {
             chart = (ColumnChartView) rootView.findViewById(R.id.chart);
             chart.setOnValueTouchListener(new ValueTouchListener());
 
-            generateData();
+            generateDefaultData();
 
             return rootView;
         }
 
-        // MENU
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.column_chart, menu);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == R.id.action_reset) {
-                reset();
-                generateData();
-                return true;
-            }
-            if (id == R.id.action_subcolumns) {
-                dataType = SUBCOLUMNS_DATA;
-                generateData();
-                return true;
-            }
-            if (id == R.id.action_stacked) {
-                dataType = STACKED_DATA;
-                generateData();
-                return true;
-            }
-            if (id == R.id.action_negative_subcolumns) {
-                dataType = NEGATIVE_SUBCOLUMNS_DATA;
-                generateData();
-                return true;
-            }
-            if (id == R.id.action_negative_stacked) {
-                dataType = NEGATIVE_STACKED_DATA;
-                generateData();
-                return true;
-            }
-            if (id == R.id.action_toggle_labels) {
-                toggleLabels();
-                return true;
-            }
-            if (id == R.id.action_toggle_axes) {
-                toggleAxes();
-                return true;
-            }
-            if (id == R.id.action_toggle_axes_names) {
-                toggleAxesNames();
-                return true;
-            }
-            if (id == R.id.action_animate) {
-                prepareDataAnimation();
-                chart.startDataAnimation();
-                return true;
-            }
-            if (id == R.id.action_toggle_selection_mode) {
-                toggleLabelForSelected();
-
-                Toast.makeText(getActivity(),
-                        "Selection mode set to " + chart.isValueSelectionEnabled() + " select any point.",
-                        Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            if (id == R.id.action_toggle_touch_zoom) {
-                chart.setZoomEnabled(!chart.isZoomEnabled());
-                Toast.makeText(getActivity(), "IsZoomEnabled " + chart.isZoomEnabled(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            if (id == R.id.action_zoom_both) {
-                chart.setZoomType(ZoomType.HORIZONTAL_AND_VERTICAL);
-                return true;
-            }
-            if (id == R.id.action_zoom_horizontal) {
-                chart.setZoomType(ZoomType.HORIZONTAL);
-                return true;
-            }
-            if (id == R.id.action_zoom_vertical) {
-                chart.setZoomType(ZoomType.VERTICAL);
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-
-        private void reset() {
-            hasAxes = true;
-            hasAxesNames = true;
-            hasLabels = false;
-            hasLabelForSelected = false;
-            dataType = DEFAULT_DATA;
-            chart.setValueSelectionEnabled(hasLabelForSelected);
-
-        }
-
+        // 添加数据
         private void generateDefaultData() {
-            int numSubcolumns = 1;
-            int numColumns = 8;
-            // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
             List<Column> columns = new ArrayList<Column>();
             List<SubcolumnValue> values;
-            for (int i = 0; i < numColumns; ++i) {
 
-                values = new ArrayList<SubcolumnValue>();
-                for (int j = 0; j < numSubcolumns; ++j) {
-                    values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
-                }
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(all, ChartUtils.pickColor()));
+            Column column = new Column(values);
+            column.setHasLabels(hasLabels);
+            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column);
 
-                Column column = new Column(values);
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                columns.add(column);
-            }
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(yes, ChartUtils.pickColor()));
+            Column column2 = new Column(values);
+            column2.setHasLabels(hasLabels);
+            column2.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column2);
+
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(no, ChartUtils.pickColor()));
+            Column column3 = new Column(values);
+            column3.setHasLabels(hasLabels);
+            column3.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column3);
 
             data = new ColumnChartData(columns);
 
+            // 坐标
             if (hasAxes) {
                 Axis axisX = new Axis();
                 Axis axisY = new Axis().setHasLines(true);
                 if (hasAxesNames) {
-                    axisX.setName("Axis X");
-                    axisY.setName("Axis Y");
-                }
-                data.setAxisXBottom(axisX);
-                data.setAxisYLeft(axisY);
-            } else {
-                data.setAxisXBottom(null);
-                data.setAxisYLeft(null);
-            }
-
-            chart.setColumnChartData(data);
-
-        }
-
-        /**
-         * Generates columns with subcolumns, columns have larger separation than subcolumns.
-         */
-        private void generateSubcolumnsData() {
-            int numSubcolumns = 4;
-            int numColumns = 4;
-            // Column can have many subcolumns, here I use 4 subcolumn in each of 8 columns.
-            List<Column> columns = new ArrayList<Column>();
-            List<SubcolumnValue> values;
-            for (int i = 0; i < numColumns; ++i) {
-
-                values = new ArrayList<SubcolumnValue>();
-                for (int j = 0; j < numSubcolumns; ++j) {
-                    values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
-                }
-
-                Column column = new Column(values);
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                columns.add(column);
-            }
-
-            data = new ColumnChartData(columns);
-
-            if (hasAxes) {
-                Axis axisX = new Axis();
-                Axis axisY = new Axis().setHasLines(true);
-                if (hasAxesNames) {
-                    axisX.setName("Axis X");
-                    axisY.setName("Axis Y");
-                }
-                data.setAxisXBottom(axisX);
-                data.setAxisYLeft(axisY);
-            } else {
-                data.setAxisXBottom(null);
-                data.setAxisYLeft(null);
-            }
-
-            chart.setColumnChartData(data);
-
-        }
-
-        /**
-         * Generates columns with stacked subcolumns.
-         */
-        private void generateStackedData() {
-            int numSubcolumns = 4;
-            int numColumns = 8;
-            // Column can have many stacked subcolumns, here I use 4 stacke subcolumn in each of 4 columns.
-            List<Column> columns = new ArrayList<Column>();
-            List<SubcolumnValue> values;
-            for (int i = 0; i < numColumns; ++i) {
-
-                values = new ArrayList<SubcolumnValue>();
-                for (int j = 0; j < numSubcolumns; ++j) {
-                    values.add(new SubcolumnValue((float) Math.random() * 20f + 5, ChartUtils.pickColor()));
-                }
-
-                Column column = new Column(values);
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                columns.add(column);
-            }
-
-            data = new ColumnChartData(columns);
-
-            // Set stacked flag.
-            data.setStacked(true);
-
-            if (hasAxes) {
-                Axis axisX = new Axis();
-                Axis axisY = new Axis().setHasLines(true);
-                if (hasAxesNames) {
-                    axisX.setName("Axis X");
-                    axisY.setName("Axis Y");
+                    axisX.setName("状态");
+                    axisY.setName("人数");
                 }
                 data.setAxisXBottom(axisX);
                 data.setAxisYLeft(axisY);
@@ -297,175 +188,56 @@ public class ColumnChartActivity extends AppCompatActivity {
             chart.setColumnChartData(data);
         }
 
-        private void generateNegativeSubcolumnsData() {
-
-            int numSubcolumns = 4;
-            int numColumns = 4;
-            List<Column> columns = new ArrayList<Column>();
-            List<SubcolumnValue> values;
-            for (int i = 0; i < numColumns; ++i) {
-
-                values = new ArrayList<SubcolumnValue>();
-                for (int j = 0; j < numSubcolumns; ++j) {
-                    int sign = getSign();
-                    values.add(new SubcolumnValue((float) Math.random() * 50f * sign + 5 * sign, ChartUtils.pickColor
-                            ()));
-                }
-
-                Column column = new Column(values);
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                columns.add(column);
-            }
-
-            data = new ColumnChartData(columns);
-
-            if (hasAxes) {
-                Axis axisX = new Axis();
-                Axis axisY = new Axis().setHasLines(true);
-                if (hasAxesNames) {
-                    axisX.setName("Axis X");
-                    axisY.setName("Axis Y");
-                }
-                data.setAxisXBottom(axisX);
-                data.setAxisYLeft(axisY);
-            } else {
-                data.setAxisXBottom(null);
-                data.setAxisYLeft(null);
-            }
-
-            chart.setColumnChartData(data);
-        }
-
-        private void generateNegativeStackedData() {
-
-            int numSubcolumns = 4;
-            int numColumns = 8;
-            // Column can have many stacked subcolumns, here I use 4 stacke subcolumn in each of 4 columns.
-            List<Column> columns = new ArrayList<Column>();
-            List<SubcolumnValue> values;
-            for (int i = 0; i < numColumns; ++i) {
-
-                values = new ArrayList<SubcolumnValue>();
-                for (int j = 0; j < numSubcolumns; ++j) {
-                    int sign = getSign();
-                    values.add(new SubcolumnValue((float) Math.random() * 20f * sign + 5 * sign, ChartUtils.pickColor()));
-                }
-
-                Column column = new Column(values);
-                column.setHasLabels(hasLabels);
-                column.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                columns.add(column);
-            }
-
-            data = new ColumnChartData(columns);
-
-            // Set stacked flag.
-            data.setStacked(true);
-
-            if (hasAxes) {
-                Axis axisX = new Axis();
-                Axis axisY = new Axis().setHasLines(true);
-                if (hasAxesNames) {
-                    axisX.setName("Axis X");
-                    axisY.setName("Axis Y");
-                }
-                data.setAxisXBottom(axisX);
-                data.setAxisYLeft(axisY);
-            } else {
-                data.setAxisXBottom(null);
-                data.setAxisYLeft(null);
-            }
-
-            chart.setColumnChartData(data);
-        }
-
-        private int getSign() {
-            int[] sign = new int[]{-1, 1};
-            return sign[Math.round((float) Math.random())];
-        }
-
-        private void generateData() {
-            switch (dataType) {
-                case DEFAULT_DATA:
-                    generateDefaultData();
-                    break;
-                case SUBCOLUMNS_DATA:
-                    generateSubcolumnsData();
-                    break;
-                case STACKED_DATA:
-                    generateStackedData();
-                    break;
-                case NEGATIVE_SUBCOLUMNS_DATA:
-                    generateNegativeSubcolumnsData();
-                    break;
-                case NEGATIVE_STACKED_DATA:
-                    generateNegativeStackedData();
-                    break;
-                default:
-                    generateDefaultData();
-                    break;
-            }
-        }
-
-        private void toggleLabels() {
-            hasLabels = !hasLabels;
-
-            if (hasLabels) {
-                hasLabelForSelected = false;
-                chart.setValueSelectionEnabled(hasLabelForSelected);
-            }
-
-            generateData();
-        }
-
-        private void toggleLabelForSelected() {
-            hasLabelForSelected = !hasLabelForSelected;
-            chart.setValueSelectionEnabled(hasLabelForSelected);
-
-            if (hasLabelForSelected) {
-                hasLabels = false;
-            }
-
-            generateData();
-        }
-
-        private void toggleAxes() {
-            hasAxes = !hasAxes;
-
-            generateData();
-        }
-
-        private void toggleAxesNames() {
-            hasAxesNames = !hasAxesNames;
-
-            generateData();
-        }
-
-        /**
-         * To animate values you have to change targets values and then call {@link Chart#startDataAnimation()}
-         * method(don't confuse with View.animate()).
-         */
-        private void prepareDataAnimation() {
-            for (Column column : data.getColumns()) {
-                for (SubcolumnValue value : column.getValues()) {
-                    value.setTarget((float) Math.random() * 100);
-                }
-            }
-        }
-
+        // 触摸事件
         private class ValueTouchListener implements ColumnChartOnValueSelectListener {
             @Override
             public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-                Toast.makeText(getActivity(), "Selected: " + value, Toast.LENGTH_SHORT).show();
+                // 获取点击的条目数值
+                String vaule = value.toString();
+                int end = vaule.length()-3;
+                // 截取所需字符串
+                String subV = vaule.substring(19,end);
+                switch (columnIndex){
+                    case 0:
+                        ToastUtli.show(getContext(),"总共"+subV+"人");
+                        break;
+                    case 1:
+                        ToastUtli.show(getContext(),"已报到"+subV+"人");
+                        break;
+                    case 2:
+                        ToastUtli.show(getContext(),"未报到"+subV+"人");
+                        break;
+                }
             }
 
             @Override
             public void onValueDeselected() {
-                // TODO Auto-generated method stub
             }
         }
     }
+
+    // 显示进度对话框
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("正在加载...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
+        }
+        progressDialog.show();
+    }
+
+    // 关闭进度对话框
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void initUI() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
