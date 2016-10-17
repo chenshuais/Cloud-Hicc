@@ -35,7 +35,7 @@ public class ShakeActivity extends Activity {
 
         initUI();
 
-        vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -43,9 +43,6 @@ public class ShakeActivity extends Activity {
         // 对加速计进行监听
         sm.registerListener(listener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_FASTEST);
-        // sm.registerListener(listener,
-        // sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_FASTEST);
-        // sm.registerListener(listener,sm.getDefaultSensor(Sensor.TYPE_PRESSURE),SensorManager.SENSOR_DELAY_FASTEST);
 
         builder = new AlertDialog.Builder(this);
         // 用来显示的对话框
@@ -68,10 +65,8 @@ public class ShakeActivity extends Activity {
     }
 
     private class SensorL implements SensorEventListener {
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
         }
 
         @Override
@@ -85,43 +80,18 @@ public class ShakeActivity extends Activity {
                 float newY = Math.abs(event.values[SensorManager.DATA_Y]);
                 float newZ = Math.abs(event.values[SensorManager.DATA_Z]);
                 // 这里是关键，判断某个方向上的加速度值是否达到自己想要的值
-                // X
-                if (newX >= 19) {
-                    //ToastUtli.show(getApplicationContext(), "newX" + newX);
+                if (newX >= 19 || newY >= 19 || newZ >= 19) {
+                    // TODO 可能与云子对接
                     Logs.i("X轴：" + newX);
-                    isRefresh = true;
-                    vibe.vibrate(200);
-                    builder.show();
-                    return;
-                }
-                // Y
-                if (newY >= 20) {
-                    //ToastUtli.show(getApplicationContext(), "newY" + newY);
                     Logs.i("Y轴：" + newY);
-                    isRefresh = true;
-                    vibe.vibrate(200);
-                    builder.show();
-                    return;
-                }
-                // Z
-                if (newZ >= 20) {
-                    //ToastUtli.show(getApplicationContext(), "newZ" + newZ);
                     Logs.i("Z轴：" + newZ);
                     isRefresh = true;
                     vibe.vibrate(200);
                     builder.show();
                     return;
                 }
-
-            }
-            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-                // Log.e("TYPE_MAGNETIC_FIELD", ""+event.sensor.toString());
-            }
-            if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
-                // Log.e("TYPE_PRESSURE", ""+event.sensor.toString());
             }
         }
-
     }
 
     @Override

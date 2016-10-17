@@ -23,8 +23,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-
-        <activity android:name="com.hicc.cloud.teacher.activity.MainActivity">
+        <!--登录界面-->
+        <activity android:name=".teacher.activity.LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,22 +32,38 @@
             </intent-filter>
         </activity>
 
+        <!--主页-->
+        <activity android:name="com.hicc.cloud.teacher.activity.MainActivity"/>
+
+        <!--请销假-->
         <activity android:name=".teacher.activity.LeaveBackActivity"/>
+        <!--课堂签到-->
         <activity android:name=".teacher.activity.ClassCheckActivity"/>
+        <!--学生社团-->
         <activity android:name=".teacher.activity.StudentCommunityActivity"/>
+        <!--班级成长-->
         <activity android:name=".teacher.activity.ClassGrowUpActivity"/>
-        <activity android:name=".teacher.activity.AllActivity"/>
+        <!--学生缴费-->
         <activity android:name=".teacher.activity.PaymentActivity"/>
+        <!--宿舍成绩-->
         <activity android:name=".teacher.activity.DormitoryScoreActivity"/>
-
+        <!--学生档案-->
         <activity android:name=".teacher.activity.StudentProfileActivity"/>
+        <!--学生成绩-->
         <activity android:name=".teacher.activity.StudentMarkActivity"/>
+        <!--全部页面-->
+        <activity android:name=".teacher.activity.AllActivity"/>
 
+        <!--摇一摇-->
         <activity android:name=".teacher.activity.ShakeActivity"/>
+        <!--扫一扫-->
         <activity android:name=".teacher.activity.ScanActivity"/>
+        <!--扫一扫结果页面-->
         <activity android:name=".teacher.activity.ScanResultActivity"/>
 
+        <!--网上报到-->
         <activity android:name=".teacher.activity.ColumnChartActivity"/>
+        <!--现场报到-->
         <activity android:name=".teacher.activity.PieChartActivity"/>
 
 

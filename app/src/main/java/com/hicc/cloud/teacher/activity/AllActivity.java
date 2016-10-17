@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/8/008.
+ * 全部页面
  */
 public class AllActivity extends AppCompatActivity {
 

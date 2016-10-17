@@ -9,6 +9,7 @@ import com.hicc.cloud.R;
 
 /**
  * Created by Administrator on 2016/10/8/008.
+ * 学生缴费
  */
 public class PaymentActivity extends AppCompatActivity {
 

@@ -39,6 +39,7 @@ import okhttp3.Call;
 
 /**
  * Created by 野 on 2016/10/13.
+ * 学生成绩
  */
 
 public class StudentMarkActivity extends AppCompatActivity {
@@ -66,11 +67,10 @@ public class StudentMarkActivity extends AppCompatActivity {
         ib_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 显示进度对话框
-                showProgressDialog();
-
                 String num = et_search.getText().toString().trim();
                 if (!num.equals("")) {
+                    // 显示进度对话框
+                    showProgressDialog();
                     // 发送GET请求
                     OkHttpUtils
                             .get()
@@ -83,7 +83,6 @@ public class StudentMarkActivity extends AppCompatActivity {
                                     Logs.i(e.toString());
                                     // 关闭进度对话框
                                     closeProgressDialog();
-
                                     ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                                 }
 
@@ -179,7 +178,7 @@ public class StudentMarkActivity extends AppCompatActivity {
             }
         } catch (JSONException e) {
             closeProgressDialog();
-            ToastUtli.show(getApplicationContext(),"查询失败");
+            ToastUtli.show(getApplicationContext(), "查询失败");
             e.printStackTrace();
         }
     }

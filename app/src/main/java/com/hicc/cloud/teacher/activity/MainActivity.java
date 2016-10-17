@@ -59,6 +59,9 @@ import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.FindListener;
 import okhttp3.Call;
 
+/**
+ * 主页
+ */
 
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{
     private MyTabLayout mTabLayout;
@@ -70,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private File file = new File(ConstantValue.downloadpathName);
     private BmobFile mBmobfile;
     private static Boolean isExit = false;
-    private final String TAG = "MainActivity";
     private EditText et_search;
     private boolean isCheck = true;
     private final String URL = "http://suguan.hicc.cn/hiccphonet/getCode";

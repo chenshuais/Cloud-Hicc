@@ -1,7 +1,7 @@
 package com.hicc.cloud.teacher.utils;
 
 /**
- * ����MD5���ܽ���
+ * MD5���ܽ���
  */
 
 import java.security.MessageDigest;

@@ -9,6 +9,7 @@ import com.hicc.cloud.R;
 
 /**
  * Created by Administrator on 2016/10/11/011.
+ * 宿舍成绩
  */
 public class DormitoryScoreActivity extends AppCompatActivity {
 

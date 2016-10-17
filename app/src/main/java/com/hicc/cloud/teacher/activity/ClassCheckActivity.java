@@ -9,6 +9,7 @@ import com.hicc.cloud.R;
 
 /**
  * Created by Administrator on 2016/10/8/008.
+ * 课堂签到
  */
 public class ClassCheckActivity extends AppCompatActivity {
 
