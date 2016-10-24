@@ -45,6 +45,32 @@
 
     </android.support.design.widget.TextInputLayout>
 
+
+    <Button
+        android:id="@+id/login_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bt_in"
+        android:text="登录" />
+
+    <CheckBox
+        android:id="@+id/login_cb1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="279dp"
+        android:layout_marginTop="10dp"
+        android:text="记住密码" />
+
+    <CheckBox
+        android:id="@+id/login_cb2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="279dp"
+        android:layout_marginTop="5dp"
+        android:text="自动登录" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -57,10 +83,9 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="40dp"
             android:layout_marginLeft="20dp"
-            android:text="注册用户"
-            android:textSize="20sp"
             android:clickable="true"
-            />
+            android:text="注册用户"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/login_tv2"
@@ -70,10 +95,9 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="40dp"
             android:layout_marginRight="20dp"
-            android:text="找回密码"
-            android:textSize="20sp"
             android:clickable="true"
-            />
+            android:text="找回密码"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 
