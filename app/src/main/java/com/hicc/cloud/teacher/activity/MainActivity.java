@@ -27,6 +27,7 @@ import com.hicc.cloud.teacher.bean.Clas;
 import com.hicc.cloud.teacher.bean.Division;
 import com.hicc.cloud.teacher.bean.ExitEvent;
 import com.hicc.cloud.teacher.bean.Grade;
+import com.hicc.cloud.teacher.bean.PhoneInfo;
 import com.hicc.cloud.teacher.bean.Professional;
 import com.hicc.cloud.teacher.db.StudentInfoDB;
 import com.hicc.cloud.teacher.db.UpdateFile;
@@ -36,6 +37,7 @@ import com.hicc.cloud.teacher.fragment.HomeFragment;
 import com.hicc.cloud.teacher.fragment.InformationFragment;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.PhoneInfoUtil;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.view.MyTabLayout;
@@ -100,6 +102,21 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         // 注册监听退出登录的事件
         EventBus.getDefault().register(this);
+
+        // 获取手机信息
+        getPhoneInfo();
+    }
+
+    private void getPhoneInfo() {
+        PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(this);
+        Logs.i("手机品牌："+phoneInfo.getPhoneBrand());
+        Logs.i("手机型号："+phoneInfo.getPhoneBrandType());
+        Logs.i("系统版本："+phoneInfo.getAndroidVersion());
+        Logs.i("cpu型号："+phoneInfo.getCpuName());
+        Logs.i("IMEI："+phoneInfo.getIMEI());
+        Logs.i("IMSI："+phoneInfo.getIMSI());
+        Logs.i("手机号："+phoneInfo.getNumer());
+        Logs.i("运营商："+phoneInfo.getServiceName());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
