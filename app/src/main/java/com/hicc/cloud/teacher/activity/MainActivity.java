@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Clas;
 import com.hicc.cloud.teacher.bean.Division;
+import com.hicc.cloud.teacher.bean.ExitEvent;
 import com.hicc.cloud.teacher.bean.Grade;
 import com.hicc.cloud.teacher.bean.Professional;
 import com.hicc.cloud.teacher.db.StudentInfoDB;
@@ -43,6 +44,9 @@ import com.hicc.cloud.teacher.view.TabItem;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,6 +97,14 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         // 加载数据到数据库中
         creatData();
+
+        // 注册监听退出登录的事件
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ExitEvent event) {
+        finish();
     }
 
     private void creatData() {
@@ -514,5 +526,11 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
             finish();
             System.exit(0);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

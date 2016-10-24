@@ -61,7 +61,12 @@ dependencies {
     compile 'com.squareup.okio:okio:1.5.0'
     compile 'com.zhy:okhttputils:2.6.2'
 
+    // 时间轴控件
     compile 'com.github.vipulasri:timelineview:1.0.3'
 
+    // 柱形图 饼状图控件
     compile 'com.github.lecho:hellocharts-android:v1.5.8'
+
+    // eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

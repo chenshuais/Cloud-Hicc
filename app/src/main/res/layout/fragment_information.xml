@@ -32,6 +32,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/tv_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/name"

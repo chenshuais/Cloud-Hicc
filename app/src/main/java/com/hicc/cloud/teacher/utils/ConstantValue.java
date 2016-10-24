@@ -23,6 +23,14 @@ public class ConstantValue {
      * 保存的用户密码
      */
     public static final String PASS_WORD = "pass_word";
+    /**
+     * 老师姓名
+     */
+    public static final String TEACHER_NAME = "teacher_name";
+    /**
+     * 老师职位
+     */
+    public static final String TEACHER_LEVEL = "teacher_level";
 
     /**
      * 更新应用下载保存路径

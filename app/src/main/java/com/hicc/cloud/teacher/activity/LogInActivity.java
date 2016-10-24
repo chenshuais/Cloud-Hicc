@@ -18,7 +18,6 @@ import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.MD5Util;
-import com.hicc.cloud.teacher.utils.ProgressDialogUtil;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -47,20 +46,17 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private ProgressDialog progressDialog;
     private String userName;
     private String mPwd;
-    private ProgressDialogUtil progressDialogUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_bak);
-
-        progressDialogUtil = new ProgressDialogUtil(this,"登录中");
-
+        setContentView(R.layout.activity_login);
         // 初始化控件
         initUI();
 
         //检测是否记住了密码 如果是就填充
         checkUpDown();
+
         //检查是否已经登陆
         checkEnter();
     }
@@ -93,9 +89,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             ToastUtli.show(getApplicationContext(),"账号或密码不能为空");
         // TODO 接口不能用时的假数据
         } else if (userName.equals("123") && mPwd.equals("123")){
-            progressDialogUtil.showProgressDialog();
             checkUp(userName,mPwd);
-            //SpUtils.putStringSp(getApplicationContext());
+            SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME,"测试");
+            SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL,"测试人员");
             enterHome();
         } else {
             // 显示进度对话框
