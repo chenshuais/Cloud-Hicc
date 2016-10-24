@@ -27,48 +27,11 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/lv_class"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/search_bg2"
-            android:hint="请输入学号"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="#fffefe"
-            android:textColorHint="#ffffff"
-            android:textSize="18dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="搜索" />
-    </LinearLayout>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardlist_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:orientation="vertical"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="@dimen/cardview_default_elevation">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="xiansdj" />
-
-    </android.support.v7.widget.CardView>
+        android:layout_height="wrap_content">
+    </ListView>
 
 
 </LinearLayout>

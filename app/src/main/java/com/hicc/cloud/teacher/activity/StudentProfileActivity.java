@@ -439,4 +439,13 @@ public class StudentProfileActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+
+
+    // TODO 更改为listview的方式  先展示导员所带班级列表  每个item的点击事件为跳转到相应的班级学生列表(也是用listview)  学生列表的item点击事件才是跳转到学生信息界面
+    // 1.找到相应控件
+    // 2.编写listview适配器
+    // 3.发网络请求  获取导员所带班级信息
+    // 4.解析json数据  并保存到List集合中
+    // 5.得到集合后  给listview设置适配器
 }
