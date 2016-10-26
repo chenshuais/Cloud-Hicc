@@ -11,6 +11,15 @@ public class Clas {
     private int classCode;
     private int gradeCode;
     private int professionalCode;
+    private String classQQGroup;
+
+    public String getClassQQGroup() {
+        return classQQGroup;
+    }
+
+    public void setClassQQGroup(String classQQGroup) {
+        this.classQQGroup = classQQGroup;
+    }
 
     public int getGradeCode() {
         return gradeCode;

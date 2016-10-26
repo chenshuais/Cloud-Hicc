@@ -49,6 +49,8 @@
         <activity android:name=".teacher.activity.DormitoryScoreActivity"/>
         <!--学生档案-->
         <activity android:name=".teacher.activity.StudentProfileActivity"/>
+        <activity android:name=".teacher.activity.ClassListActivity"/>
+        <activity android:name=".teacher.activity.StudentListActivity"/>
         <!--学生成绩-->
         <activity android:name=".teacher.activity.StudentMarkActivity"/>
         <!--全部页面-->

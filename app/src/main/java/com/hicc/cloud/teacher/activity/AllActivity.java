@@ -84,7 +84,9 @@ public class AllActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(),ClassGrowUpActivity.class));
                         break;
                     case 6:
-                        startActivity(new Intent(getApplicationContext(),StudentProfileActivity.class));
+                        Intent intent = new Intent(getApplicationContext(),ClassListActivity.class);
+                        intent.putExtra("type",1);
+                        startActivity(intent);
                         break;
                     case 7:
                         startActivity(new Intent(getApplicationContext(),PaymentActivity.class));

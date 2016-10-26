@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private static Boolean isExit = false;
     private EditText et_search;
     private boolean isCheck = true;
-    private final String URL = "http://suguan.hicc.cn/hiccphonet/getCode";
+    private final String URL = "http://suguan.hicc.cn/hicccloudt/getCode";
     private StudentInfoDB db;
 
     @Override
@@ -198,9 +198,13 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
                                 // 班级
                                 Clas clas = new Clas();
+                                int classCode = info.getInt("Nid");
+                                clas.setClassCode(classCode);
                                 String ClassDes = info.getString("ClassDescription");
                                 clas.setClassDes(ClassDes);
                                 clas.setGradeCode(gradeCode);
+                                String classQQGroup = info.getString("ClassQQGroup");
+                                clas.setClassQQGroup(classQQGroup);
                                 if(!ProfessionalDes.equals("null")){
                                     int professionCode = info.getInt("ProfessionalId");
                                     clas.setProfessionalCode(professionCode);

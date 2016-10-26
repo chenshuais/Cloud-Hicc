@@ -49,7 +49,7 @@ public class StudentMarkActivity extends AppCompatActivity {
     private TextView tv_name;
     private TextView tv_class;
     private TextView tv_stu_number;
-    private String URL = "http://suguan.hicc.cn/hiccphonet/getGrade";
+    private String URL = "http://suguan.hicc.cn/hicccloudt/getGrade";
     private ProgressDialog progressDialog;
 
     @Override

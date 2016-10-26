@@ -57,6 +57,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
 
         tvName.setText(SpUtils.getStringSp(getContext(), ConstantValue.TEACHER_NAME,""));
         tvLevel.setText("职位："+SpUtils.getStringSp(getContext(), ConstantValue.TEACHER_LEVEL,""));
+        tvPhone.setText("电话："+SpUtils.getStringSp(getContext(),ConstantValue.TEACHER_PHONE,""));
     }
 
     @Override
@@ -79,6 +80,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 SpUtils.remove(getContext(),ConstantValue.PASS_WORD);
                 SpUtils.remove(getContext(),ConstantValue.TEACHER_NAME);
                 SpUtils.remove(getContext(),ConstantValue.TEACHER_LEVEL);
+                SpUtils.remove(getContext(),ConstantValue.TEACHER_PHONE);
                 SpUtils.putBoolSp(getContext(),ConstantValue.IS_REMBER_PWD,false);
                 break;
             case R.id.department:

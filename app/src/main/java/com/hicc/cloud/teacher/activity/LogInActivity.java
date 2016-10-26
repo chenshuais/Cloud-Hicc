@@ -37,7 +37,7 @@ import okhttp3.Call;
  */
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
-    private static final String URL = "http://suguan.hicc.cn/hiccphonet/LoginT";
+    private static final String URL = "http://suguan.hicc.cn/hicccloudt/LoginT";
     private static Boolean isExit = false;
     private CheckBox cb_rember;
     private EditText et_username;
@@ -92,6 +92,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             checkUp(userName,mPwd);
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME,"测试");
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL,"测试人员");
+            SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_PHONE, "1024");
             enterHome();
         } else {
             // 显示进度对话框
@@ -136,23 +137,38 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             JSONObject jsonObject = new JSONObject(response);
             boolean sucessed = jsonObject.getBoolean("sucessed");
             if(sucessed) {
-                Logs.i("开始解析");
+                Logs.i("登录成功，开始解析");
                 // 登录成功后检查是否记住密码
                 checkUp(userName,mPwd);
                 Logs.i("账号："+userName+"  密码："+mPwd);
+
+                // TODO 保存用户信息
+                JSONObject data = jsonObject.getJSONObject("data");
+                // 姓名
+                SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME, data.getString("UserName"));
+                // 职位
+                SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL, data.getString("UserLevel"));
+                // 联系方式
+                SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_PHONE, data.getString("ContactWay"));
+
+                SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_NO,data.getInt("UserNo"));
+                SpUtils.putIntSp(getApplicationContext(),ConstantValue.RECORD_CODE,data.getInt("RecordCode"));
+                SpUtils.putIntSp(getApplicationContext(),ConstantValue.NID,data.getInt("Nid"));
+                SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_LEVEL_CODE,data.getInt("UserLevelCode"));
+
                 // 关闭对话框进入主界面
+                ToastUtli.show(getApplicationContext(),"登录成功");
                 closeProgressDialog();
                 enterHome();
-                // TODO 保存用户信息
             }else{
                 closeProgressDialog();
                 ToastUtli.show(getApplicationContext(),"账号或密码错误");
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            closeProgressDialog();
             ToastUtli.show(getApplicationContext(),"登录失败");
         }
-
     }
 
     //检查是否已经登陆

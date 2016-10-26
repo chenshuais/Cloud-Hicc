@@ -1,5 +1,6 @@
 package com.hicc.cloud.teacher.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +20,10 @@ import com.hicc.cloud.teacher.utils.Logs;
  * Created by Administrator on 2016/9/24/024.
  */
 
+@SuppressLint("ValidFragment")
 public class DetailedInfoFragment extends BaseFragment {
     private MyBroadcastReceiver mBroadcastReceiver;
+    private Student mStudent;
     private TextView tv_grade;
     private TextView tv_division;
     private TextView tv_professional;
@@ -60,6 +63,10 @@ public class DetailedInfoFragment extends BaseFragment {
     private String onlinereport = "";
     private String liveseportstatue = "";
 
+    @SuppressLint("ValidFragment")
+    public DetailedInfoFragment(Student student){
+        mStudent = student;
+    }
     @Override
     public void fetchData() {
     }
@@ -68,6 +75,8 @@ public class DetailedInfoFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_detailed_info, container, false);
 
         initUI(view);
+
+        initData();
 
         setUI();
 
@@ -78,6 +87,29 @@ public class DetailedInfoFragment extends BaseFragment {
         getContext().registerReceiver(mBroadcastReceiver, intentFilter);
 
         return view;
+    }
+
+    private void initData() {
+        grade = mStudent.getGradeDescription();
+        division = mStudent.getDivisionDescription();
+        professional = mStudent.getProfessionalDescription();
+        phone = mStudent.getYourPhone();
+        dormitory = mStudent.getDormitoryDescription();
+        dormitoryNo = mStudent.getDormitoryNo();
+        bednumber = mStudent.getBedNumber();
+        national = mStudent.getNationalDescription();
+        province = mStudent.getProvinceDescription();
+        nativeplace = mStudent.getNativePlace();
+        politics = mStudent.getPoliticsStatusDescription();
+        homeaddress = mStudent.getHomeAddress();
+        idnumber = mStudent.getIdNumber();
+        birthdate = mStudent.getBirthDate();
+        birthdate = birthdate.substring(0,10);
+        height = mStudent.getHeight();
+        weight = mStudent.getWeight();
+        paymentstaus = mStudent.getPaymentStausDescription();
+        onlinereport = mStudent.getOnlineReportStatueDescription();
+        liveseportstatue = mStudent.getLiveReportStatueDescription();
     }
 
     private void setUI() {
@@ -167,10 +199,11 @@ public class DetailedInfoFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         // 取消注册广播
         if (mBroadcastReceiver != null) {
+            Logs.i("取消注册广播");
             getContext().unregisterReceiver(mBroadcastReceiver);
         }
     }

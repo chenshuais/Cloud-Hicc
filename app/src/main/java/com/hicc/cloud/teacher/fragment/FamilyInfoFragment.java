@@ -1,5 +1,6 @@
 package com.hicc.cloud.teacher.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,12 +25,18 @@ import java.util.List;
  * Created by Administrator on 2016/9/24/024.
  */
 
+@SuppressLint("ValidFragment")
 public class FamilyInfoFragment extends BaseFragment {
 
     private MyBroadcastReceiver mBroadcastReceiver;
     private List<Family> familyList = new ArrayList<Family>();
     private FamilyAdapter myBaseAdapter;
     private RecyclerView mRecyclerView;
+
+    @SuppressLint("ValidFragment")
+    public FamilyInfoFragment(List<Family> familyList){
+        this.familyList = familyList;
+    }
 
     @Override
     public void fetchData() {
@@ -45,6 +52,9 @@ public class FamilyInfoFragment extends BaseFragment {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("ACTION_UPDATA_UI");
         getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+
+        myBaseAdapter = new FamilyAdapter(familyList);
+        mRecyclerView.setAdapter(myBaseAdapter);
 
         return view;
     }
@@ -81,10 +91,11 @@ public class FamilyInfoFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         // 取消注册广播
         if (mBroadcastReceiver != null) {
+            Logs.i("取消注册广播");
             getContext().unregisterReceiver(mBroadcastReceiver);
         }
     }

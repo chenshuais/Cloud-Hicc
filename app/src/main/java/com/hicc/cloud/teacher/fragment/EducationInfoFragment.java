@@ -121,10 +121,11 @@ public class EducationInfoFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         // 取消注册广播
         if (mBroadcastReceiver != null) {
+            Logs.i("取消注册广播");
             getContext().unregisterReceiver(mBroadcastReceiver);
         }
     }

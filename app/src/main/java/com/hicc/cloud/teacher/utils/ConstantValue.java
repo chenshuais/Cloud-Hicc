@@ -31,6 +31,26 @@ public class ConstantValue {
      * 老师职位
      */
     public static final String TEACHER_LEVEL = "teacher_level";
+    /**
+     * 老师电话
+     */
+    public static final String TEACHER_PHONE = "teacher_phone";
+    /**
+     * UserNo
+     */
+    public static final String USER_NO = "user_no";
+    /**
+     * RecordCode
+     */
+    public static final String RECORD_CODE = "record_code";
+    /**
+     * Nid
+     */
+    public static final String NID = "nid";
+    /**
+     * UserLevelCode
+     */
+    public static final String USER_LEVEL_CODE = "user_level_code";
 
     /**
      * 更新应用下载保存路径

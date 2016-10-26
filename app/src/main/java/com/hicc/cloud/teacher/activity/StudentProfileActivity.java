@@ -55,12 +55,15 @@ public class StudentProfileActivity extends AppCompatActivity {
     private TextView tv_class;
     private TextView tv_sex;
     private TextView tv_stu_num;
-    private String URL = "http://suguan.hicc.cn/hiccphonet/getStudentInfo";
+    private String URL = "http://suguan.hicc.cn/hicccloudt/getStudentInfo";
     private ProgressDialog progressDialog;
     private StudentInfoDB db;
     private String stuName;
     private String stuNum;
     private String classDes;
+    private String sex;
+    private Student student;
+    private List<Family> familyList;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -89,20 +92,29 @@ public class StudentProfileActivity extends AppCompatActivity {
             }
         }
     };
-    private String sex;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentprofile_bak);
+        findUI();
 
         db = StudentInfoDB.getInstance(this);
+
+        String studentNu = getIntent().getStringExtra("studentNu");
+
+        showProgressDialog();
+        // 查询学号   优先从数据库中查询  没有再请求网络查询
+        queryStudent(studentNu);
 
         initUI();
 
         // 搜索学号
         searchNum();
     }
+
 
     private void searchNum() {
         ib_search.setOnClickListener(new View.OnClickListener() {
@@ -122,16 +134,16 @@ public class StudentProfileActivity extends AppCompatActivity {
 
     private void queryStudent(String stuNum) {
         // 从数据库中查询
-        Student student = db.getStudent(stuNum);
+        student = db.getStudent(stuNum);
         if(student != null){
             Logs.i("从数据库中查询");
-            tv_name.setText("姓名："+student.getStudentName());
+            tv_name.setText("姓名："+ student.getStudentName());
             tv_sex.setText("性别：" + student.getGenderDescription());
             tv_class.setText("班级："+ student.getClassDescription());
             tv_stu_num.setText("学号："+ student.getStudentNu());
 
             // 查询家庭信息
-            List<Family> familyList = db.getFamilys(student.getStudentNu());
+            familyList = db.getFamilys(student.getStudentNu());
 
             // 发送携带信息的广播
             Intent intent = new Intent();
@@ -139,7 +151,7 @@ public class StudentProfileActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putSerializable("student", student);
             intent.putExtras(bundle);
-            intent.putExtra("family", (Serializable)familyList);
+            intent.putExtra("family", (Serializable) familyList);
             sendBroadcast(intent);
 
             closeProgressDialog();
@@ -279,10 +291,11 @@ public class StudentProfileActivity extends AppCompatActivity {
                         String onlineReportStatueDes = dataInfo.getString("OnlineReportStatueDescription");
                         student.setOnlineReportStatueDescription(onlineReportStatueDes);
                         // **班级代码
-                        int classId = db.getClasIdForDB(classDes,gradeCode);
-                        if(classId >= 0){
-                            student.setClassId(classId);
-                        }
+                        /*int classCode = db.getClasCodeForDB(classDes,gradeCode);
+                        if(classCode >= 0){
+                            student.setClassCode(classCode);
+                        }*/
+                        student.setClassCode(dataInfo.getInt("ClassId"));
 
                         db.saveStudent(student);
 
@@ -371,7 +384,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void initUI() {
+    private void findUI() {
         // 返回
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -387,7 +400,8 @@ public class StudentProfileActivity extends AppCompatActivity {
         tv_class = (TextView) findViewById(R.id.tv_class);
         tv_sex = (TextView) findViewById(R.id.tv_sex);
         tv_stu_num = (TextView) findViewById(R.id.tv_stu_num);
-
+    }
+    private void initUI() {
         // 设置viewpager
         ScrollViewPager viewPager = (ScrollViewPager) findViewById(R.id.viewpager);
         // 设置viewpager是否禁止滑动
@@ -403,8 +417,8 @@ public class StudentProfileActivity extends AppCompatActivity {
     // 设置viewpager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new DetailedInfoFragment(), "详细信息");
-        adapter.addFrag(new FamilyInfoFragment(), "家庭信息");
+        adapter.addFrag(new DetailedInfoFragment(student), "详细信息");
+        adapter.addFrag(new FamilyInfoFragment(familyList), "家庭信息");
         adapter.addFrag(new EducationInfoFragment(), "教育经历");
 
         viewPager.setAdapter(adapter);
