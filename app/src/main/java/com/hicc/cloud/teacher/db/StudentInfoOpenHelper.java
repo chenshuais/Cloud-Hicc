@@ -25,6 +25,7 @@ public class StudentInfoOpenHelper extends SQLiteOpenHelper {
      * 创建班级表语句
      */
     public static final String CREAT_CLASS = "create table Clas (id integer primary key autoincrement, grade_code integer, class_des text, class_code integer, professional_code integer, class_qq_group text)";
+
     /**
      * 创建学生表语句
      */
@@ -61,8 +62,8 @@ public class StudentInfoOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREAT_DIVISION);     //学部表
         db.execSQL(CREAT_PROFESSIONAL);     //专业表
         db.execSQL(CREAT_CLASS);       //班级表
-        db.execSQL(CREAT_STUDENT);      //学生表
-        db.execSQL(CREAT_FAMILY);   //家庭表
+        //db.execSQL(CREAT_STUDENT);      //学生表
+        //db.execSQL(CREAT_FAMILY);   //家庭表
     }
 
     @Override

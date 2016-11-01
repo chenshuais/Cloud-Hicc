@@ -1,10 +1,6 @@
 package com.hicc.cloud.teacher.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,19 +12,19 @@ import android.view.ViewGroup;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.adapter.FamilyAdapter;
 import com.hicc.cloud.teacher.bean.Family;
-import com.hicc.cloud.teacher.utils.Logs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/24/024.
+ * 学生档案  家庭信息
  */
 
 @SuppressLint("ValidFragment")
 public class FamilyInfoFragment extends BaseFragment {
 
-    private MyBroadcastReceiver mBroadcastReceiver;
+    //private MyBroadcastReceiver mBroadcastReceiver;
     private List<Family> familyList = new ArrayList<Family>();
     private FamilyAdapter myBaseAdapter;
     private RecyclerView mRecyclerView;
@@ -47,11 +43,13 @@ public class FamilyInfoFragment extends BaseFragment {
 
         initUI(view);
 
+        /*
         // 动态注册广播
         mBroadcastReceiver = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("ACTION_UPDATA_UI");
         getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+        */
 
         myBaseAdapter = new FamilyAdapter(familyList);
         mRecyclerView.setAdapter(myBaseAdapter);
@@ -59,6 +57,7 @@ public class FamilyInfoFragment extends BaseFragment {
         return view;
     }
 
+    /*
     // 广播接收者
     class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -70,6 +69,7 @@ public class FamilyInfoFragment extends BaseFragment {
             mRecyclerView.setAdapter(myBaseAdapter);
         }
     }
+    */
 
     private void initUI(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -90,6 +90,7 @@ public class FamilyInfoFragment extends BaseFragment {
         return linearLayoutManager;
     }
 
+    /*
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -99,4 +100,5 @@ public class FamilyInfoFragment extends BaseFragment {
             getContext().unregisterReceiver(mBroadcastReceiver);
         }
     }
+    */
 }

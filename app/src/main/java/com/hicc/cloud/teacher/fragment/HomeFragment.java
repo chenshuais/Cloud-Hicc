@@ -134,6 +134,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.ll_record:
             case R.id.iv_record:
+                ToastUtli.show(getContext(),"努力开发中");
                 break;
         }
     }

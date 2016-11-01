@@ -1,11 +1,15 @@
 package com.hicc.cloud.teacher.fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -47,6 +51,16 @@ public class FriendFragment extends BaseFragment {
         ll_progress = (LinearLayout) view.findViewById(R.id.ll_progress);
         ll_progress.setVisibility(View.VISIBLE);
 
+        // 设置条目的点击事件
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Firend firend = firendList.get(position);
+                String phone = firend.getPhone();
+                showDialog(phone);
+            }
+        });
+
 
         return view;
     }
@@ -83,5 +97,32 @@ public class FriendFragment extends BaseFragment {
                 mHandler.sendEmptyMessage(0);
             }
         }.start();
+    }
+
+    // 显示对话框
+    protected void showDialog(final String phone) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        //设置对话框标题
+        builder.setTitle("打电话给朋友");
+        //设置对话框内容
+        builder.setMessage("是否跳转到拨号界面");
+        //设置积极的按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone));
+                startActivity(intent);
+            }
+        });
+        //设置消极的按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+
+        builder.show();
     }
 }

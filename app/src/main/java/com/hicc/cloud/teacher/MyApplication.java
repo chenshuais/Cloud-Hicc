@@ -40,6 +40,7 @@ public class MyApplication extends Application {
                 .build();
         OkHttpUtils.initClient(okHttpClient);
 
+
         // 捕获全局未捕获的异常
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override

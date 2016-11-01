@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.ToastUtli;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,7 @@ public class AllActivity extends AppCompatActivity {
                         break;
                     // 问卷调查
                     case 2:
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
                         break;
                 }
             }

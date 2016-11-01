@@ -1,10 +1,7 @@
 package com.hicc.cloud.teacher.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,11 +15,12 @@ import com.hicc.cloud.teacher.utils.Logs;
 
 /**
  * Created by Administrator on 2016/9/24/024.
+ * 学生档案 详细信息
  */
 
 @SuppressLint("ValidFragment")
 public class DetailedInfoFragment extends BaseFragment {
-    private MyBroadcastReceiver mBroadcastReceiver;
+    //private MyBroadcastReceiver mBroadcastReceiver;
     private Student mStudent;
     private TextView tv_grade;
     private TextView tv_division;
@@ -42,6 +40,7 @@ public class DetailedInfoFragment extends BaseFragment {
     private TextView tv_paymentstaus;
     private TextView tv_onlinereport;
     private TextView tv_liveseportstatue;
+    private TextView tv_oldschool;
 
     private String grade = "";
     private String division = "";
@@ -62,6 +61,8 @@ public class DetailedInfoFragment extends BaseFragment {
     private String paymentstaus = "";
     private String onlinereport = "";
     private String liveseportstatue = "";
+    private String oldSchool = "";
+
 
     @SuppressLint("ValidFragment")
     public DetailedInfoFragment(Student student){
@@ -80,11 +81,13 @@ public class DetailedInfoFragment extends BaseFragment {
 
         setUI();
 
+        /* TODO 搜索框的方法
         // 动态注册广播
         mBroadcastReceiver = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("ACTION_UPDATA_UI");
         getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+        */
 
         return view;
     }
@@ -110,6 +113,7 @@ public class DetailedInfoFragment extends BaseFragment {
         paymentstaus = mStudent.getPaymentStausDescription();
         onlinereport = mStudent.getOnlineReportStatueDescription();
         liveseportstatue = mStudent.getLiveReportStatueDescription();
+        oldSchool = mStudent.getOldSchool();
     }
 
     private void setUI() {
@@ -131,6 +135,7 @@ public class DetailedInfoFragment extends BaseFragment {
         tv_paymentstaus.setText("缴费状态："+paymentstaus);
         tv_onlinereport.setText("网上报到："+onlinereport);
         tv_liveseportstatue.setText("现场报到："+liveseportstatue);
+        tv_oldschool.setText("毕业学校："+oldSchool);
     }
 
     private void initUI(View view) {
@@ -152,6 +157,7 @@ public class DetailedInfoFragment extends BaseFragment {
         tv_paymentstaus = (TextView) view.findViewById(R.id.tv_paymentstaus);
         tv_onlinereport = (TextView) view.findViewById(R.id.tv_onlinereport);
         tv_liveseportstatue = (TextView) view.findViewById(R.id.tv_liveseportstatue);
+        tv_oldschool = (TextView) view.findViewById(R.id.tv_oldschool);
 
         tv_phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +173,7 @@ public class DetailedInfoFragment extends BaseFragment {
         });
     }
 
+    /*
     class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -207,4 +214,5 @@ public class DetailedInfoFragment extends BaseFragment {
             getContext().unregisterReceiver(mBroadcastReceiver);
         }
     }
+    */
 }

@@ -15,51 +15,119 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Student;
-import com.hicc.cloud.teacher.db.StudentInfoDB;
 import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/10/26/026.
  */
 public class StudentListActivity extends AppCompatActivity {
-    private List<Student> studentList;
+    private List<Student> mStudentList = new ArrayList<>();
     private ImageView iv_back;
     private ProgressDialog progressDialog;
     private ListView lv_student;
     private int type;
+    private String URL = "http://suguan.hicc.cn/hicccloudt/getInfo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentlist);
-        int classCode = getIntent().getIntExtra("classcode",0);
+
+        int timesCode =  getIntent().getIntExtra("timescode",0);
+        int divisionCode =  getIntent().getIntExtra("divisionCode",0);
+        int professionalCode =  getIntent().getIntExtra("professionalCode",0);
+        int classCode =  getIntent().getIntExtra("classcode",0);
+
         type = getIntent().getIntExtra("type",0);
+
         initUI();
 
-        initData(classCode);
+        initData(timesCode, divisionCode, professionalCode, classCode);
     }
 
-    private void initData(final int classCode) {
-        final StudentInfoDB db = StudentInfoDB.getInstance(this);
+    private void initData(int timesCode, int divisionCode, int professionalCode, int classCode) {
         showProgressDialog();
+        // 发送GET请求
+        OkHttpUtils
+                .get()
+                .url(URL)
+                .addParams("timescode", String.valueOf(timesCode))
+                .addParams("divisionCode", String.valueOf(divisionCode))
+                .addParams("professionalCode", String.valueOf(professionalCode))
+                .addParams("classcode", String.valueOf(classCode))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        closeProgressDialog();
+                        Logs.i(e.toString());
+                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+
+                        Logs.i(response);
+                        // 解析json
+                        Logs.i("解析json");
+                        getJsonInfo(response);
+                    }
+                });
+    }
+
+    private void getJsonInfo(final String response) {
         new Thread(){
             @Override
             public void run() {
-                studentList = db.getStudents(classCode);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Logs.i("大小是："+studentList.size());
-                        lv_student.setAdapter(new MyAdapter());
-                        closeProgressDialog();
+                super.run();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean sucessed = jsonObject.getBoolean("sucessed");
+                    if(sucessed) {
+                        Logs.i("开始解析");
+
+                        JSONArray data = jsonObject.getJSONArray("data");
+
+                        for (int i = 0; i < data.length(); i++) {
+                            Student student = new Student();
+                            JSONObject studentInfo = data.getJSONObject(i);
+                            // 学生姓名
+                            student.setStudentName(studentInfo.getString("StudentName"));
+                            // 学号
+                            student.setStudentNu(studentInfo.getString("StudentNu"));
+
+                            mStudentList.add(student);
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Logs.i("大小是："+ mStudentList.size());
+                                lv_student.setAdapter(new MyAdapter());
+                                closeProgressDialog();
+                            }
+                        });
                     }
-                });
+                } catch (JSONException e) {
+                    // 解析错误
+                    e.printStackTrace();
+                    ToastUtli.show(getApplicationContext(),"加载失败");
+                    closeProgressDialog();
+                }
             }
         }.start();
-
-
     }
 
     private void initUI() {
@@ -76,11 +144,11 @@ public class StudentListActivity extends AppCompatActivity {
         lv_student.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Logs.i(studentList.get(position).getStudentNu());
+                Logs.i(mStudentList.get(position).getStudentNu());
                 // 学生档案
                 if(type == 1){
                     Intent intent = new Intent(getApplicationContext(),StudentProfileActivity.class);
-                    intent.putExtra("studentNu",studentList.get(position).getStudentNu());
+                    intent.putExtra("studentNu", mStudentList.get(position).getStudentNu());
                     startActivity(intent);
                 // 学生成绩
                 }else if(type == 2){
@@ -95,12 +163,12 @@ public class StudentListActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return studentList.size();
+            return mStudentList.size();
         }
 
         @Override
         public Student getItem(int position) {
-            return studentList.get(position);
+            return mStudentList.get(position);
         }
 
         @Override

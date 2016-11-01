@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/24/024.
+ * 学生档案  教育经历
  */
 
 public class EducationInfoFragment extends BaseFragment {

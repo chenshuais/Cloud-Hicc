@@ -136,6 +136,8 @@ public class ColumnChartActivity extends AppCompatActivity {
 
             chart = (ColumnChartView) rootView.findViewById(R.id.chart);
             chart.setOnValueTouchListener(new ValueTouchListener());
+            // 禁止缩放
+            chart.setZoomEnabled(false);
 
             generateDefaultData();
 
