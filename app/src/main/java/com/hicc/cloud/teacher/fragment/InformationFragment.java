@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
@@ -14,6 +15,7 @@ import com.hicc.cloud.teacher.activity.LogInActivity;
 import com.hicc.cloud.teacher.bean.ExitEvent;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.SpUtils;
+import com.hicc.cloud.teacher.utils.ToastUtli;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -53,7 +55,12 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         tvPepartment = (TextView) view.findViewById(R.id.department);
         tvLevel = (TextView) view.findViewById(R.id.tv_level);
 
+        LinearLayout ll_setting = (LinearLayout) view.findViewById(R.id.ll_setting);
+        LinearLayout ll_info = (LinearLayout) view.findViewById(R.id.ll_info);
+
         btEsc.setOnClickListener(this);
+        ll_setting.setOnClickListener(this);
+        ll_info.setOnClickListener(this);
 
         tvName.setText(SpUtils.getStringSp(getContext(), ConstantValue.TEACHER_NAME,""));
         tvLevel.setText("职位："+SpUtils.getStringSp(getContext(), ConstantValue.TEACHER_LEVEL,""));
@@ -73,6 +80,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.set:
                 break;
+            // 注销按钮
             case R.id.esc:
                 EventBus.getDefault().post(new ExitEvent());
                 startActivity(new Intent(getContext(), LogInActivity.class));
@@ -85,7 +93,13 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.department:
                 break;
-            default:
+            // 设置
+            case R.id.ll_setting:
+                ToastUtli.show(getContext(),"努力开发中");
+                break;
+            // 关于
+            case R.id.ll_info:
+                ToastUtli.show(getContext(),"努力开发中");
                 break;
         }
     }

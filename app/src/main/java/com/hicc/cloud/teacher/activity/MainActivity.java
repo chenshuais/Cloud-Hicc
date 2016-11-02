@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.hicc.cloud.R;
@@ -63,6 +64,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 import okhttp3.Call;
 
 /**
@@ -103,20 +105,31 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         // 注册监听退出登录的事件
         EventBus.getDefault().register(this);
 
-        // 获取手机信息
-        getPhoneInfo();
+
     }
 
     private void getPhoneInfo() {
-        PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(this);
-        Logs.i("手机品牌："+phoneInfo.getPhoneBrand());
-        Logs.i("手机型号："+phoneInfo.getPhoneBrandType());
-        Logs.i("系统版本："+phoneInfo.getAndroidVersion());
-        Logs.i("cpu型号："+phoneInfo.getCpuName());
-        Logs.i("IMEI："+phoneInfo.getIMEI());
-        Logs.i("IMSI："+phoneInfo.getIMSI());
-        Logs.i("手机号："+phoneInfo.getNumer());
-        Logs.i("运营商："+phoneInfo.getServiceName());
+        final PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(this);
+        phoneInfo.save(this, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_UP_PHONE_INFO,false);
+                Logs.i("手机品牌："+phoneInfo.getPhoneBrand());
+                Logs.i("手机型号："+phoneInfo.getPhoneBrandType());
+                Logs.i("系统版本："+phoneInfo.getAndroidVersion());
+                Logs.i("cpu型号："+phoneInfo.getCpuName());
+                Logs.i("IMEI："+phoneInfo.getIMEI());
+                Logs.i("IMSI："+phoneInfo.getIMSI());
+                Logs.i("手机号："+phoneInfo.getNumer());
+                Logs.i("运营商："+phoneInfo.getServiceName());
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                // 加载失败  下次进入应用重新加载
+                SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_UP_PHONE_INFO,true);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -136,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                         @Override
                         public void onError(Call call, Exception e, int id) {
                             Logs.i(e.toString());
-                            ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
-                            et_search.setText("");
+                            // 加载失败  下次进入应用重新加载
+                            SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
                         }
 
                         @Override
@@ -147,6 +160,13 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                             getJsonInfo(response);
                         }
                     });
+
+
+        }
+
+        if(SpUtils.getBoolSp(this,ConstantValue.FIRST_UP_PHONE_INFO,true)){
+            // 获取手机信息
+            getPhoneInfo();
         }
     }
 
@@ -213,12 +233,16 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                             }
                         }
                         Logs.i("加载数据成功");
+                        // 下次进入应用不在加载
                         SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,false);
                     }else{
+                        // 加载失败  下次进入应用重新加载
                         SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    // 加载失败  下次进入应用重新加载
+                    SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
                 }
             }
         }.start();
@@ -230,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         // 设置viewpager是否禁止滑动
         mViewPager.setNoScroll(false);
 
+        // 搜索框
         et_search = (EditText) findViewById(R.id.et_search);
         et_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +266,24 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                     et_search.setHint("搜索");
                     isCheck = !isCheck;
                 }
+            }
+        });
+
+        // 推送消息记录
+        ImageView iv_content = (ImageView) findViewById(R.id.iv_content);
+        iv_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtli.show(getApplicationContext(),"努力开发中");
+            }
+        });
+
+        // 添加
+        ImageView iv_add = (ImageView) findViewById(R.id.iv_add);
+        iv_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtli.show(getApplicationContext(),"努力开发中");
             }
         });
     }
@@ -307,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     // 检测更新
     private void checkVersionCode() {
         if(bmobQuery != null){
-            // 旧版本
+            // 新版本
             /*bmobQuery.findObjects(new FindListener<UpdateFile>() {
                 @Override
                 public void done(List<UpdateFile> object, BmobException e) {

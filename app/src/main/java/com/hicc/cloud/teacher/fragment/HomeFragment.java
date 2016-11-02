@@ -50,6 +50,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
     private LinearLayout ll_record;
+    private LinearLayout ll_classrecord;
 
     // 加载数据
     @Override
@@ -67,7 +68,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //未设置点击事件
+                //设置点击事件
                 switch (position){
                     case 0:
                         startActivity(new Intent(getContext(),StudentMarkActivity.class));
@@ -104,9 +105,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void initUI(View view) {
         gridView = (GridView) view.findViewById(R.id.gv_menu);
+
         ll_scan = (LinearLayout) view.findViewById(R.id.ll_scan);
         ll_shake = (LinearLayout) view.findViewById(R.id.ll_shake);
         ll_record = (LinearLayout) view.findViewById(R.id.ll_record);
+
+        ll_classrecord = (LinearLayout) view.findViewById(R.id.ll_classrecord);
 
         ImageView iv_scan = (ImageView) view.findViewById(R.id.iv_scan);
         ImageView iv_shake = (ImageView) view.findViewById(R.id.iv_shake);
@@ -119,21 +123,31 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         iv_scan.setOnClickListener(this);
         iv_shake.setOnClickListener(this);
         iv_record.setOnClickListener(this);
+
+        ll_classrecord.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            // 扫一扫
             case R.id.ll_scan:
             case R.id.iv_scan:
                 startActivityForResult(new Intent(getContext(), ScanActivity.class),SCAN_CODE);
                 break;
+            // 摇一摇
             case R.id.ll_shake:
             case R.id.iv_shake:
                 startActivity(new Intent(getContext(), ShakeActivity.class));
                 break;
+            // 记录
             case R.id.ll_record:
             case R.id.iv_record:
+                ToastUtli.show(getContext(),"努力开发中");
+                break;
+
+            // 记录班级成长
+            case R.id.ll_classrecord:
                 ToastUtli.show(getContext(),"努力开发中");
                 break;
         }

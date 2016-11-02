@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="部门：计算机学院"
+            android:text="部门：信息学部"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -96,6 +96,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_setting"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:padding="16dp"
@@ -124,6 +125,7 @@
         android:background="#e6e3e3"/>
 
     <LinearLayout
+        android:id="@+id/ll_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -137,7 +139,6 @@
             android:src="@drawable/icon_info" />
 
         <TextView
-            android:id="@+id/tv_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

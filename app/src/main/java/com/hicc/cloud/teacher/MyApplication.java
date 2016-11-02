@@ -3,6 +3,10 @@ package com.hicc.cloud.teacher;
 import android.app.Application;
 import android.os.Environment;
 
+import com.hicc.cloud.teacher.bean.PhoneInfo;
+import com.hicc.cloud.teacher.db.ExceptionFile;
+import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.PhoneInfoUtil;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -12,6 +16,8 @@ import java.io.PrintWriter;
 import java.util.concurrent.TimeUnit;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.SaveListener;
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
 
@@ -60,6 +66,26 @@ public class MyApplication extends Application {
                 }
 
                 // 可以将异常文件上传到服务器
+                ExceptionFile exceptionFile = new ExceptionFile();
+
+                PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(getApplicationContext());
+                exceptionFile.setPhoneBrand(phoneInfo.getPhoneBrand());
+                exceptionFile.setPhoneBrandType(phoneInfo.getPhoneBrandType());
+                exceptionFile.setAndroidVersion(phoneInfo.getAndroidVersion());
+                exceptionFile.setCpuName(phoneInfo.getCpuName());
+                BmobFile bmobFile = new BmobFile(file);
+                exceptionFile.setExceptionFile(bmobFile);
+                exceptionFile.save(getApplicationContext(), new SaveListener() {
+                    @Override
+                    public void onSuccess() {
+                        Logs.i("错误日志上传成功");
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        Logs.i("错误日志上传失败："+s);
+                    }
+                });
 
                 // 手动退出应用
                 System.exit(0);

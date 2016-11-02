@@ -51,6 +51,10 @@ public class ConstantValue {
      * UserLevelCode
      */
     public static final String USER_LEVEL_CODE = "user_level_code";
+    /**
+     * 是否是第一次上传手机信息
+     */
+    public static final String FIRST_UP_PHONE_INFO = "first_up_phone_info";
 
     /**
      * 更新应用下载保存路径
