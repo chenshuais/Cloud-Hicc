@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
         if(SpUtils.getBoolSp(this,ConstantValue.FIRST_UP_PHONE_INFO,true)){
             // 获取手机信息
-            getPhoneInfo();
+           // getPhoneInfo();
         }
     }
 

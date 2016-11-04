@@ -97,6 +97,12 @@
         <!--现场报到-->
         <activity android:name=".teacher.activity.PieChartActivity"
             android:screenOrientation="portrait"/>
+        <!--网络中心介绍-->
+        <activity android:name=".teacher.activity.InternetActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".teacher.activity.SoftwareActivity"
+            android:screenOrientation="portrait"/>
 
 
         <service android:name=".teacher.service.UpdataService"/>

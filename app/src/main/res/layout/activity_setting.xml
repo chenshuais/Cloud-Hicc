@@ -25,5 +25,43 @@
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <RelativeLayout
+            android:id="@+id/rl_password"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_news_bg"
+            android:clickable="true">
+            <TextView
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="密码设置"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_massage"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_news_bg"
+            android:layout_marginTop="10dp"
+            android:clickable="true">
+        <TextView
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="联系人消息提醒"
+            android:textSize="16sp"/>
+        </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

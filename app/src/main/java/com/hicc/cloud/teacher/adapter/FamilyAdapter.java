@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Family;
 import com.hicc.cloud.teacher.utils.Logs;
-import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.List;
 
@@ -27,10 +26,6 @@ public class FamilyAdapter extends RecyclerView.Adapter<FamilyViewHolder> {
         mFeedList = feedList;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position,getItemCount());
-    }
 
     @Override
     public FamilyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
