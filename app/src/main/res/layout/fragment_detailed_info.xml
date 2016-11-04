@@ -143,42 +143,6 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_idnumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:padding="5dp"
-                    android:text="身份证号："
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_birthdate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:padding="5dp"
-                    android:text="出生日期："
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_height"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:padding="5dp"
-                    android:text="身高："
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:padding="5dp"
-                    android:text="体重："
-                    android:textSize="16sp" />
-
-                <TextView
                     android:id="@+id/tv_paymentstaus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

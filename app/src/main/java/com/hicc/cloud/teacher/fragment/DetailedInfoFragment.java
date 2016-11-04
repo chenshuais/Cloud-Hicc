@@ -33,10 +33,6 @@ public class DetailedInfoFragment extends BaseFragment {
     private TextView tv_nativeplace;
     private TextView tv_politics;
     private TextView tv_homeaddress;
-    private TextView tv_idnumber;
-    private TextView tv_birthdate;
-    private TextView tv_height;
-    private TextView tv_weight;
     private TextView tv_paymentstaus;
     private TextView tv_onlinereport;
     private TextView tv_liveseportstatue;
@@ -54,10 +50,6 @@ public class DetailedInfoFragment extends BaseFragment {
     private String nativeplace = "";
     private String politics = "";
     private String homeaddress = "";
-    private String idnumber = "";
-    private String birthdate = "";
-    private String height = "";
-    private String weight = "";
     private String paymentstaus = "";
     private String onlinereport = "";
     private String liveseportstatue = "";
@@ -93,7 +85,7 @@ public class DetailedInfoFragment extends BaseFragment {
     }
 
     private void initData() {
-        grade = mStudent.getGradeDescription();
+        grade = "20"+mStudent.getGradeCode()+"级";
         division = mStudent.getDivisionDescription();
         professional = mStudent.getProfessionalDescription();
         phone = mStudent.getYourPhone();
@@ -105,11 +97,6 @@ public class DetailedInfoFragment extends BaseFragment {
         nativeplace = mStudent.getNativePlace();
         politics = mStudent.getPoliticsStatusDescription();
         homeaddress = mStudent.getHomeAddress();
-        idnumber = mStudent.getIdNumber();
-        birthdate = mStudent.getBirthDate();
-        birthdate = birthdate.substring(0,10);
-        height = mStudent.getHeight();
-        weight = mStudent.getWeight();
         paymentstaus = mStudent.getPaymentStausDescription();
         onlinereport = mStudent.getOnlineReportStatueDescription();
         liveseportstatue = mStudent.getLiveReportStatueDescription();
@@ -128,10 +115,6 @@ public class DetailedInfoFragment extends BaseFragment {
         tv_nativeplace.setText("籍贯："+nativeplace);
         tv_politics.setText("政治面貌："+politics);
         tv_homeaddress.setText("家庭住址："+homeaddress);
-        tv_idnumber.setText("身份证号："+idnumber);
-        tv_birthdate.setText("出生日期："+birthdate);
-        tv_height.setText("身高："+height);
-        tv_weight.setText("体重："+weight);
         tv_paymentstaus.setText("缴费状态："+paymentstaus);
         tv_onlinereport.setText("网上报到："+onlinereport);
         tv_liveseportstatue.setText("现场报到："+liveseportstatue);
@@ -150,10 +133,6 @@ public class DetailedInfoFragment extends BaseFragment {
         tv_nativeplace = (TextView) view.findViewById(R.id.tv_nativeplace);
         tv_politics = (TextView) view.findViewById(R.id.tv_politics);
         tv_homeaddress = (TextView) view.findViewById(R.id.tv_homeaddress);
-        tv_idnumber = (TextView) view.findViewById(R.id.tv_idnumber);
-        tv_birthdate = (TextView) view.findViewById(R.id.tv_birthdate);
-        tv_height = (TextView) view.findViewById(R.id.tv_height);
-        tv_weight = (TextView) view.findViewById(R.id.tv_weight);
         tv_paymentstaus = (TextView) view.findViewById(R.id.tv_paymentstaus);
         tv_onlinereport = (TextView) view.findViewById(R.id.tv_onlinereport);
         tv_liveseportstatue = (TextView) view.findViewById(R.id.tv_liveseportstatue);

@@ -2,6 +2,7 @@ package com.hicc.cloud.teacher.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,10 +22,12 @@ import com.hicc.cloud.teacher.bean.Family;
 import com.hicc.cloud.teacher.bean.Student;
 import com.hicc.cloud.teacher.fragment.DetailedInfoFragment;
 import com.hicc.cloud.teacher.fragment.FamilyInfoFragment;
+import com.hicc.cloud.teacher.fragment.RewardPunishmentInfoFragment;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
@@ -41,21 +44,19 @@ import okhttp3.Call;
  * 学生档案
  */
 public class StudentProfileActivity extends AppCompatActivity {
-
-    //private EditText et_search;
-    //private ImageButton ib_search;
     private ImageView iv_back;
     private TextView tv_name;
     private TextView tv_class;
     private TextView tv_sex;
     private TextView tv_stu_num;
+    private ImageView iv_pic;
     private String URL = "http://suguan.hicc.cn/hicccloudt/getStudentInfo";
     private ProgressDialog progressDialog;
-    //private StudentInfoDB db;
     private String stuName;
     private String stuNum;
     private String classDes;
     private String sex;
+    private String imageUrl;
     private Student mStudent = new Student();
     private List<Family> mFamilyList = new ArrayList<>();
 
@@ -70,7 +71,23 @@ public class StudentProfileActivity extends AppCompatActivity {
                     tv_sex.setText("性别：" + sex);
                     tv_stu_num.setText("学号："+ stuNum);
                     tv_class.setText("班级："+ classDes);
-                    closeProgressDialog();
+                    // 加载图片
+                    OkHttpUtils
+                            .get()
+                            .url(mStudent.getImageUrl())
+                            .build()
+                            .execute(new BitmapCallback() {
+                                @Override
+                                public void onError(Call call, Exception e, int id) {
+                                    Logs.i(e.toString());
+                                    closeProgressDialog();
+                                }
+                                @Override
+                                public void onResponse(Bitmap response, int id) {
+                                    iv_pic.setImageBitmap(response);
+                                    closeProgressDialog();
+                                }
+                            });
                     break;
                 case 1:
                     closeProgressDialog();
@@ -88,85 +105,55 @@ public class StudentProfileActivity extends AppCompatActivity {
         }
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentprofile);
+
+        // 找到相应控件
         findUI();
 
-        // 创建数据库实例
-        //db = StudentInfoDB.getInstance(this);
-
+        // 获取从上一个activity传过来的学号 和学生信息
         String studentNu = getIntent().getStringExtra("studentNu");
+        Student student = (Student) getIntent().getSerializableExtra("student");
 
+        // 显示进度对话框
         showProgressDialog();
-        // 查询学号   优先从数据库中查询  没有再请求网络查询
-        //queryStudent(studentNu);
-        queryFromServer(studentNu);
 
-        // 当从网络查询完毕后再加载页面
-        //initUI();
-
-        // 搜索学号
-        //searchNum();
-    }
-
-
-    /* 有搜索栏的
-    private void searchNum() {
-        ib_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String num = et_search.getText().toString().trim();
-                if(!num.equals("")){
-                    showProgressDialog();
-                    // 查询学号   优先从数据库中查询  没有再请求网络查询
-                    queryStudent(num);
-                }else{
-                    ToastUtli.show(getApplicationContext(),"学号不能为空");
-                }
-            }
-        });
-    }
-    */
-
-    /* 有数据库的查询方式  为了信息安全  不使用数据库  直接网络查询
-    private void queryStudent(String stuNum) {
-        // 从数据库中查询
-        mStudent = db.getStudent(stuNum);
-        if(mStudent != null){
-            Logs.i("从数据库中查询");
+        // 如果该学生未现场报道
+        if(student.getLiveReportStatueDescription().equals("未报到")){
+            Logs.i("未现场报道学生");
+            mStudent = student;
+            initUI();
             tv_name.setText("姓名："+ mStudent.getStudentName());
             tv_sex.setText("性别：" + mStudent.getGenderDescription());
-            tv_class.setText("班级："+ mStudent.getClassDescription());
             tv_stu_num.setText("学号："+ mStudent.getStudentNu());
-
-            // 查询家庭信息
-            mFamilyList = db.getFamilys(mStudent.getStudentNu());
-
-            // 发送携带信息的广播
-            Intent intent = new Intent();
-            intent.setAction("ACTION_UPDATA_UI");
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("mStudent", mStudent);
-            intent.putExtras(bundle);
-            intent.putExtra("family", (Serializable) mFamilyList);
-            sendBroadcast(intent);
-
-            closeProgressDialog();
-        }else{
-            Logs.i("从服务器中查询");
-            // 从服务器中查询
-            queryFromServer(stuNum);
+            tv_class.setText("班级："+ mStudent.getClassDescription());
+            // 加载图片
+            OkHttpUtils
+                    .get()
+                    .url(mStudent.getImageUrl())
+                    .build()
+                    .execute(new BitmapCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            Logs.i(e.toString());
+                            closeProgressDialog();
+                        }
+                        @Override
+                        public void onResponse(Bitmap response, int id) {
+                            iv_pic.setImageBitmap(response);
+                            closeProgressDialog();
+                        }
+                    });
+        } else {
+            // 查询学号  请求网络查询
+            queryFromServer(studentNu);
         }
     }
-    */
 
     // 网络查询
     private void queryFromServer(String stuNum) {
-
         // 发送GET请求
         OkHttpUtils
                 .get()
@@ -178,7 +165,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新选择");
                     }
 
                     @Override
@@ -209,22 +196,26 @@ public class StudentProfileActivity extends AppCompatActivity {
                         // **学生姓名
                         stuName = dataInfo.getString("StudentName");
                         mStudent.setStudentName(stuName);
-                        //tv_name.setText("姓名："+ stuName);
                         // **学号
                         stuNum = dataInfo.getString("StudentNu");
                         mStudent.setStudentNu(stuNum);
-                        //tv_stu_num.setText("学号："+ stuNum);
-                        // -专业
-                        String professional = dataInfo.getString("ProfessionalDescription");
-                        mStudent.setProfessionalDescription(professional);
                         // **性别
                         sex = dataInfo.getString("GenderDescription");
                         mStudent.setGenderDescription(sex);
-                        //tv_sex.setText("性别："+sex);
                         // **班级
                         classDes = dataInfo.getString("ClassDescription");
                         mStudent.setClassDescription(classDes);
-                        //tv_class.setText("班级："+ classDes);
+                        // 照片
+                        imageUrl = dataInfo.getString("NewImage");
+                        if(!imageUrl.equals("null")){
+                            mStudent.setImageUrl("http://home.hicc.cn/StudentImage/"+imageUrl);
+                        } else {
+                            imageUrl = dataInfo.getString("OldImage");
+                            mStudent.setImageUrl("http://home.hicc.cn/OldImage/"+imageUrl);
+                        }
+                        // -专业
+                        String professional = dataInfo.getString("ProfessionalDescription");
+                        mStudent.setProfessionalDescription(professional);
                         // -缴费状态
                         String paymentStausDes = dataInfo.getString("PaymentStausDescription");
                         mStudent.setPaymentStausDescription(paymentStausDes);
@@ -248,9 +239,6 @@ public class StudentProfileActivity extends AppCompatActivity {
                         // -学部
                         String division = dataInfo.getString("DivisionDescription");
                         mStudent.setDivisionDescription(division);
-                        // -体重
-                        String weight = dataInfo.getString("Weight");
-                        mStudent.setWeight(weight);
                         // -电话
                         String phone = dataInfo.getString("YourPhone");
                         mStudent.setYourPhone(phone);
@@ -260,21 +248,9 @@ public class StudentProfileActivity extends AppCompatActivity {
                         // -床号
                         String bedNumber = dataInfo.getString("BedNumber");
                         mStudent.setBedNumber(bedNumber);
-                        // -身高
-                        String height = dataInfo.getString("Height");
-                        mStudent.setHeight(height);
                         // **毕业学校
                         String oldSchool = dataInfo.getString("OldSchool");
                         mStudent.setOldSchool(oldSchool);
-                        // -生日
-                        String birthDate = dataInfo.getString("BirthDate");
-                        mStudent.setBirthDate(birthDate);
-                        // -身份证号
-                        String idNumber = dataInfo.getString("IdNumber");
-                        mStudent.setIdNumber(idNumber);
-                        // **入学时间
-                        String inTime = dataInfo.getString("EnrollmentDate");
-                        mStudent.setEnrollmentDate(inTime);
                         // -家庭住址
                         String homeAddress = dataInfo.getString("HomeAddress");
                         mStudent.setHomeAddress(homeAddress);
@@ -290,15 +266,8 @@ public class StudentProfileActivity extends AppCompatActivity {
                         // -网上报道
                         String onlineReportStatueDes = dataInfo.getString("OnlineReportStatueDescription");
                         mStudent.setOnlineReportStatueDescription(onlineReportStatueDes);
-                        // **班级代码
-                        /*int classCode = db.getClasCodeForDB(classDes,gradeCode);
-                        if(classCode >= 0){
-                            mStudent.setClassCode(classCode);
-                        }*/
-                        mStudent.setClassCode(dataInfo.getInt("ClassId"));
-
-                        // 存到数据库  为了数据安全  取消
-                        //db.saveStudent(student);
+                        // 班级代码
+                        mStudent.setClassId(dataInfo.getInt("ClassId"));
 
                         Logs.i("解析家庭信息");
 
@@ -333,25 +302,15 @@ public class StudentProfileActivity extends AppCompatActivity {
                             String contactAddress = familyInfo.getString("ContactAddress");
                             family.setContactAddress(contactAddress);
 
-                            // 存到数据库  为了数据安全  取消
-                            //db.saveFamily(family);
                             mFamilyList.add(family);
                         }
+
+                        // TODO 解析奖惩信息
 
                         Logs.i("发handler消息");
 
                         mHandler.sendEmptyMessage(0);
 
-                        /*
-                        // 发送携带信息的广播
-                        Intent intent = new Intent();
-                        intent.setAction("ACTION_UPDATA_UI");
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mStudent", mStudent);
-                        intent.putExtras(bundle);
-                        intent.putExtra("family", (Serializable)mFamilyList);
-                        sendBroadcast(intent);
-                        */
                     }else{
                         // 查不到  学号或服务器错误
                         mHandler.sendEmptyMessage(1);
@@ -397,12 +356,11 @@ public class StudentProfileActivity extends AppCompatActivity {
             }
         });
 
-        //et_search = (EditText) findViewById(R.id.et_search);
-        //ib_search = (ImageButton) findViewById(R.id.ib_search);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_class = (TextView) findViewById(R.id.tv_class);
         tv_sex = (TextView) findViewById(R.id.tv_sex);
         tv_stu_num = (TextView) findViewById(R.id.tv_stu_num);
+        iv_pic = (ImageView) findViewById(R.id.iv_pic);
     }
     private void initUI() {
         // 设置viewpager
@@ -422,7 +380,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new DetailedInfoFragment(mStudent), "详细信息");
         adapter.addFrag(new FamilyInfoFragment(mFamilyList), "家庭信息");
-        //adapter.addFrag(new EducationInfoFragment(), "教育经历");
+        adapter.addFrag(new RewardPunishmentInfoFragment(), "奖惩信息");
 
         viewPager.setAdapter(adapter);
     }

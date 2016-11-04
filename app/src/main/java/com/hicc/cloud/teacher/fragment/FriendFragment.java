@@ -6,58 +6,121 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.adapter.FirendAdapter;
-import com.hicc.cloud.teacher.bean.Firend;
+import com.hicc.cloud.teacher.activity.FriendStudentListActivity;
+import com.hicc.cloud.teacher.bean.TeacherClassInfo;
+import com.hicc.cloud.teacher.utils.ConstantValue;
+import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.SpUtils;
+import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/9/24/024.
  */
 
 public class FriendFragment extends BaseFragment {
-    private List<Firend> firendList = new ArrayList<Firend>();
+    private static final String URL = "http://suguan.hicc.cn/hicccloudt/LoginT";
+    private List<TeacherClassInfo> classInfoList = new ArrayList<TeacherClassInfo>();
     private ListView listView;
     private LinearLayout ll_progress;
+    private SwipeRefreshLayout sw_refresh; // 下拉刷新控件
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            FirendAdapter adapter = new FirendAdapter(getActivity(), R.layout.firend_item, firendList);
-            listView.setAdapter(adapter);
-            ll_progress.setVisibility(View.GONE);
+            switch (msg.what){
+                // 成功
+                case 0:
+                    sw_refresh.setRefreshing(false);
+                    MyAdapter adapter = new MyAdapter();
+                    listView.setAdapter(adapter);
+                    if(ll_progress.VISIBLE == View.VISIBLE){
+                        ll_progress.setVisibility(View.GONE);
+                    }
+                    // 成功时设置不可下拉刷新
+                    sw_refresh.setEnabled(false);
+                    break;
+                // 请求失败
+                case 1:
+                    sw_refresh.setEnabled(true);
+                    sw_refresh.setRefreshing(false);
+                    if(ll_progress.VISIBLE == View.VISIBLE){
+                        ll_progress.setVisibility(View.GONE);
+                    }
+                    ToastUtli.show(getContext(), "加载失败，请重新加载");
+                    break;
+                // 解析错误
+                case 2:
+                    sw_refresh.setEnabled(true);
+                    sw_refresh.setRefreshing(false);
+                    if(ll_progress.VISIBLE == View.VISIBLE){
+                        ll_progress.setVisibility(View.GONE);
+                    }
+                    ToastUtli.show(getContext(), "加载失败");
+                    break;
+            }
+
         }
     };
 
+
     @Override
     public void fetchData() {
-        initFriends();
+        intiData();
     }
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_firend, container, false);
 
         listView = (ListView) view.findViewById(R.id.list_view);
+        sw_refresh = (SwipeRefreshLayout) view.findViewById(R.id.sw_refresh);
         ll_progress = (LinearLayout) view.findViewById(R.id.ll_progress);
         ll_progress.setVisibility(View.VISIBLE);
+        // 初始设置不可下拉刷新
+        sw_refresh.setEnabled(false);
+        sw_refresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_green_light, android.R.color.holo_red_light, android.R.color.holo_orange_light);
 
         // 设置条目的点击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Firend firend = firendList.get(position);
-                String phone = firend.getPhone();
-                showDialog(phone);
+                Intent intent = new Intent(getContext(),FriendStudentListActivity.class);
+                intent.putExtra("classcode",classInfoList.get(position).getNid());
+                intent.putExtra("timescode",classInfoList.get(position).getGradeCode());
+                intent.putExtra("divisionCode",classInfoList.get(position).getDivisionCode());
+                intent.putExtra("professionalCode",classInfoList.get(position).getProfessionalId());
+                startActivity(intent);
+            }
+        });
+
+        //下拉加载
+        sw_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                intiData();
             }
         });
 
@@ -65,39 +128,80 @@ public class FriendFragment extends BaseFragment {
         return view;
     }
 
-    private void initFriends() {
-        new Thread(){
+    // 网络请求
+    private void intiData() {
+        OkHttpUtils
+                .get()
+                .url(URL)
+                .addParams("account", SpUtils.getStringSp(getContext(), ConstantValue.USER_NAME, ""))
+                .addParams("pass", SpUtils.getStringSp(getContext(), ConstantValue.PASS_WORD, ""))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        // 错误时可以下拉刷新
+                        sw_refresh.setEnabled(true);
+                        sw_refresh.setRefreshing(false);
+                        if(ll_progress.VISIBLE == View.VISIBLE){
+                            ll_progress.setVisibility(View.GONE);
+                        }
+                        Logs.i(e.toString());
+                        ToastUtli.show(getContext(), "服务器繁忙，请重新加载");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        // 解析json
+                        Logs.i("解析json");
+                        getJsonInfo(response);
+                    }
+                });
+    }
+
+    // 解析json数据
+    private void getJsonInfo(final String response) {
+        new Thread() {
             @Override
             public void run() {
-                super.run();
-                Firend a = new Firend("李老师", "13400362548", "9月26日 10:20", R.drawable.ic_test_friend1);
-                firendList.add(a);
-                Firend b = new Firend("张老师", "15512654872", "9月25日 12:20", R.drawable.ic_test_friend2);
-                firendList.add(b);
-                Firend c = new Firend("王老师", "13363254582", "9月24日 15:20", R.drawable.ic_test_friend12);
-                firendList.add(c);
-                Firend d = new Firend("小崔", "18615245789", "9月23日 09:24", R.drawable.ic_test_friend3);
-                firendList.add(d);
-                Firend e = new Firend("小王", "15547856955", "9月22日 10:11", R.drawable.ic_test_friend4);
-                firendList.add(e);
-                Firend f = new Firend("小陈", "13544648522", "9月21日 16:28", R.drawable.ic_test_friend5);
-                firendList.add(f);
-                Firend g = new Firend("赵老师", "15231565455", "9月20日 06:24", R.drawable.ic_test_friend6);
-                firendList.add(g);
-                Firend h = new Firend("于老师", "13400254785", "9月19日 09:50", R.drawable.ic_test_friend7);
-                firendList.add(h);
-                Firend i = new Firend("周老师", "13673219955", "9月19日 06:55", R.drawable.ic_test_friend8);
-                firendList.add(i);
-                Firend j = new Firend("小田", "18773125475", "9月18日 15:13", R.drawable.ic_test_friend9);
-                firendList.add(j);
-                Firend k = new Firend("丛老师", "15532565425", "9月17日 09:23", R.drawable.ic_test_friend10);
-                firendList.add(k);
-                Firend l = new Firend("田老师", "18012354789", "9月16日 10:11", R.drawable.ic_test_friend11);
-                firendList.add(l);
-                mHandler.sendEmptyMessage(0);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean sucessed = jsonObject.getBoolean("sucessed");
+                    if (sucessed) {
+                        Logs.i("开始解析");
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        // 带班信息
+                        JSONArray classInfo = data.getJSONArray("classInfo");
+                        TeacherClassInfo teacherClassInfo;
+                        for (int i = 0; i < classInfo.length(); i++) {
+                            JSONObject info = classInfo.getJSONObject(i);
+
+                            teacherClassInfo = new TeacherClassInfo();
+                            teacherClassInfo.setClassDescription(info.getString("ClassDescription"));
+                            teacherClassInfo.setDivisionCode(info.getInt("DivisionCode"));
+                            teacherClassInfo.setDivisionDescription(info.getString("DivisionDescription"));
+                            teacherClassInfo.setUserNo(info.getString("UserNo"));
+                            teacherClassInfo.setGradeCode(info.getInt("GradeCode"));
+                            teacherClassInfo.setNid(info.getInt("Nid"));
+                            teacherClassInfo.setProfessionalDescription(info.getString("ProfessionalDescription"));
+                            teacherClassInfo.setProfessionalId(info.getInt("ProfessionalId"));
+                            teacherClassInfo.setClassQQGroup(info.getString("ClassQQGroup"));
+
+                            classInfoList.add(teacherClassInfo);
+                        }
+
+                        mHandler.sendEmptyMessage(0);
+                    } else {
+                        mHandler.sendEmptyMessage(1);
+                    }
+                } catch (JSONException e) {
+                    mHandler.sendEmptyMessage(2);
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
+
 
     // 显示对话框
     protected void showDialog(final String phone) {
@@ -110,7 +214,7 @@ public class FriendFragment extends BaseFragment {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                 startActivity(intent);
             }
         });
@@ -124,5 +228,42 @@ public class FriendFragment extends BaseFragment {
         builder.setCancelable(false);
 
         builder.show();
+    }
+
+    class MyAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return classInfoList.size();
+        }
+
+        @Override
+        public TeacherClassInfo getItem(int position) {
+            return classInfoList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHoulder viewHoulder;
+            if(convertView == null){
+                convertView = View.inflate(getContext(),R.layout.item_class,null);
+                viewHoulder = new ViewHoulder();
+                viewHoulder.tv_classdes = (TextView) convertView.findViewById(R.id.tv_classdes);
+                convertView.setTag(viewHoulder);
+            }
+            viewHoulder = (ViewHoulder) convertView.getTag();
+            viewHoulder.tv_classdes.setText(getItem(position).getDivisionDescription()+getItem(position).getGradeCode()+"级"+getItem(position).getClassDescription());
+
+            return convertView;
+        }
+    }
+
+    static class ViewHoulder {
+        TextView tv_classdes;
     }
 }

@@ -2,7 +2,6 @@ package com.hicc.cloud.teacher.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,25 +31,23 @@ import okhttp3.Call;
 /**
  * Created by Administrator on 2016/10/26/026.
  */
-public class StudentListActivity extends AppCompatActivity {
+public class FriendStudentListActivity extends AppCompatActivity {
     private List<Student> mStudentList = new ArrayList<>();
     private ImageView iv_back;
     private ProgressDialog progressDialog;
     private ListView lv_student;
-    private int type;
     private String URL = "http://suguan.hicc.cn/hicccloudt/getInfo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_studentlist);
+        setContentView(R.layout.activity_friendstudentlist);
 
         int timesCode =  getIntent().getIntExtra("timescode",0);
         int divisionCode =  getIntent().getIntExtra("divisionCode",0);
         int professionalCode =  getIntent().getIntExtra("professionalCode",0);
         int classCode =  getIntent().getIntExtra("classcode",0);
 
-        type = getIntent().getIntExtra("type",0);
 
         initUI();
 
@@ -106,59 +102,8 @@ public class StudentListActivity extends AppCompatActivity {
                             JSONObject studentInfo = data.getJSONObject(i);
                             // 学生姓名
                             student.setStudentName(studentInfo.getString("StudentName"));
-                            // 学号
-                            student.setStudentNu(studentInfo.getString("StudentNu"));
-
-                            // 现场报道状态
-                            student.setLiveReportStatueDescription(studentInfo.getString("LiveReportStatueDescription"));
-                            // 没有现场报道的  解析更多信息 用于下一个页面的展示
-                            if(studentInfo.getString("LiveReportStatueDescription").equals("未报到")){
-                                // 性别
-                                student.setGenderDescription(studentInfo.getString("GenderDescription"));
-                                // 班级
-                                student.setClassDescription(studentInfo.getString("ClassDescription"));
-                                // 照片
-                                String imageUrl = studentInfo.getString("NewImage");
-                                if(!imageUrl.equals("null")){
-                                    student.setImageUrl("http://home.hicc.cn/StudentImage/"+imageUrl);
-                                } else {
-                                    imageUrl = studentInfo.getString("OldImage");
-                                    student.setImageUrl("http://home.hicc.cn/OldImage/"+imageUrl);
-                                }
-                                // 专业
-                                student.setProfessionalDescription(studentInfo.getString("ProfessionalDescription"));
-                                // 缴费状态
-                                student.setPaymentStausDescription(studentInfo.getString("PaymentStausDescription"));
-                                // 民族
-                                student.setNationalDescription(studentInfo.getString("NationalDescription"));
-                                // 省份
-                                student.setProvinceDescription(studentInfo.getString("ProvinceDescription"));
-                                // 年级代码
-                                student.setGradeCode(studentInfo.getInt("GradeCode"));
-                                // -宿舍
-                                student.setDormitoryDescription(studentInfo.getString("DormitoryDescription"));
-                                // 宿舍号
-                                if(!studentInfo.getString("DormitoryNo").equals("null")){
-                                    int dormitoryNo = studentInfo.getInt("DormitoryNo");
-                                    student.setDormitoryNo(dormitoryNo);
-                                }
-                                // -学部
-                                student.setDivisionDescription(studentInfo.getString("DivisionDescription"));
-                                // -电话
-                                student.setYourPhone(studentInfo.getString("YourPhone"));
-                                // -年级
-                                student.setGradeDescription(studentInfo.getString("GradeDescription"));
-                                // -床号
-                                student.setBedNumber(studentInfo.getString("BedNumber"));
-                                // -家庭住址
-                                student.setHomeAddress(studentInfo.getString("HomeAddress"));
-                                // -政治面貌
-                                student.setPoliticsStatusDescription(studentInfo.getString("PoliticsStatusDescription"));
-                                // -现场报道
-                                student.setLiveReportStatueDescription(studentInfo.getString("LiveReportStatueDescription"));
-                                // -网上报道
-                                student.setOnlineReportStatueDescription(studentInfo.getString("OnlineReportStatueDescription"));
-                            }
+                            // 电话
+                            student.setYourPhone(studentInfo.getString("YourPhone"));
 
                             mStudentList.add(student);
                         }
@@ -196,18 +141,8 @@ public class StudentListActivity extends AppCompatActivity {
         lv_student.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Logs.i(mStudentList.get(position).getStudentNu());
-                // 学生档案
-                if(type == 1){
-                    Intent intent = new Intent(getApplicationContext(),StudentProfileActivity.class);
-                    intent.putExtra("studentNu", mStudentList.get(position).getStudentNu());
-                    intent.putExtra("student",(Serializable)mStudentList.get(position));
-                    startActivity(intent);
-                // 学生成绩
-                }else if(type == 2){
-
-                }
-
+                Logs.i(mStudentList.get(position).getYourPhone());
+                // TODO 点击添加标签
             }
         });
     }
