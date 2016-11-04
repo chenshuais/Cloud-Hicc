@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Mark;
-import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.List;
 
@@ -23,10 +22,6 @@ public class MarkHistoryAdapter extends RecyclerView.Adapter<MarkHistoryViewHold
         mFeedList = feedList;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position,getItemCount());
-    }
 
     @Override
     public MarkHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
