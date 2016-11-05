@@ -29,10 +29,8 @@ public class FeedBackActivity extends AppCompatActivity {
     private ImageView iv_back;
     private Button bt_send;
     private static final String URL = "http://suguan.hicc.cn/feedback1/suggest.do";
-    public String code=this.getVersionCode();
     private EditText ed_sendtext;
-    public FeedBackActivity() throws PackageManager.NameNotFoundException {
-    }
+    public String date=this.getVersionCode();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +41,18 @@ public class FeedBackActivity extends AppCompatActivity {
 
     }
 
-    public String getVersionCode() throws PackageManager.NameNotFoundException {
+    public String getVersionCode()  {
         //获取包管理者
       PackageManager pm = getPackageManager();
        //从包管理者中获取基本信息
-       PackageInfo packageInfo=pm.getPackageInfo(getPackageName(),0);
-       return packageInfo.versionName;
+        PackageInfo packageInfo= null;
+        try {
+            packageInfo = pm.getPackageInfo(getPackageName(),0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

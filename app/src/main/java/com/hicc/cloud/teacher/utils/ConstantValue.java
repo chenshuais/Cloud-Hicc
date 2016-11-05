@@ -64,7 +64,7 @@ public class ConstantValue {
     /**
      * 版本号
      */
-    public static final String VERSION_CODE = "this.getVersionCode();";
+    public static final String VERSION_CODE = "date;";
     /**
      * 更新应用下载保存路径
      */
