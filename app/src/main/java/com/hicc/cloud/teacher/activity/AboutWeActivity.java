@@ -14,7 +14,6 @@ import com.hicc.cloud.R;
  * 关于   ——崔国钊
  */
 public class AboutWeActivity extends AppCompatActivity {
-
     private Button bt_internet;
     private Button bt_software;
     private ImageView iv_back;
