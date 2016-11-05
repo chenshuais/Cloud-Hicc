@@ -12,10 +12,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="60dp"
         android:clickable="true"
-        android:src="@drawable/ic_test_friend6" />
+        android:src="@drawable/icon_avatar" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/login_ti1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp">
@@ -31,7 +30,6 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/login_ti2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

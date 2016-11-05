@@ -10,7 +10,7 @@ import com.hicc.cloud.R;
 
 /**
  * Created by Administrator on 2016/9/24/024.
- * 学生档案  教育经历
+ * 学生档案  奖惩信息
  */
 
 public class RewardPunishmentInfoFragment extends BaseFragment {

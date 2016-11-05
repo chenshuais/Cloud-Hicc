@@ -101,7 +101,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             mPwd = MD5Util.str2md5(mPwd);
             // 向服务器请求数据 发送GET请求
             getFromServer(userName, mPwd);
-            Logs.i("账号："+userName+"  密码："+mPwd);
         }
     }
 

@@ -59,18 +59,19 @@ public class StudentProfileActivity extends AppCompatActivity {
     private String imageUrl;
     private Student mStudent = new Student();
     private List<Family> mFamilyList = new ArrayList<>();
+    private Student unFindStudent;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     initUI();
-                    tv_name.setText("姓名："+ stuName);
+                    tv_name.setText("姓名：" + stuName);
                     tv_sex.setText("性别：" + sex);
-                    tv_stu_num.setText("学号："+ stuNum);
-                    tv_class.setText("班级："+ classDes);
+                    tv_stu_num.setText("学号：" + stuNum);
+                    tv_class.setText("班级：" + classDes);
                     // 加载图片
                     OkHttpUtils
                             .get()
@@ -82,6 +83,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                                     Logs.i(e.toString());
                                     closeProgressDialog();
                                 }
+
                                 @Override
                                 public void onResponse(Bitmap response, int id) {
                                     iv_pic.setImageBitmap(response);
@@ -90,20 +92,16 @@ public class StudentProfileActivity extends AppCompatActivity {
                             });
                     break;
                 case 1:
-                    closeProgressDialog();
-                    tv_name.setText("姓名：");
-                    tv_sex.setText("性别：");
-                    tv_stu_num.setText("学号：");
-                    tv_class.setText("班级：");
-                    ToastUtli.show(getApplicationContext(),"学号错误，请检查无误后输入");
+                    unFindStudentUI(unFindStudent);
                     break;
                 case 2:
                     closeProgressDialog();
-                    ToastUtli.show(getApplicationContext(),"查询失败");
+                    ToastUtli.show(getApplicationContext(), "查询失败");
                     break;
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,41 +113,44 @@ public class StudentProfileActivity extends AppCompatActivity {
 
         // 获取从上一个activity传过来的学号 和学生信息
         String studentNu = getIntent().getStringExtra("studentNu");
-        Student student = (Student) getIntent().getSerializableExtra("student");
+        unFindStudent = (Student) getIntent().getSerializableExtra("student");
 
         // 显示进度对话框
         showProgressDialog();
 
-        // 如果该学生未现场报道
-        if(student.getLiveReportStatueDescription().equals("未报到")){
-            Logs.i("未现场报道学生");
-            mStudent = student;
-            initUI();
-            tv_name.setText("姓名："+ mStudent.getStudentName());
-            tv_sex.setText("性别：" + mStudent.getGenderDescription());
-            tv_stu_num.setText("学号："+ mStudent.getStudentNu());
-            tv_class.setText("班级："+ mStudent.getClassDescription());
-            // 加载图片
-            OkHttpUtils
-                    .get()
-                    .url(mStudent.getImageUrl())
-                    .build()
-                    .execute(new BitmapCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            Logs.i(e.toString());
-                            closeProgressDialog();
-                        }
-                        @Override
-                        public void onResponse(Bitmap response, int id) {
-                            iv_pic.setImageBitmap(response);
-                            closeProgressDialog();
-                        }
-                    });
-        } else {
-            // 查询学号  请求网络查询
-            queryFromServer(studentNu);
-        }
+        // 查询学号  请求网络查询
+        queryFromServer(studentNu);
+
+    }
+
+    // 查询不到的学生展示UI方式
+    private void unFindStudentUI(Student unFindStudent) {
+        Logs.i("查找不到的学生");
+        mStudent = unFindStudent;
+        initUI();
+        tv_name.setText("姓名：" + mStudent.getStudentName());
+        tv_sex.setText("性别：" + mStudent.getGenderDescription());
+        tv_stu_num.setText("学号：" + mStudent.getStudentNu());
+        tv_class.setText("班级：" + mStudent.getClassDescription());
+        // 加载图片
+        OkHttpUtils
+                .get()
+                .url(mStudent.getImageUrl())
+                .build()
+                .execute(new BitmapCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logs.i(e.toString());
+                        closeProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(Bitmap response, int id) {
+                        iv_pic.setImageBitmap(response);
+                        closeProgressDialog();
+                        ToastUtli.show(getApplicationContext(), "该学生信息不全");
+                    }
+                });
     }
 
     // 网络查询
@@ -165,7 +166,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新选择");
+                        ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新选择");
                     }
 
                     @Override
@@ -180,14 +181,14 @@ public class StudentProfileActivity extends AppCompatActivity {
     }
 
     private void getJsonInfo(final String response) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     boolean sucessed = jsonObject.getBoolean("sucessed");
-                    if(sucessed){
+                    if (sucessed) {
                         Logs.i("开始解析");
 
                         JSONObject data = jsonObject.getJSONObject("data");
@@ -207,11 +208,11 @@ public class StudentProfileActivity extends AppCompatActivity {
                         mStudent.setClassDescription(classDes);
                         // 照片
                         imageUrl = dataInfo.getString("NewImage");
-                        if(!imageUrl.equals("null")){
-                            mStudent.setImageUrl("http://home.hicc.cn/StudentImage/"+imageUrl);
+                        if (!imageUrl.equals("null")) {
+                            mStudent.setImageUrl("http://home.hicc.cn/StudentImage/" + imageUrl);
                         } else {
                             imageUrl = dataInfo.getString("OldImage");
-                            mStudent.setImageUrl("http://home.hicc.cn/OldImage/"+imageUrl);
+                            mStudent.setImageUrl("http://home.hicc.cn/OldImage/" + imageUrl);
                         }
                         // -专业
                         String professional = dataInfo.getString("ProfessionalDescription");
@@ -232,7 +233,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                         String dormitoryDes = dataInfo.getString("DormitoryDescription");
                         mStudent.setDormitoryDescription(dormitoryDes);
                         // 宿舍号
-                        if(!dataInfo.getString("DormitoryNo").equals("null")){
+                        if (!dataInfo.getString("DormitoryNo").equals("null")) {
                             int dormitoryNo = dataInfo.getInt("DormitoryNo");
                             mStudent.setDormitoryNo(dormitoryNo);
                         }
@@ -273,7 +274,7 @@ public class StudentProfileActivity extends AppCompatActivity {
 
                         // 解析家庭信息
                         JSONArray dataFamily = data.getJSONArray("dataFamily");
-                        for(int i=0; i < dataFamily.length(); i++){
+                        for (int i = 0; i < dataFamily.length(); i++) {
                             Family family = new Family();
 
                             JSONObject familyInfo = dataFamily.getJSONObject(i);
@@ -311,7 +312,7 @@ public class StudentProfileActivity extends AppCompatActivity {
 
                         mHandler.sendEmptyMessage(0);
 
-                    }else{
+                    } else {
                         // 查不到  学号或服务器错误
                         mHandler.sendEmptyMessage(1);
                     }
@@ -362,6 +363,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         tv_stu_num = (TextView) findViewById(R.id.tv_stu_num);
         iv_pic = (ImageView) findViewById(R.id.iv_pic);
     }
+
     private void initUI() {
         // 设置viewpager
         ScrollViewPager viewPager = (ScrollViewPager) findViewById(R.id.viewpager);
@@ -414,7 +416,6 @@ public class StudentProfileActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
 
 
     // TODO 更改为listview的方式  先展示导员所带班级列表  每个item的点击事件为跳转到相应的班级学生列表(也是用listview)  学生列表的item点击事件才是跳转到学生信息界面

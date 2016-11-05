@@ -20,7 +20,6 @@ import com.hicc.cloud.teacher.utils.Logs;
 
 @SuppressLint("ValidFragment")
 public class DetailedInfoFragment extends BaseFragment {
-    //private MyBroadcastReceiver mBroadcastReceiver;
     private Student mStudent;
     private TextView tv_grade;
     private TextView tv_division;
@@ -72,14 +71,6 @@ public class DetailedInfoFragment extends BaseFragment {
         initData();
 
         setUI();
-
-        /* TODO 搜索框的方法
-        // 动态注册广播
-        mBroadcastReceiver = new MyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("ACTION_UPDATA_UI");
-        getContext().registerReceiver(mBroadcastReceiver, intentFilter);
-        */
 
         return view;
     }
@@ -151,47 +142,4 @@ public class DetailedInfoFragment extends BaseFragment {
             }
         });
     }
-
-    /*
-    class MyBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Logs.i("详细信息界面收到广播了吗？？？？？？");
-            Student student = (Student) intent.getSerializableExtra("student");
-
-            grade = student.getGradeDescription();
-            division = student.getDivisionDescription();
-            professional = student.getProfessionalDescription();
-            phone = student.getYourPhone();
-            dormitory = student.getDormitoryDescription();
-            dormitoryNo = student.getDormitoryNo();
-            bednumber = student.getBedNumber();
-            national = student.getNationalDescription();
-            province = student.getProvinceDescription();
-            nativeplace = student.getNativePlace();
-            politics = student.getPoliticsStatusDescription();
-            homeaddress = student.getHomeAddress();
-            idnumber = student.getIdNumber();
-            birthdate = student.getBirthDate();
-            birthdate = birthdate.substring(0,10);
-            height = student.getHeight();
-            weight = student.getWeight();
-            paymentstaus = student.getPaymentStausDescription();
-            onlinereport = student.getOnlineReportStatueDescription();
-            liveseportstatue = student.getLiveReportStatueDescription();
-
-            setUI();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // 取消注册广播
-        if (mBroadcastReceiver != null) {
-            Logs.i("取消注册广播");
-            getContext().unregisterReceiver(mBroadcastReceiver);
-        }
-    }
-    */
 }

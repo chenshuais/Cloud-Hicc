@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -31,7 +30,6 @@ import com.hicc.cloud.teacher.bean.Grade;
 import com.hicc.cloud.teacher.bean.PhoneInfo;
 import com.hicc.cloud.teacher.bean.Professional;
 import com.hicc.cloud.teacher.db.StudentInfoDB;
-import com.hicc.cloud.teacher.db.UpdateFile;
 import com.hicc.cloud.teacher.fragment.BaseFragment;
 import com.hicc.cloud.teacher.fragment.FriendFragment;
 import com.hicc.cloud.teacher.fragment.HomeFragment;
@@ -45,6 +43,7 @@ import com.hicc.cloud.teacher.view.MyTabLayout;
 import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.hicc.cloud.teacher.view.TabItem;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,15 +55,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.DownloadFileListener;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 import okhttp3.Call;
 
 /**
@@ -72,19 +65,19 @@ import okhttp3.Call;
  */
 
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{
+    private static final String URL_PHONEINFO = "http://suguan.hicc.cn/feedback1/phoneInfo.do";
+    private static final String URL = "http://suguan.hicc.cn/hicccloudt/getCode";
+    private static final String URL_NEW_APP = "http://suguan.hicc.cn/feedback1/newApp.do";
     private MyTabLayout mTabLayout;
     BaseFragment fragment;
     ScrollViewPager mViewPager;
     ArrayList<TabItem>tabs;
     private ProgressDialog progressDialog;
-    private BmobQuery<UpdateFile> bmobQuery = new BmobQuery<UpdateFile>();
-    private File file = new File(ConstantValue.downloadpathName);
-    private BmobFile mBmobfile;
     private static Boolean isExit = false;
     private EditText et_search;
     private boolean isCheck = true;
-    private final String URL = "http://suguan.hicc.cn/hicccloudt/getCode";
     private StudentInfoDB db;
+    private String mAppUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,40 +95,64 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         // 加载数据到数据库中
         creatData();
 
+        // 每次登陆将手机信息上传到服务器
+        postPhoneInfo();
+
         // 注册监听退出登录的事件
         EventBus.getDefault().register(this);
     }
 
-    // TODO 每次登陆都发送
-    private void getPhoneInfo() {
-        final PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(this);
-        phoneInfo.save(this, new SaveListener() {
-            @Override
-            public void onSuccess() {
-                SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_UP_PHONE_INFO,false);
-                Logs.i("手机品牌："+phoneInfo.getPhoneBrand());
-                Logs.i("手机型号："+phoneInfo.getPhoneBrandType());
-                Logs.i("系统版本："+phoneInfo.getAndroidVersion());
-                Logs.i("cpu型号："+phoneInfo.getCpuName());
-                Logs.i("IMEI："+phoneInfo.getIMEI());
-                Logs.i("IMSI："+phoneInfo.getIMSI());
-                Logs.i("手机号："+phoneInfo.getNumer());
-                Logs.i("运营商："+phoneInfo.getServiceName());
-            }
+    // 上传手机信息到服务器
+    private void postPhoneInfo() {
+        PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(this);
+        // 发送GET请求
+        OkHttpUtils
+                .get()
+                .url(URL_PHONEINFO)
+                .addParams("userId", SpUtils.getStringSp(this,ConstantValue.USER_NAME,""))
+                .addParams("phone", phoneInfo.getPhoneBrand())
+                .addParams("phoneType", phoneInfo.getPhoneBrandType())
+                .addParams("sys", phoneInfo.getAndroidVersion())
+                .addParams("IMEI", phoneInfo.getIMEI())
+                .addParams("CPU", phoneInfo.getCpuName())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logs.i("上传手机信息失败："+e.toString());
+                        // 上传失败  重新上传
+                        postPhoneInfo();
+                        return;
+                    }
 
-            @Override
-            public void onFailure(int i, String s) {
-                // 加载失败  下次进入应用重新加载
-                SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_UP_PHONE_INFO,true);
-            }
-        });
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        // 解析json
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean sucessed = jsonObject.getBoolean("flag");
+                            if(sucessed){
+                                Logs.i("上传手机信息成功");
+                            }else{
+                                // 上传失败
+                                Logs.i("手机信息:服务器未响应，上传失败");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Logs.i("手机信息:解析异常:"+e.toString());
+                        }
+                    }
+                });
     }
 
+    // 设置eventBus收到消息后的事件
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ExitEvent event) {
         finish();
     }
 
+    // 获取专业代码 存到数据库
     private void creatData() {
         if(SpUtils.getBoolSp(this,ConstantValue.FIRST_DATA,true)){
             // 发送GET请求
@@ -159,13 +176,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                             getJsonInfo(response);
                         }
                     });
-
-
-        }
-
-        if(SpUtils.getBoolSp(this,ConstantValue.FIRST_UP_PHONE_INFO,true)){
-            // 获取手机信息
-           // getPhoneInfo();
         }
     }
 
@@ -348,38 +358,63 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
     // 检测更新
     private void checkVersionCode() {
-        if(bmobQuery != null){
-            // TODO 旧版本方法
-            bmobQuery.findObjects(this, new FindListener<UpdateFile>() {
-                @Override
-                public void onSuccess(List<UpdateFile> list) {
-                    for (UpdateFile updatefile : list) {
-                        // 如果服务器的版本号大于本地的  就更新
-                        if(updatefile.getVersion() > getVersionCode()){
-                            BmobFile bmobfile = updatefile.getFile();
-                            mBmobfile = bmobfile;
-                            // 文件路径不为null  并且sd卡可用
-                            if(file != null && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                                // 展示下载对话框
-                                showUpDataDialog(updatefile.getDescription(),bmobfile,file);
-                            }
-                        }
+        // 发送GET请求
+        OkHttpUtils
+                .get()
+                .url(URL_NEW_APP)
+                .addParams("appId", "1")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logs.i("获取最新app信息失败："+e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        Logs.i("获取最新app信息成功");
+                        // 解析json
+                        getAppInfoJson(response);
+                    }
+                });
+    }
+
+    // 解析服务器返回的app信息数据
+    private void getAppInfoJson(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            boolean falg = jsonObject.getBoolean("falg");
+            if (falg) {
+                JSONObject data = jsonObject.getJSONObject("data");
+                double v = Double.valueOf(data.getString("appVersion"));
+                int version = (int) v;
+                // 如果服务器的版本号大于本地的  就更新
+                if(version > getVersionCode()){
+                    // 获取下载地址
+                    mAppUrl = data.getString("appUrl");
+                    // 获取新版app描述
+                    String appDescribe = data.getString("appDescribe");
+                    // 如果sd卡可用
+                    if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                        // 展示下载对话框
+                        showUpDataDialog(appDescribe, mAppUrl);
                     }
                 }
-
-                @Override
-                public void onError(int i, String s) {
-                    Log.i("Bmob文件传输","查询失败："+s);
-                }
-            });
+            } else {
+                Logs.i("获取最新app信息失败："+jsonObject.getString("data"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Logs.i("解析最新app信息失败："+e.toString());
         }
     }
 
     // 显示更新对话框
-    protected void showUpDataDialog(String description, final BmobFile bmobfile, final File file) {
+    protected void showUpDataDialog(String description, final String appUrl) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
         //设置对话框左上角图标
-        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(R.mipmap.icon);
         //设置对话框标题
         builder.setTitle("发现新版本");
         //设置对话框内容
@@ -394,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                     requestCameraPermission();
                 } else {
                     //下载apk
-                    downLoadApk(bmobfile, file);
+                    downLoadApk(appUrl);
                     // 显示一个进度条对话框
                     showProgressDialog();
                 }
@@ -421,6 +456,37 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         builder.show();
     }
 
+    // 下载文件
+    private void downLoadApk(String appUrl) {
+        OkHttpUtils
+                .get()
+                .url(appUrl)
+                .build()
+                .execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(),"云上工商.apk") {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtli.show(getApplicationContext(),"下载失败："+e.toString());
+                        Logs.i("下载失败："+e.toString()+","+id);
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onResponse(File response, int id) {
+                        ToastUtli.show(getApplicationContext(),"下载成功,保存路径:"+ ConstantValue.downloadpathName);
+                        Logs.i("下载成功,保存路径:"+ConstantValue.downloadpathName);
+                        // 安装应用
+                        installApk(response);
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void inProgress(float progress, long total, int id) {
+                        // 设置进度
+                        progressDialog.setProgress((int) (100 * progress));
+                    }
+                });
+    }
+
     // 下载的进度条对话框
     protected void showProgressDialog() {
         progressDialog = new ProgressDialog(this);
@@ -430,32 +496,11 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
+                return;
             }
         });
-        //progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.show();
-    }
-
-    // 下载文件
-    private void downLoadApk(BmobFile bmobfile, final File file) {
-        //调用bmobfile.download方法
-        // TODO 旧版本方法
-        bmobfile.download(this, file, new DownloadFileListener() {
-            @Override
-            public void onSuccess(String s) {
-                ToastUtli.show(getApplicationContext(),"下载成功,保存路径:"+ ConstantValue.downloadpathName);
-                Log.i("Bmob文件下载","下载成功,保存路径:"+ConstantValue.downloadpathName);
-                installApk(file);
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                ToastUtli.show(getApplicationContext(),"下载失败："+s+","+s);
-                Log.i("Bmob文件下载","下载失败："+i+","+s);
-                progressDialog.dismiss();
-            }
-        });
     }
 
     // 安装应用
@@ -467,9 +512,9 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivityForResult(intent,0);
         android.os.Process.killProcess(android.os.Process.myPid());
-
     }
 
+    // 从安装应用界面返回后的处理
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -506,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         if (requestCode == 0) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //下载apk
-                downLoadApk(mBmobfile, file);
+                downLoadApk(mAppUrl);
                 // 显示一个进度条对话框
                 showProgressDialog();
             } else {

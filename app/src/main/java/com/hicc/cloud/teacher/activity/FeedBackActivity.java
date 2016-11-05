@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.RadioGroup;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
@@ -18,6 +18,9 @@ import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.Call;
 
 /**
@@ -25,14 +28,13 @@ import okhttp3.Call;
  * 反馈   ——崔国钊
  */
 public class FeedBackActivity extends AppCompatActivity {
-
+    private static final String URL = "http://suguan.hicc.cn/feedback1/suggest.do";
     private ImageView iv_back;
     private Button bt_send;
-    private static final String URL = "http://suguan.hicc.cn/feedback1/suggest.do";
-    public String code=this.getVersionCode();
     private EditText ed_sendtext;
-    public FeedBackActivity() throws PackageManager.NameNotFoundException {
-    }
+    private RadioGroup rg_root;
+    private String mTag = "1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,21 +42,12 @@ public class FeedBackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_feedback);
 
         initUI();
-
     }
-
-    public String getVersionCode() throws PackageManager.NameNotFoundException {
-        //获取包管理者
-      PackageManager pm = getPackageManager();
-       //从包管理者中获取基本信息
-       PackageInfo packageInfo=pm.getPackageInfo(getPackageName(),0);
-       return packageInfo.versionName;
-    }
-
 
     private void initUI() {
-        ed_sendtext= (EditText) findViewById(R.id.sendtext);
-        bt_send= (Button) findViewById(R.id.bt_send);
+        ed_sendtext = (EditText) findViewById(R.id.sendtext);
+        bt_send = (Button) findViewById(R.id.bt_send);
+        rg_root = (RadioGroup) findViewById(R.id.rg_root);
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,35 +55,80 @@ public class FeedBackActivity extends AppCompatActivity {
                 finish();
             }
         });
-        final String massage=ed_sendtext.getText().toString().trim();
-        bt_send.setOnClickListener(new View.OnClickListener() {
+
+        rg_root.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                OkHttpUtils
-                        .get()
-                        .url(URL)
-                        .addParams("userId",SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME,""))
-                        .addParams("appId",SpUtils.getStringSp(getApplicationContext(),ConstantValue.APP_ID,""))
-                        .addParams("tag",SpUtils.getStringSp(getApplicationContext(),ConstantValue.USER_NAME,""))
-                        .addParams("content",SpUtils.getStringSp(getApplicationContext(),massage,""))
-                        //.addParams("appVersion",SpUtils.getStringSp(getApplicationContext(),ConstantValue.VERSION_CODE,"")
-                        .build()
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onError(Call call, Exception e, int id) {
-                                Logs.i(e.toString());
-                                ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新发送");
-                            }
-
-                            @Override
-                            public void onResponse(String response, int id) {
-                                ToastUtli.show(getApplicationContext(),"发送成功");
-                            }
-                        });
-
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.rb_ui:
+                        mTag = "1";
+                        break;
+                    case R.id.rb_function:
+                        mTag = "2";
+                        break;
+                }
             }
         });
 
+        // 发送按钮的点击事件
+        bt_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String massage = ed_sendtext.getText().toString().trim();
+                // 如果输入不为空
+                if(!massage.equals("")){
+                    OkHttpUtils
+                            .get()
+                            .url(URL)
+                            .addParams("userId", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
+                            .addParams("appId", "1")
+                            .addParams("appVersion", String.valueOf(getVersionCode()))
+                            .addParams("tag", mTag)
+                            .addParams("content", massage)
+                            .build()
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onError(Call call, Exception e, int id) {
+                                    Logs.i("发送反馈信息失败："+e.toString());
+                                    ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新发送");
+                                }
+
+                                @Override
+                                public void onResponse(String response, int id) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean falg = jsonObject.getBoolean("falg");
+                                        if(falg){
+                                            ToastUtli.show(getApplicationContext(), "发送成功");
+                                        } else {
+                                            Logs.i("服务器错误,发送失败："+jsonObject.getString("data"));
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        Logs.i("解析反馈信息结果失败："+e.toString());
+                                    }
+                                }
+                            });
+                } else {
+                    ToastUtli.show(getApplicationContext(),"请输入您的反馈信息");
+                }
+            }
+        });
+    }
+
+    // 获取本应用版本号
+    private int getVersionCode() {
+        // 拿到包管理者
+        PackageManager pm = getPackageManager();
+        // 获取包的基本信息
+        try {
+            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
+            // 返回应用的版本号
+            return info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

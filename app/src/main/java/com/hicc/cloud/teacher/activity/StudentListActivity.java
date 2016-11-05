@@ -40,20 +40,23 @@ public class StudentListActivity extends AppCompatActivity {
     private ListView lv_student;
     private int type;
     private String URL = "http://suguan.hicc.cn/hicccloudt/getInfo";
+    private TextView tv_action_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentlist);
 
-        int timesCode =  getIntent().getIntExtra("timescode",0);
-        int divisionCode =  getIntent().getIntExtra("divisionCode",0);
-        int professionalCode =  getIntent().getIntExtra("professionalCode",0);
-        int classCode =  getIntent().getIntExtra("classcode",0);
+        int timesCode = getIntent().getIntExtra("timescode", 0);
+        int divisionCode = getIntent().getIntExtra("divisionCode", 0);
+        int professionalCode = getIntent().getIntExtra("professionalCode", 0);
+        int classCode = getIntent().getIntExtra("classcode", 0);
+        String title = getIntent().getStringExtra("title");
 
-        type = getIntent().getIntExtra("type",0);
+        type = getIntent().getIntExtra("type", 0);
 
         initUI();
+        tv_action_title.setText(title);
 
         initData(timesCode, divisionCode, professionalCode, classCode);
     }
@@ -74,7 +77,7 @@ public class StudentListActivity extends AppCompatActivity {
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                        ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
                     @Override
@@ -89,14 +92,14 @@ public class StudentListActivity extends AppCompatActivity {
     }
 
     private void getJsonInfo(final String response) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     boolean sucessed = jsonObject.getBoolean("sucessed");
-                    if(sucessed) {
+                    if (sucessed) {
                         Logs.i("开始解析");
 
                         JSONArray data = jsonObject.getJSONArray("data");
@@ -111,54 +114,53 @@ public class StudentListActivity extends AppCompatActivity {
 
                             // 现场报道状态
                             student.setLiveReportStatueDescription(studentInfo.getString("LiveReportStatueDescription"));
-                            // 没有现场报道的  解析更多信息 用于下一个页面的展示
-                            if(studentInfo.getString("LiveReportStatueDescription").equals("未报到")){
-                                // 性别
-                                student.setGenderDescription(studentInfo.getString("GenderDescription"));
-                                // 班级
-                                student.setClassDescription(studentInfo.getString("ClassDescription"));
-                                // 照片
-                                String imageUrl = studentInfo.getString("NewImage");
-                                if(!imageUrl.equals("null")){
-                                    student.setImageUrl("http://home.hicc.cn/StudentImage/"+imageUrl);
-                                } else {
-                                    imageUrl = studentInfo.getString("OldImage");
-                                    student.setImageUrl("http://home.hicc.cn/OldImage/"+imageUrl);
-                                }
-                                // 专业
-                                student.setProfessionalDescription(studentInfo.getString("ProfessionalDescription"));
-                                // 缴费状态
-                                student.setPaymentStausDescription(studentInfo.getString("PaymentStausDescription"));
-                                // 民族
-                                student.setNationalDescription(studentInfo.getString("NationalDescription"));
-                                // 省份
-                                student.setProvinceDescription(studentInfo.getString("ProvinceDescription"));
-                                // 年级代码
-                                student.setGradeCode(studentInfo.getInt("GradeCode"));
-                                // -宿舍
-                                student.setDormitoryDescription(studentInfo.getString("DormitoryDescription"));
-                                // 宿舍号
-                                if(!studentInfo.getString("DormitoryNo").equals("null")){
-                                    int dormitoryNo = studentInfo.getInt("DormitoryNo");
-                                    student.setDormitoryNo(dormitoryNo);
-                                }
-                                // -学部
-                                student.setDivisionDescription(studentInfo.getString("DivisionDescription"));
-                                // -电话
-                                student.setYourPhone(studentInfo.getString("YourPhone"));
-                                // -年级
-                                student.setGradeDescription(studentInfo.getString("GradeDescription"));
-                                // -床号
-                                student.setBedNumber(studentInfo.getString("BedNumber"));
-                                // -家庭住址
-                                student.setHomeAddress(studentInfo.getString("HomeAddress"));
-                                // -政治面貌
-                                student.setPoliticsStatusDescription(studentInfo.getString("PoliticsStatusDescription"));
-                                // -现场报道
-                                student.setLiveReportStatueDescription(studentInfo.getString("LiveReportStatueDescription"));
-                                // -网上报道
-                                student.setOnlineReportStatueDescription(studentInfo.getString("OnlineReportStatueDescription"));
+
+                            // 性别
+                            student.setGenderDescription(studentInfo.getString("GenderDescription"));
+                            // 班级
+                            student.setClassDescription(studentInfo.getString("ClassDescription"));
+                            // 照片
+                            String imageUrl = studentInfo.getString("NewImage");
+                            if (!imageUrl.equals("null")) {
+                                student.setImageUrl("http://home.hicc.cn/StudentImage/" + imageUrl);
+                            } else {
+                                imageUrl = studentInfo.getString("OldImage");
+                                student.setImageUrl("http://home.hicc.cn/OldImage/" + imageUrl);
                             }
+                            // 专业
+                            student.setProfessionalDescription(studentInfo.getString("ProfessionalDescription"));
+                            // 缴费状态
+                            student.setPaymentStausDescription(studentInfo.getString("PaymentStausDescription"));
+                            // 民族
+                            student.setNationalDescription(studentInfo.getString("NationalDescription"));
+                            // 省份
+                            student.setProvinceDescription(studentInfo.getString("ProvinceDescription"));
+                            // 年级代码
+                            student.setGradeCode(studentInfo.getInt("GradeCode"));
+                            // -宿舍
+                            student.setDormitoryDescription(studentInfo.getString("DormitoryDescription"));
+                            // 宿舍号
+                            if (!studentInfo.getString("DormitoryNo").equals("null")) {
+                                int dormitoryNo = studentInfo.getInt("DormitoryNo");
+                                student.setDormitoryNo(dormitoryNo);
+                            }
+                            // -学部
+                            student.setDivisionDescription(studentInfo.getString("DivisionDescription"));
+                            // -电话
+                            student.setYourPhone(studentInfo.getString("YourPhone"));
+                            // -年级
+                            student.setGradeDescription(studentInfo.getString("GradeDescription"));
+                            // -床号
+                            student.setBedNumber(studentInfo.getString("BedNumber"));
+                            // -家庭住址
+                            student.setHomeAddress(studentInfo.getString("HomeAddress"));
+                            // -政治面貌
+                            student.setPoliticsStatusDescription(studentInfo.getString("PoliticsStatusDescription"));
+                            // -现场报道
+                            student.setLiveReportStatueDescription(studentInfo.getString("LiveReportStatueDescription"));
+                            // -网上报道
+                            student.setOnlineReportStatueDescription(studentInfo.getString("OnlineReportStatueDescription"));
+
 
                             mStudentList.add(student);
                         }
@@ -166,7 +168,7 @@ public class StudentListActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Logs.i("大小是："+ mStudentList.size());
+                                Logs.i("大小是：" + mStudentList.size());
                                 lv_student.setAdapter(new MyAdapter());
                                 closeProgressDialog();
                             }
@@ -175,7 +177,7 @@ public class StudentListActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     // 解析错误
                     e.printStackTrace();
-                    ToastUtli.show(getApplicationContext(),"加载失败");
+                    ToastUtli.show(getApplicationContext(), "加载失败");
                     closeProgressDialog();
                 }
             }
@@ -192,19 +194,20 @@ public class StudentListActivity extends AppCompatActivity {
         });
 
         lv_student = (ListView) findViewById(R.id.lv_student);
+        tv_action_title = (TextView) findViewById(R.id.tv_action_title);
 
         lv_student.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Logs.i(mStudentList.get(position).getStudentNu());
                 // 学生档案
-                if(type == 1){
-                    Intent intent = new Intent(getApplicationContext(),StudentProfileActivity.class);
+                if (type == 1) {
+                    Intent intent = new Intent(getApplicationContext(), StudentProfileActivity.class);
                     intent.putExtra("studentNu", mStudentList.get(position).getStudentNu());
-                    intent.putExtra("student",(Serializable)mStudentList.get(position));
+                    intent.putExtra("student", (Serializable) mStudentList.get(position));
                     startActivity(intent);
-                // 学生成绩
-                }else if(type == 2){
+                    // 学生成绩
+                } else if (type == 2) {
 
                 }
 
@@ -232,8 +235,8 @@ public class StudentListActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ClassListActivity.ViewHoulder viewHoulder;
-            if(convertView == null){
-                convertView = View.inflate(getApplicationContext(),R.layout.item_class,null);
+            if (convertView == null) {
+                convertView = View.inflate(getApplicationContext(), R.layout.item_class, null);
                 viewHoulder = new ClassListActivity.ViewHoulder();
                 viewHoulder.tv_classdes = (TextView) convertView.findViewById(R.id.tv_classdes);
                 convertView.setTag(viewHoulder);

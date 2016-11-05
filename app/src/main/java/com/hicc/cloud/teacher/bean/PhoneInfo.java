@@ -1,12 +1,10 @@
 package com.hicc.cloud.teacher.bean;
 
-import cn.bmob.v3.BmobObject;
-
 /**
  * Created by Administrator on 2016/10/24/024.
  */
 
-public class PhoneInfo extends BmobObject {
+public class PhoneInfo {
     private String phoneBrand;
     private String phoneBrandType;
     private String IMEI;

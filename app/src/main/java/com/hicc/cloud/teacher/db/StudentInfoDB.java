@@ -9,6 +9,7 @@ import com.hicc.cloud.teacher.bean.Clas;
 import com.hicc.cloud.teacher.bean.Division;
 import com.hicc.cloud.teacher.bean.Grade;
 import com.hicc.cloud.teacher.bean.Professional;
+import com.hicc.cloud.teacher.bean.StartStudent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,5 +200,57 @@ public class StudentInfoDB {
             }
         }
         return classCode;
+    }
+
+    /**增加一个常用联系人
+     * @param startStudent  星标学生
+     */
+    public void insertStart(StartStudent startStudent){
+        if(startStudent != null){
+            ContentValues values = new ContentValues();
+            values.put("name", startStudent.getName());
+            values.put("phone", startStudent.getPhone());
+            values.put("class_id", startStudent.getClassId());
+            db.insert("StartStudent", null, values);
+        }
+    }
+
+    /**删除常用联系人
+     * @param phone  星标学生电话
+     */
+    public void deleteStart(long phone){
+        db.delete("StartStudent", "phone = ?", new String[]{String.valueOf(phone)});
+    }
+
+    /**查询数据库中所有星标学生姓名
+     * @return  返回包含星标学生姓名的集合
+     */
+    public List<String> queryStartNames(int classId){
+        Cursor cursor = db.query("StartStudent", new String[]{"name"}, "class_id = ?", new String[]{String.valueOf(classId)}, null, null, null);
+        List<String> startNameList = new ArrayList<String>();
+        while(cursor.moveToNext()){
+            startNameList.add(cursor.getString(0));
+        }
+        cursor.close();
+
+        return startNameList;
+    }
+
+    /**查询数据库中所有星标学生
+     * @return  返回包含星标学生的集合
+     */
+    public List<StartStudent> queryStartStudents(int classId){
+        List<StartStudent> startStudentList = new ArrayList<StartStudent>();
+        Cursor cursor = db.query("StartStudent", null, "class_id = ?", new String[]{String.valueOf(classId)}, null, null, null);
+        while (cursor.moveToNext()){
+            StartStudent startStudent = new StartStudent();
+            startStudent.setName(cursor.getString(cursor.getColumnIndex("name")));
+            startStudent.setPhone(cursor.getLong(cursor.getColumnIndex("phone")));
+
+            startStudentList.add(startStudent);
+        }
+        cursor.close();
+
+        return startStudentList;
     }
 }

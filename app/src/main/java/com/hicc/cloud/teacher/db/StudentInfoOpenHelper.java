@@ -25,6 +25,10 @@ public class StudentInfoOpenHelper extends SQLiteOpenHelper {
      * 创建班级表语句
      */
     public static final String CREAT_CLASS = "create table Clas (id integer primary key autoincrement, grade_code integer, class_des text, class_code integer, professional_code integer, class_qq_group text)";
+    /**
+     * 创建常用联系人表
+     */
+    public static final String CREAT_START_STUDENT = "create table StartStudent (id integer primary key autoincrement, name text, phone money, class_id integer)";
 
 
     public StudentInfoOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -37,6 +41,7 @@ public class StudentInfoOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREAT_DIVISION);     //学部表
         db.execSQL(CREAT_PROFESSIONAL);     //专业表
         db.execSQL(CREAT_CLASS);       //班级表
+        db.execSQL(CREAT_START_STUDENT);       //常用联系人表
     }
 
     @Override

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -18,6 +19,7 @@
             android:background="@drawable/selector_iv_back" />
 
         <TextView
+            android:id="@+id/tv_action_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="联系"
@@ -25,9 +27,23 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lv_student"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </ListView>
+
+        <ListView
+            android:id="@+id/lv_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#E2DFE6"
+            android:padding="5dp"
+            android:text="常用联系人"
+            android:textColor="#757A82"
+            android:textSize="18sp" />
+    </RelativeLayout>
 </LinearLayout>

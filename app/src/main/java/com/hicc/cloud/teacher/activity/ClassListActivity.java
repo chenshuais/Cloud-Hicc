@@ -147,6 +147,8 @@ public class ClassListActivity extends AppCompatActivity {
                 intent.putExtra("timescode",classInfoList.get(position).getGradeCode());
                 intent.putExtra("divisionCode",classInfoList.get(position).getDivisionCode());
                 intent.putExtra("professionalCode",classInfoList.get(position).getProfessionalId());
+                String title = classInfoList.get(position).getGradeCode()+"级"+classInfoList.get(position).getClassDescription();
+                intent.putExtra("title",title);
                 intent.putExtra("type",type);
                 startActivity(intent);
             }

@@ -24,7 +24,6 @@ import java.util.List;
 @SuppressLint("ValidFragment")
 public class FamilyInfoFragment extends BaseFragment {
 
-    //private MyBroadcastReceiver mBroadcastReceiver;
     private List<Family> familyList = new ArrayList<Family>();
     private FamilyAdapter myBaseAdapter;
     private RecyclerView mRecyclerView;
@@ -43,33 +42,11 @@ public class FamilyInfoFragment extends BaseFragment {
 
         initUI(view);
 
-        /*
-        // 动态注册广播
-        mBroadcastReceiver = new MyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("ACTION_UPDATA_UI");
-        getContext().registerReceiver(mBroadcastReceiver, intentFilter);
-        */
-
         myBaseAdapter = new FamilyAdapter(familyList);
         mRecyclerView.setAdapter(myBaseAdapter);
 
         return view;
     }
-
-    /*
-    // 广播接收者
-    class MyBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Logs.i("家庭界面收到广播了吗？？？？？？");
-            familyList = (List<Family>) intent.getSerializableExtra("family");
-
-            myBaseAdapter = new FamilyAdapter(familyList);
-            mRecyclerView.setAdapter(myBaseAdapter);
-        }
-    }
-    */
 
     private void initUI(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -89,16 +66,4 @@ public class FamilyInfoFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         return linearLayoutManager;
     }
-
-    /*
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // 取消注册广播
-        if (mBroadcastReceiver != null) {
-            Logs.i("取消注册广播");
-            getContext().unregisterReceiver(mBroadcastReceiver);
-        }
-    }
-    */
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 
 import java.util.ArrayList;
@@ -66,31 +67,49 @@ public class AllActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //点击事件
                 switch (position){
+                    // 学生成绩
                     case 0:
+                        // 向服务器发送点击的功能
+                        NetworkRequestUtil.postClickFunction(getApplicationContext(),"2");
                         startActivity(new Intent(getApplicationContext(),StudentMarkActivity.class));
                         break;
+                    // 宿舍成绩
                     case 1:
-                        startActivity(new Intent(getApplicationContext(),DormitoryScoreActivity.class));
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
+                        //startActivity(new Intent(getApplicationContext(),DormitoryScoreActivity.class));
                         break;
+                    // 请销假
                     case 2:
-                        startActivity(new Intent(getApplicationContext(),LeaveBackActivity.class));
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
+                        //startActivity(new Intent(getApplicationContext(),LeaveBackActivity.class));
                         break;
+                    // 课堂签到
                     case 3:
-                        startActivity(new Intent(getApplicationContext(),ClassCheckActivity.class));
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
+                        //startActivity(new Intent(getApplicationContext(),ClassCheckActivity.class));
                         break;
+                    // 学生社团
                     case 4:
-                        startActivity(new Intent(getApplicationContext(),StudentCommunityActivity.class));
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
+                        //startActivity(new Intent(getApplicationContext(),StudentCommunityActivity.class));
                         break;
+                    // 班级成长
                     case 5:
-                        startActivity(new Intent(getApplicationContext(),ClassGrowUpActivity.class));
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
+                        //startActivity(new Intent(getApplicationContext(),ClassGrowUpActivity.class));
                         break;
+                    // 学生档案
                     case 6:
+                        // 向服务器发送点击的功能
+                        NetworkRequestUtil.postClickFunction(getApplicationContext(),"1");
                         Intent intent = new Intent(getApplicationContext(),ClassListActivity.class);
                         intent.putExtra("type",1);
                         startActivity(intent);
                         break;
+                    // 学生缴费
                     case 7:
-                        startActivity(new Intent(getApplicationContext(),PaymentActivity.class));
+                        ToastUtli.show(getApplicationContext(),"努力开发中");
+                        //startActivity(new Intent(getApplicationContext(),PaymentActivity.class));
                         break;
                 }
             }

@@ -97,10 +97,11 @@
         <!--现场报到-->
         <activity android:name=".teacher.activity.PieChartActivity"
             android:screenOrientation="portrait"/>
+
         <!--网络中心介绍-->
         <activity android:name=".teacher.activity.InternetActivity"
             android:screenOrientation="portrait"/>
-
+        <!--软件创业中心-->
         <activity android:name=".teacher.activity.SoftwareActivity"
             android:screenOrientation="portrait"/>
 

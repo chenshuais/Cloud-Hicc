@@ -40,7 +40,7 @@ public class SettingActivity extends AppCompatActivity {
         rl_massage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtli.show(getApplicationContext(),"努力开发中");
+                ToastUtli.show(getApplicationContext(),"清理缓存成功");
             }
         });
         rl_password.setOnClickListener(new View.OnClickListener() {

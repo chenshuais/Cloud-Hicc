@@ -2,8 +2,6 @@ package com.hicc.cloud.teacher.utils;
 
 import android.os.Environment;
 
-import com.hicc.cloud.teacher.activity.FeedBackActivity;
-
 /**
  * Created on 2016/9/24/023.
  * 存储常量
@@ -53,18 +51,7 @@ public class ConstantValue {
      * UserLevelCode
      */
     public static final String USER_LEVEL_CODE = "user_level_code";
-    /**
-     * 是否是第一次上传手机信息
-     */
-    public static final String FIRST_UP_PHONE_INFO = "first_up_phone_info";
-    /**
-     * App_id
-     */
-    public static final String APP_ID = "1";
-    /**
-     * 版本号
-     */
-    public static final String VERSION_CODE = "this.getVersionCode();";
+
     /**
      * 更新应用下载保存路径
      */

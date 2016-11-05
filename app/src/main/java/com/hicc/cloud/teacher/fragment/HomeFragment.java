@@ -16,17 +16,13 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AllActivity;
-import com.hicc.cloud.teacher.activity.ClassCheckActivity;
-import com.hicc.cloud.teacher.activity.ClassGrowUpActivity;
 import com.hicc.cloud.teacher.activity.ClassListActivity;
-import com.hicc.cloud.teacher.activity.DormitoryScoreActivity;
-import com.hicc.cloud.teacher.activity.LeaveBackActivity;
 import com.hicc.cloud.teacher.activity.ScanActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
-import com.hicc.cloud.teacher.activity.StudentCommunityActivity;
 import com.hicc.cloud.teacher.activity.StudentMarkActivity;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -70,29 +66,46 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //设置点击事件
                 switch (position){
+                    // 学生成绩
                     case 0:
+                        // 向服务器发送点击的功能
+                        NetworkRequestUtil.postClickFunction(getContext(),"2");
                         startActivity(new Intent(getContext(),StudentMarkActivity.class));
                         break;
+                    // 宿舍成绩
                     case 1:
-                        startActivity(new Intent(getContext(),DormitoryScoreActivity.class));
+                        ToastUtli.show(getContext(),"努力开发中");
+                        //startActivity(new Intent(getContext(),DormitoryScoreActivity.class));
                         break;
+                    // 请销假
                     case 2:
-                        startActivity(new Intent(getContext(),LeaveBackActivity.class));
+                        ToastUtli.show(getContext(),"努力开发中");
+                        //startActivity(new Intent(getContext(),LeaveBackActivity.class));
                         break;
+                    // 课堂签到
                     case 3:
-                        startActivity(new Intent(getContext(),ClassCheckActivity.class));
+                        ToastUtli.show(getContext(),"努力开发中");
+                        //startActivity(new Intent(getContext(),ClassCheckActivity.class));
                         break;
+                    // 学生社团
                     case 4:
-                        startActivity(new Intent(getContext(),StudentCommunityActivity.class));
+                        ToastUtli.show(getContext(),"努力开发中");
+                        //startActivity(new Intent(getContext(),StudentCommunityActivity.class));
                         break;
+                    // 班级成长
                     case 5:
-                        startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
+                        ToastUtli.show(getContext(),"努力开发中");
+                        //startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
                         break;
+                    // 学生档案
                     case 6:
+                        // 向服务器发送点击的功能
+                        NetworkRequestUtil.postClickFunction(getContext(),"1");
                         Intent intent = new Intent(getContext(),ClassListActivity.class);
                         intent.putExtra("type",1);
                         startActivity(intent);
                         break;
+                    // 全部
                     case 7:
                         startActivity(new Intent(getContext(),AllActivity.class));
                         break;
@@ -169,7 +182,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     // TODO 解析后操作
-                    //ToastUtli.show(getContext(),"解析结果:" + result);
                     Intent intent = new Intent(getContext(),ScanResultActivity.class);
                     intent.putExtra("result",result);
                     startActivity(intent);

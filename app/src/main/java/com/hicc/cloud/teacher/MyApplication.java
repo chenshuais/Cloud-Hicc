@@ -1,24 +1,29 @@
 package com.hicc.cloud.teacher;
 
 import android.app.Application;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 
-import com.hicc.cloud.teacher.bean.PhoneInfo;
-import com.hicc.cloud.teacher.db.ExceptionFile;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
-import com.hicc.cloud.teacher.utils.PhoneInfoUtil;
+import com.hicc.cloud.teacher.utils.SpUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.SaveListener;
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 /**
@@ -26,11 +31,11 @@ import okhttp3.OkHttpClient;
  */
 
 public class MyApplication extends Application {
+    private static final String URL_ERROR = "http://suguan.hicc.cn/feedback1/error.do";
+
     @Override
     public void onCreate() {
         super.onCreate();
-        // 初始化Bmob
-        Bmob.initialize(this, "8266a5af2719a5062d139b829922d2d4");
 
         JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);     		// 初始化 JPush
@@ -55,7 +60,7 @@ public class MyApplication extends Application {
                 ex.printStackTrace();
 
                 // 将打印的异常存到SD卡中
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"cloud_hicc_error.log";
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"cloud_hicc_t_error.log";
                 File file = new File(path);
                 try {
                     PrintWriter printWriter = new PrintWriter(file);
@@ -65,31 +70,66 @@ public class MyApplication extends Application {
                     e.printStackTrace();
                 }
 
-                // 可以将异常文件上传到服务器
-                ExceptionFile exceptionFile = new ExceptionFile();
-
-                PhoneInfo phoneInfo = PhoneInfoUtil.getPhoneInfo(getApplicationContext());
-                exceptionFile.setPhoneBrand(phoneInfo.getPhoneBrand());
-                exceptionFile.setPhoneBrandType(phoneInfo.getPhoneBrandType());
-                exceptionFile.setAndroidVersion(phoneInfo.getAndroidVersion());
-                exceptionFile.setCpuName(phoneInfo.getCpuName());
-                BmobFile bmobFile = new BmobFile(file);
-                exceptionFile.setExceptionFile(bmobFile);
-                exceptionFile.save(getApplicationContext(), new SaveListener() {
-                    @Override
-                    public void onSuccess() {
-                        Logs.i("错误日志上传成功");
-                    }
-
-                    @Override
-                    public void onFailure(int i, String s) {
-                        Logs.i("错误日志上传失败："+s);
-                    }
-                });
+                // 将异常文件上传到服务器
+                postErrorFile(file);
 
                 // 手动退出应用
                 System.exit(0);
             }
         });
+    }
+
+    // 将异常文件上传到服务器
+    private void postErrorFile(final File file) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME,""));
+        params.put("appId", "1");
+        params.put("appVersion", String.valueOf(getVersionCode()));
+        OkHttpUtils.post()
+                .url(URL_ERROR)
+                .params(params)
+                .addFile("errorFile", "cloud_hicc_t_error.log", file)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logs.i("上传错误日志失败："+e.toString());
+                        postErrorFile(file);
+                        return;
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean sucessed = jsonObject.getBoolean("falg");
+                            if(sucessed){
+                                Logs.i("上传错误日志成功");
+                            }else{
+                                // 上传失败
+                                Logs.i("错误日志:服务器未响应，上传失败");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Logs.i("错误日志：解析错误："+e.toString());
+                        }
+                    }
+                });
+    }
+
+    // 获取本应用版本号
+    private int getVersionCode() {
+        // 拿到包管理者
+        PackageManager pm = getPackageManager();
+        // 获取包的基本信息
+        try {
+            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
+            // 返回应用的版本号
+            return info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
