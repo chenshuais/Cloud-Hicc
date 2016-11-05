@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         creatData();
 
         // 每次登陆将手机信息上传到服务器
-        postPhoneInfo();
+       // postPhoneInfo();
 
         // 注册监听退出登录的事件
         EventBus.getDefault().register(this);

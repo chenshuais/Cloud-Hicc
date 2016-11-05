@@ -9,6 +9,7 @@ import com.hicc.cloud.R;
 
 /**
  * Created by 666 on 2016/11/5.
+ * 软件创业中心介绍
  */
 
 public class SoftwareActivity extends Activity {
