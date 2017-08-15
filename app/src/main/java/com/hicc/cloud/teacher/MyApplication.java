@@ -7,6 +7,7 @@ import android.os.Environment;
 
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -17,14 +18,19 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.Authenticator;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Route;
 
 /**
  * Created by Administrator on 2016/9/24/024.
@@ -42,13 +48,20 @@ public class MyApplication extends Application {
 
         ZXingLibrary.initDisplayOpinion(this);  //二维码扫描
 
-        // okhttp网络请求工具配置信息
+        // 配置OkHttpUtils
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-//                .addInterceptor(new LoggerInterceptor("TAG"))
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                //其他配置
+                .authenticator(new Authenticator() {
+                    @Override
+                    public Request authenticate(Route route, Response response) throws IOException {
+                        return response.request().newBuilder()
+                                .header("Authorization", "Bearer " + NetworkRequestUtil.getToken())
+                                .build();
+                    }
+                })
                 .build();
+
         OkHttpUtils.initClient(okHttpClient);
 
 
