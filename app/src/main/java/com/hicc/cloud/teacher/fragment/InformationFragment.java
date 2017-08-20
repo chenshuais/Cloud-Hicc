@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,13 +12,9 @@ import android.widget.TextView;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AboutWeActivity;
 import com.hicc.cloud.teacher.activity.FeedBackActivity;
-import com.hicc.cloud.teacher.activity.LogInActivity;
 import com.hicc.cloud.teacher.activity.SettingActivity;
-import com.hicc.cloud.teacher.bean.ExitEvent;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.SpUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Administrator on 2016/9/24/024.
@@ -28,9 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 public class InformationFragment extends BaseFragment implements View.OnClickListener{
     public ImageView ivPicture;
     public TextView tvName;
-    public TextView tvPosition;
     public TextView tvPhone;
-    public Button btEsc;
     private TextView tvLevel;
 
 
@@ -54,8 +47,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         tvLevel = (TextView) view.findViewById(R.id.tv_level);
         // 电话
         tvPhone = (TextView) view.findViewById(R.id.phone);
-        // 注销按钮
-        btEsc = (Button) view.findViewById(R.id.esc);
         // 设置
         LinearLayout ll_setting = (LinearLayout) view.findViewById(R.id.ll_setting);
         // 关于
@@ -63,7 +54,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         // 反馈
         LinearLayout ll_feedback = (LinearLayout) view.findViewById(R.id.ll_feedback);
 
-        btEsc.setOnClickListener(this);
         ll_setting.setOnClickListener(this);
         ll_feedback.setOnClickListener(this);
         ll_info.setOnClickListener(this);
@@ -87,17 +77,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
             // 关于
             case R.id.ll_info:
                 startActivity(new Intent(getContext(),AboutWeActivity.class));
-                break;
-            // 注销按钮
-            case R.id.esc:
-                EventBus.getDefault().post(new ExitEvent());
-                startActivity(new Intent(getContext(), LogInActivity.class));
-                SpUtils.remove(getContext(),ConstantValue.USER_NAME);
-                SpUtils.remove(getContext(),ConstantValue.PASS_WORD);
-                SpUtils.remove(getContext(),ConstantValue.TEACHER_NAME);
-                SpUtils.remove(getContext(),ConstantValue.TEACHER_LEVEL);
-                SpUtils.remove(getContext(),ConstantValue.TEACHER_PHONE);
-                SpUtils.putBoolSp(getContext(),ConstantValue.IS_REMBER_PWD,false);
                 break;
         }
     }

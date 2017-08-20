@@ -25,6 +25,7 @@ import com.hicc.cloud.teacher.fragment.FamilyInfoFragment;
 import com.hicc.cloud.teacher.fragment.RewardPunishmentInfoFragment;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
@@ -60,6 +61,8 @@ public class StudentProfileActivity extends AppCompatActivity {
     private Student mStudent = new Student();
     private List<Family> mFamilyList = new ArrayList<>();
     private Student unFindStudent;
+    private boolean familyIsOk = false;
+    private boolean studentInfoIsOk = false;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -158,8 +161,8 @@ public class StudentProfileActivity extends AppCompatActivity {
         // 发送GET请求
         OkHttpUtils
                 .get()
-                .url(URL)
-                .addParams("studentNum", stuNum)
+                .url(URLs.GetStudentInfo)
+                .addParams("studentNu", stuNum)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -191,8 +194,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                     if (sucessed) {
                         Logs.i("开始解析");
 
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        JSONObject dataInfo = data.getJSONObject("dataInfo");
+                        JSONObject dataInfo = jsonObject.getJSONObject("data");
 
                         // **学生姓名
                         stuName = dataInfo.getString("StudentName");
@@ -270,48 +272,14 @@ public class StudentProfileActivity extends AppCompatActivity {
                         // 班级代码
                         mStudent.setClassId(dataInfo.getInt("ClassId"));
 
-                        Logs.i("解析家庭信息");
+                        studentInfoIsOk = true;
 
-                        // 解析家庭信息
-                        JSONArray dataFamily = data.getJSONArray("dataFamily");
-                        for (int i = 0; i < dataFamily.length(); i++) {
-                            Family family = new Family();
+                        // 获取家庭信息
+                        getFamilyInfo(stuNum);
 
-                            JSONObject familyInfo = dataFamily.getJSONObject(i);
-                            // 学号
-                            String stuNu = familyInfo.getString("StudentNu");
-                            family.setStudentNum(stuNu);
-                            // 姓名
-                            String name = familyInfo.getString("Name");
-                            family.setName(name);
-                            // 工作
-                            String workandPosition = familyInfo.getString("WorkandPosition");
-                            family.setWorkand(workandPosition);
-                            // 关系
-                            String relation = familyInfo.getString("Relation");
-                            family.setRelation(relation);
-                            // 电话
-                            String familyPhone = familyInfo.getString("Phone");
-                            family.setPhone(familyPhone);
-                            // 年龄
-                            int age = familyInfo.getInt("Age");
-                            family.setAge(age);
-                            // 政治面貌
-                            String politicsStatus = familyInfo.getString("PoliticsStatus");
-                            family.setPolitics(politicsStatus);
-                            // 联系地址
-                            String contactAddress = familyInfo.getString("ContactAddress");
-                            family.setContactAddress(contactAddress);
-
-                            mFamilyList.add(family);
+                        if (studentInfoIsOk && familyIsOk) {
+                            mHandler.sendEmptyMessage(0);
                         }
-
-                        // TODO 解析奖惩信息
-
-                        Logs.i("发handler消息");
-
-                        mHandler.sendEmptyMessage(0);
-
                     } else {
                         // 查不到  学号或服务器错误
                         mHandler.sendEmptyMessage(1);
@@ -323,6 +291,72 @@ public class StudentProfileActivity extends AppCompatActivity {
                 }
             }
         }.start();
+    }
+
+    // 获取学生家庭信息
+    private void getFamilyInfo(String stuNum) {
+        OkHttpUtils
+                .get()
+                .url(URLs.GetFamilyInfo)
+                .addParams("studentNu", stuNum)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logs.d("获取家庭信息失败：" + e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i("解析家庭信息");
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean sucessed = jsonObject.getBoolean("sucessed");
+                            if (sucessed) {
+                                // 解析家庭信息
+                                JSONArray dataFamily = jsonObject.getJSONArray("data");
+                                for (int i = 0; i < dataFamily.length(); i++) {
+                                    Family family = new Family();
+
+                                    JSONObject familyInfo = dataFamily.getJSONObject(i);
+                                    // 学号
+                                    String stuNu = familyInfo.getString("StudentNu");
+                                    family.setStudentNum(stuNu);
+                                    // 姓名
+                                    String name = familyInfo.getString("Name");
+                                    family.setName(name);
+                                    // 工作
+                                    String workandPosition = familyInfo.getString("WorkandPosition");
+                                    family.setWorkand(workandPosition);
+                                    // 关系
+                                    String relation = familyInfo.getString("Relation");
+                                    family.setRelation(relation);
+                                    // 电话
+                                    String familyPhone = familyInfo.getString("Phone");
+                                    family.setPhone(familyPhone);
+                                    // 年龄
+                                    int age = familyInfo.getInt("Age");
+                                    family.setAge(age);
+                                    // 政治面貌
+                                    String politicsStatus = familyInfo.getString("PoliticsStatus");
+                                    family.setPolitics(politicsStatus);
+                                    // 联系地址
+                                    String contactAddress = familyInfo.getString("ContactAddress");
+                                    family.setContactAddress(contactAddress);
+
+                                    mFamilyList.add(family);
+                                }
+                                familyIsOk = true;
+
+                                if (studentInfoIsOk && familyIsOk) {
+                                    mHandler.sendEmptyMessage(0);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     // 显示进度对话框

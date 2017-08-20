@@ -23,13 +23,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.bean.Clas;
-import com.hicc.cloud.teacher.bean.Division;
 import com.hicc.cloud.teacher.bean.ExitEvent;
-import com.hicc.cloud.teacher.bean.Grade;
 import com.hicc.cloud.teacher.bean.PhoneInfo;
-import com.hicc.cloud.teacher.bean.Professional;
-import com.hicc.cloud.teacher.db.StudentInfoDB;
 import com.hicc.cloud.teacher.fragment.BaseFragment;
 import com.hicc.cloud.teacher.fragment.FriendFragment;
 import com.hicc.cloud.teacher.fragment.HomeFragment;
@@ -39,6 +34,7 @@ import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.PhoneInfoUtil;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.hicc.cloud.teacher.view.MyTabLayout;
 import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.hicc.cloud.teacher.view.TabItem;
@@ -49,7 +45,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,7 +61,6 @@ import okhttp3.Call;
 
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{
     private static final String URL_PHONEINFO = "http://suguan.hicc.cn/feedback1/phoneInfo.do";
-    private static final String URL = "http://suguan.hicc.cn/hicccloudt/getCode";
     private static final String URL_NEW_APP = "http://suguan.hicc.cn/feedback1/newApp.do";
     private MyTabLayout mTabLayout;
     BaseFragment fragment;
@@ -76,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private static Boolean isExit = false;
     private EditText et_search;
     private boolean isCheck = true;
-    private StudentInfoDB db;
     private String mAppUrl;
 
     @Override
@@ -84,22 +77,63 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = StudentInfoDB.getInstance(this);
+        // 获取用户信息
+        getUserInfo();
 
         initView();
+
         initData();
 
         // 检测更新
         checkVersionCode();
-
-        // 加载数据到数据库中
-        creatData();
 
         // 每次登陆将手机信息上传到服务器
         postPhoneInfo();
 
         // 注册监听退出登录的事件
         EventBus.getDefault().register(this);
+    }
+
+    // 获取用户信息
+    private void getUserInfo() {
+        OkHttpUtils
+                .get()
+                .url(URLs.GetUserInfo)
+                .addParams("Account",SpUtils.getStringSp(this,ConstantValue.USER_NAME,""))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logs.e("获取用户信息失败:"+e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.getBoolean("sucessed")) {
+                                // 保存用户信息
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                // 姓名
+                                SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME, data.getString("UserName"));
+                                // 职位
+                                SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL, data.getString("UserLevel"));
+                                // 联系方式
+                                SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_PHONE, data.getString("ContactWay"));
+
+                                SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_NO,data.getInt("UserNo"));
+                                SpUtils.putIntSp(getApplicationContext(),ConstantValue.RECORD_CODE,data.getInt("RecordCode"));
+                                SpUtils.putIntSp(getApplicationContext(),ConstantValue.NID,data.getInt("Nid"));
+                                SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_LEVEL_CODE,data.getInt("UserLevelCode"));
+                            } else {
+                                Logs.e("获取用户信息失败:"+jsonObject.getString("Msg"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Logs.e("解析用户信息失败:"+e.toString());
+                        }
+                    }
+                });
     }
 
     // 上传手机信息到服务器
@@ -121,8 +155,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
                     public void onError(Call call, Exception e, int id) {
                         Logs.i("上传手机信息失败："+e.toString());
                         // 上传失败  重新上传
-                        postPhoneInfo();
-                        return;
+                        //postPhoneInfo();
                     }
 
                     @Override
@@ -152,110 +185,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         finish();
     }
 
-    // 获取专业代码 存到数据库
-    private void creatData() {
-        if(SpUtils.getBoolSp(this,ConstantValue.FIRST_DATA,true)){
-            // 发送GET请求
-            OkHttpUtils
-                    .get()
-                    .url(URL)
-                    .addParams("code", "16")
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            Logs.i(e.toString());
-                            // 加载失败  下次进入应用重新加载
-                            SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
-                        }
-
-                        @Override
-                        public void onResponse(String response, int id) {
-                            Logs.i(response);
-                            // 解析json
-                            getJsonInfo(response);
-                        }
-                    });
-        }
-    }
-
-    // 解析json
-    private void getJsonInfo(final String response) {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean sucessed = jsonObject.getBoolean("sucessed");
-                    if(sucessed){
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        for(int i=13; i <= 16; i++){
-                            JSONArray Grade = data.getJSONArray("Description_"+i);
-                            for(int j=0; j < Grade.length(); j++){
-                                JSONObject info = Grade.getJSONObject(j);
-
-                                // 年级
-                                com.hicc.cloud.teacher.bean.Grade grade = new Grade();
-                                int GradeCode = info.getInt("GradeCode");
-                                grade.setGradeCode(GradeCode);
-                                db.saveGrade(grade);
-
-                                // 学部
-                                Division division = new Division();
-                                String DivisionDes = info.getString("DivisionDescription");
-                                division.setDivisionDes(DivisionDes);
-                                if(!DivisionDes.equals("null")){
-                                    int DivisionCode = info.getInt("DivisionCode");
-                                    division.setDivisionCode(DivisionCode);
-                                }
-                                int gradeCode = info.getInt("GradeCode");
-                                division.setGradeCode(gradeCode);
-                                db.saveDivision(division);
-
-                                // 专业
-                                Professional professional = new Professional();
-                                String ProfessionalDes = info.getString("ProfessionalDescription");
-                                professional.setProfessionalDes(ProfessionalDes);
-                                if(!ProfessionalDes.equals("null")){
-                                    int ProfessionCode = info.getInt("ProfessionalId");
-                                    professional.setProfessionalCode(ProfessionCode);
-                                    int divisionCode = info.getInt("DivisionCode");
-                                    professional.setDivisionCode(divisionCode);
-                                }
-                                db.saveProfessional(professional);
-
-                                // 班级
-                                Clas clas = new Clas();
-                                int classCode = info.getInt("Nid");
-                                clas.setClassCode(classCode);
-                                String ClassDes = info.getString("ClassDescription");
-                                clas.setClassDes(ClassDes);
-                                clas.setGradeCode(gradeCode);
-                                String classQQGroup = info.getString("ClassQQGroup");
-                                clas.setClassQQGroup(classQQGroup);
-                                if(!ProfessionalDes.equals("null")){
-                                    int professionCode = info.getInt("ProfessionalId");
-                                    clas.setProfessionalCode(professionCode);
-                                }
-                                db.saveClass(clas);
-                            }
-                        }
-                        Logs.i("加载数据成功");
-                        // 下次进入应用不在加载
-                        SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,false);
-                    }else{
-                        // 加载失败  下次进入应用重新加载
-                        SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    // 加载失败  下次进入应用重新加载
-                    SpUtils.putBoolSp(getApplicationContext(),ConstantValue.FIRST_DATA,true);
-                }
-            }
-        }.start();
-    }
 
     private void initView(){
         mTabLayout=(MyTabLayout)findViewById(R.id.tablayout);
@@ -298,9 +227,12 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     }
 
     private void initData(){
+        int levelCode = SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0);
         tabs=new ArrayList<TabItem>();
         tabs.add(new TabItem(R.drawable.selector_tab_home, R.string.tab_home, HomeFragment.class));
-        tabs.add(new TabItem(R.drawable.selector_tab_friend, R.string.tab_friend, FriendFragment.class));
+        if (levelCode != 11 && levelCode != 16) {
+            tabs.add(new TabItem(R.drawable.selector_tab_friend, R.string.tab_friend, FriendFragment.class));
+        }
         tabs.add(new TabItem(R.drawable.selector_tab_infomation, R.string.tab_information, InformationFragment.class));
         mTabLayout.initData(tabs, this);
         mTabLayout.setCurrentTab(0);

@@ -23,6 +23,7 @@ import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -40,7 +41,6 @@ import okhttp3.Call;
  */
 
 public class FriendFragment extends BaseFragment {
-    private static final String URL = "http://suguan.hicc.cn/hicccloudt/LoginT";
     private List<TeacherClassInfo> classInfoList = new ArrayList<TeacherClassInfo>();
     private ListView listView;
     private LinearLayout ll_progress;
@@ -134,9 +134,8 @@ public class FriendFragment extends BaseFragment {
     private void intiData() {
         OkHttpUtils
                 .get()
-                .url(URL)
-                .addParams("account", SpUtils.getStringSp(getContext(), ConstantValue.USER_NAME, ""))
-                .addParams("pass", SpUtils.getStringSp(getContext(), ConstantValue.PASS_WORD, ""))
+                .url(URLs.GetClassByUserNo)
+                .addParams("teachercode", SpUtils.getIntSp(getContext(), ConstantValue.USER_NO, 0)+"")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -171,9 +170,8 @@ public class FriendFragment extends BaseFragment {
                     boolean sucessed = jsonObject.getBoolean("sucessed");
                     if (sucessed) {
                         Logs.i("开始解析");
-                        JSONObject data = jsonObject.getJSONObject("data");
                         // 带班信息
-                        JSONArray classInfo = data.getJSONArray("classInfo");
+                        JSONArray classInfo = jsonObject.getJSONArray("data");
                         TeacherClassInfo teacherClassInfo;
                         for (int i = 0; i < classInfo.length(); i++) {
                             JSONObject info = classInfo.getJSONObject(i);

@@ -45,8 +45,7 @@ public class NetworkRequestUtil {
                     public void onError(Call call, Exception e, int id) {
                         Logs.i("上传点击功能失败："+e.toString());
                         // 上传失败  重新上传
-                        postClickFunction(context,functionId);
-                        return;
+                        //postClickFunction(context,functionId);
                     }
 
                     @Override

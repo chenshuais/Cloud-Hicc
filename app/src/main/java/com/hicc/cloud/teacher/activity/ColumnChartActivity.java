@@ -17,7 +17,6 @@ import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +39,6 @@ import okhttp3.Call;
  */
 public class ColumnChartActivity extends AppCompatActivity {
     private View iv_back;
-    private static final String URL = "http://home.hicc.cn/PhoneInterface/OnlineReportService.asmx/Getonlinereportnum";
     private int all;
     private int yes;
     private int no;
@@ -54,59 +52,55 @@ public class ColumnChartActivity extends AppCompatActivity {
         initUI();
 
         // 请求数据
-        queryFromServer(savedInstanceState);
+        queryFromServer();
     }
 
-    private void queryFromServer(final Bundle savedInstanceState) {
+    private void queryFromServer() {
         showProgressDialog();
-        // 发送GET请求
+        // 获取网上报道信息
         OkHttpUtils
                 .get()
-                .url(URL)
-                .addParams("userno", "1001")
-                .addParams("num", "20465")
-                .addParams("userlevelcode", "11")
-                .addParams("account", "hicc")
-                .addParams("pas", "123")
-                .addParams("timeCode", "16")
+                .url("http://api.hicc.cn/a")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
-                        Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                        Logs.e("获取网上报道数据失败："+e.toString());
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(150,156,140,110,160)).commit();
+                        ToastUtli.show(getApplicationContext(),"获取网上报道数据失败");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Logs.i(response);
-                        // 解析json
-                        Logs.i("解析json");
-                        getJsonInfo(response,savedInstanceState);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.getBoolean("sucessed")) {
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                int rw = data.getInt("rw");
+                                int lg = data.getInt("lg");
+                                int jj = data.getInt("jj");
+                                int gj = data.getInt("gj");
+                                int gl = data.getInt("gl");
+                                getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(rw,lg,jj,gj,gl)).commit();
+                                closeProgressDialog();
+                            } else {
+                                ToastUtli.show(getApplicationContext(),jsonObject.getString("Msg"));
+                                closeProgressDialog();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            closeProgressDialog();
+                            Logs.e("获取网上报道数据失败："+e.toString());
+                            ToastUtli.show(getApplicationContext(),"获取网上报道数据失败");
+                        }
                     }
                 });
+
     }
 
-    // 解析json数据
-    private void getJsonInfo(String response, Bundle savedInstanceState) {
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-            for (int i=0; i < jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                all = jsonObject.getInt("All");
-                yes = jsonObject.getInt("Yes");
-                no = jsonObject.getInt("No");
-            }
-            if (savedInstanceState == null && all > 0) {
-                getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment(all,yes,no)).commit();
-                closeProgressDialog();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
+    // 网上报道
     public static class PlaceholderFragment extends Fragment {
         private ColumnChartView chart;
         private ColumnChartData data;
@@ -116,15 +110,19 @@ public class ColumnChartActivity extends AppCompatActivity {
         private boolean hasLabels = true;
         private boolean hasLabelForSelected = false;
 
-        private int all;
-        private int yes;
-        private int no;
+        private int rw; // 人文
+        private int lg; // 理工
+        private int jj; // 经济
+        private int gj; // 国交
+        private int gl; // 管理
 
         @SuppressLint("ValidFragment")
-        public PlaceholderFragment(int all, int yes, int no) {
-            this.all = all;
-            this.yes = yes;
-            this.no = no;
+        public PlaceholderFragment(int rw, int lg, int jj, int gj, int gl) {
+            this.rw = rw;
+            this.lg = lg;
+            this.jj = jj;
+            this.gj = gj;
+            this.gl = gl;
         }
 
         public PlaceholderFragment(){}
@@ -150,25 +148,39 @@ public class ColumnChartActivity extends AppCompatActivity {
             List<SubcolumnValue> values;
 
             values = new ArrayList<SubcolumnValue>();
-            values.add(new SubcolumnValue(all, ChartUtils.pickColor()));
+            values.add(new SubcolumnValue(rw, ChartUtils.pickColor()));
             Column column = new Column(values);
             column.setHasLabels(hasLabels);
             column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
 
             values = new ArrayList<SubcolumnValue>();
-            values.add(new SubcolumnValue(yes, ChartUtils.pickColor()));
+            values.add(new SubcolumnValue(lg, ChartUtils.pickColor()));
             Column column2 = new Column(values);
             column2.setHasLabels(hasLabels);
             column2.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column2);
 
             values = new ArrayList<SubcolumnValue>();
-            values.add(new SubcolumnValue(no, ChartUtils.pickColor()));
+            values.add(new SubcolumnValue(jj, ChartUtils.pickColor()));
             Column column3 = new Column(values);
             column3.setHasLabels(hasLabels);
             column3.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column3);
+
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(gj, ChartUtils.pickColor()));
+            Column column4 = new Column(values);
+            column4.setHasLabels(hasLabels);
+            column4.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column4);
+
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(gl, ChartUtils.pickColor()));
+            Column column5 = new Column(values);
+            column5.setHasLabels(hasLabels);
+            column5.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column5);
 
             data = new ColumnChartData(columns);
 
@@ -177,7 +189,7 @@ public class ColumnChartActivity extends AppCompatActivity {
                 Axis axisX = new Axis();
                 Axis axisY = new Axis().setHasLines(true);
                 if (hasAxesNames) {
-                    axisX.setName("状态");
+                    axisX.setName("学部");
                     axisY.setName("人数");
                 }
                 data.setAxisXBottom(axisX);
@@ -201,13 +213,19 @@ public class ColumnChartActivity extends AppCompatActivity {
                 String subV = vaule.substring(19,end);
                 switch (columnIndex){
                     case 0:
-                        ToastUtli.show(getContext(),"总共"+subV+"人");
+                        ToastUtli.show(getContext(),"人文学部"+subV+"人");
                         break;
                     case 1:
-                        ToastUtli.show(getContext(),"已报到"+subV+"人");
+                        ToastUtli.show(getContext(),"理工学部"+subV+"人");
                         break;
                     case 2:
-                        ToastUtli.show(getContext(),"未报到"+subV+"人");
+                        ToastUtli.show(getContext(),"经济学部"+subV+"人");
+                        break;
+                    case 3:
+                        ToastUtli.show(getContext(),"国交学部"+subV+"人");
+                        break;
+                    case 4:
+                        ToastUtli.show(getContext(),"管理学部"+subV+"人");
                         break;
                 }
             }

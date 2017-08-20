@@ -17,6 +17,7 @@ import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Student;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -39,7 +40,6 @@ public class StudentListActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ListView lv_student;
     private int type;
-    private String URL = "http://suguan.hicc.cn/hicccloudt/getInfo";
     private TextView tv_action_title;
 
     @Override
@@ -66,7 +66,9 @@ public class StudentListActivity extends AppCompatActivity {
         // 发送GET请求
         OkHttpUtils
                 .get()
-                .url(URL)
+                .url(URLs.GetClassList)
+                .addParams("pageno", "1")
+                .addParams("pagesize", "300")
                 .addParams("timescode", String.valueOf(timesCode))
                 .addParams("divisionCode", String.valueOf(divisionCode))
                 .addParams("professionalCode", String.valueOf(professionalCode))
@@ -208,7 +210,9 @@ public class StudentListActivity extends AppCompatActivity {
                     startActivity(intent);
                     // 学生成绩
                 } else if (type == 2) {
-
+                    Intent intent = new Intent(getApplicationContext(), StudentMarkActivity.class);
+                    intent.putExtra("studentNu", mStudentList.get(position).getStudentNu());
+                    startActivity(intent);
                 }
 
             }

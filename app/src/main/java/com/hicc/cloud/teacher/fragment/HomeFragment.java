@@ -17,12 +17,16 @@ import android.widget.TextView;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AllActivity;
 import com.hicc.cloud.teacher.activity.ClassListActivity;
+import com.hicc.cloud.teacher.activity.ColumnChartActivity;
+import com.hicc.cloud.teacher.activity.FacultyComparedActivity;
+import com.hicc.cloud.teacher.activity.PieChartActivity;
 import com.hicc.cloud.teacher.activity.ScanActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
-import com.hicc.cloud.teacher.activity.StudentMarkActivity;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
+import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -39,14 +43,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
     private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "全部"};
+    private String[] titles2 = new String[]{"网上报道", "现场报道", "总体对比"};
     private int[] images = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
             R.mipmap.leaveback, R.drawable.icon_check,
             R.mipmap.club, R.mipmap.classes,
             R.drawable.icon_file, R.mipmap.icon_all};
+    private int[] images2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_comparison};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
     private LinearLayout ll_record;
     private LinearLayout ll_classrecord;
+    private int levelCode;
 
     // 加载数据
     @Override
@@ -57,61 +64,92 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // 获取等级代码
+        levelCode = SpUtils.getIntSp(getContext(), ConstantValue.USER_LEVEL_CODE, 0);
+
         initUI(view);
 
-        PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
-        gridView.setAdapter(adapter);
+        if (levelCode == 11 || levelCode == 16) {
+            gridView.setNumColumns(3);
+            PictureAdapter adapter = new PictureAdapter(titles2, images2, getContext());
+            gridView.setAdapter(adapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //设置点击事件
-                switch (position){
-                    // 学生成绩
-                    case 0:
-                        // 向服务器发送点击的功能
-                        NetworkRequestUtil.postClickFunction(getContext(),"2");
-                        startActivity(new Intent(getContext(),StudentMarkActivity.class));
-                        break;
-                    // 宿舍成绩
-                    case 1:
-                        ToastUtli.show(getContext(),"努力开发中");
-                        //startActivity(new Intent(getContext(),DormitoryScoreActivity.class));
-                        break;
-                    // 请销假
-                    case 2:
-                        ToastUtli.show(getContext(),"努力开发中");
-                        //startActivity(new Intent(getContext(),LeaveBackActivity.class));
-                        break;
-                    // 课堂签到
-                    case 3:
-                        ToastUtli.show(getContext(),"努力开发中");
-                        //startActivity(new Intent(getContext(),ClassCheckActivity.class));
-                        break;
-                    // 学生社团
-                    case 4:
-                        ToastUtli.show(getContext(),"努力开发中");
-                        //startActivity(new Intent(getContext(),StudentCommunityActivity.class));
-                        break;
-                    // 班级成长
-                    case 5:
-                        ToastUtli.show(getContext(),"努力开发中");
-                        //startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
-                        break;
-                    // 学生档案
-                    case 6:
-                        // 向服务器发送点击的功能
-                        NetworkRequestUtil.postClickFunction(getContext(),"1");
-                        Intent intent = new Intent(getContext(),ClassListActivity.class);
-                        intent.putExtra("type",1);
-                        startActivity(intent);
-                        break;
-                    // 全部
-                    case 7:
-                        startActivity(new Intent(getContext(),AllActivity.class));
-                        break;
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    //设置点击事件
+                    switch (position){
+                        // 网上报道
+                        case 0:
+                            startActivity(new Intent(getContext(),ColumnChartActivity.class));
+                            break;
+                        // 现场报道
+                        case 1:
+                            startActivity(new Intent(getContext(),PieChartActivity.class));
+                            break;
+                        // 学部对比
+                        case 2:
+                            startActivity(new Intent(getContext(),FacultyComparedActivity.class));
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
+            gridView.setAdapter(adapter);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    //设置点击事件
+                    switch (position){
+                        // 学生成绩
+                        case 0:
+                            // 向服务器发送点击的功能
+                            NetworkRequestUtil.postClickFunction(getContext(),"2");
+                            Intent intent1 = new Intent(getContext(),ClassListActivity.class);
+                            intent1.putExtra("type",2);
+                            startActivity(intent1);
+                            break;
+                        // 宿舍成绩
+                        case 1:
+                            ToastUtli.show(getContext(),"努力开发中");
+                            //startActivity(new Intent(getContext(),DormitoryScoreActivity.class));
+                            break;
+                        // 请销假
+                        case 2:
+                            ToastUtli.show(getContext(),"努力开发中");
+                            //startActivity(new Intent(getContext(),LeaveBackActivity.class));
+                            break;
+                        // 课堂签到
+                        case 3:
+                            ToastUtli.show(getContext(),"努力开发中");
+                            //startActivity(new Intent(getContext(),ClassCheckActivity.class));
+                            break;
+                        // 学生社团
+                        case 4:
+                            ToastUtli.show(getContext(),"努力开发中");
+                            //startActivity(new Intent(getContext(),StudentCommunityActivity.class));
+                            break;
+                        // 班级成长
+                        case 5:
+                            ToastUtli.show(getContext(),"努力开发中");
+                            //startActivity(new Intent(getContext(),ClassGrowUpActivity.class));
+                            break;
+                        // 学生档案
+                        case 6:
+                            // 向服务器发送点击的功能
+                            NetworkRequestUtil.postClickFunction(getContext(),"1");
+                            Intent intent = new Intent(getContext(),ClassListActivity.class);
+                            intent.putExtra("type",1);
+                            startActivity(intent);
+                            break;
+                        // 全部
+                        case 7:
+                            startActivity(new Intent(getContext(),AllActivity.class));
+                            break;
+                    }
+                }
+            });
+        }
 
         return view;
     }
@@ -240,10 +278,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
             viewHolder.title.setText(pictures.get(position).getTitle());
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
-            if(position == 1 || position == 2 || position == 3 || position == 4 || position == 5){
+
+            if((levelCode != 11 && levelCode != 16) && (position == 1 || position == 2 || position == 3 || position == 4 || position == 5)){
                 viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
 
             }
+
             return convertView;
         }
 
