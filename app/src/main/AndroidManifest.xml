@@ -130,6 +130,9 @@
         <!-- 学部对比 -->
         <activity android:name=".teacher.activity.FacultyComparedActivity"
             android:screenOrientation="portrait" />
+        <!-- 班级对比 -->
+        <activity android:name=".teacher.activity.ClassComparedActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".teacher.service.UpdataService" />
 

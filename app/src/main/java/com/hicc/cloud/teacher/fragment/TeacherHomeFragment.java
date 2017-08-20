@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AllActivity;
+import com.hicc.cloud.teacher.activity.ClassComparedActivity;
 import com.hicc.cloud.teacher.activity.ClassListActivity;
 import com.hicc.cloud.teacher.activity.ColumnChartActivity;
 import com.hicc.cloud.teacher.activity.FacultyComparedActivity;
@@ -43,9 +44,9 @@ import java.util.List;
 public class TeacherHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
-    private String[] titles = new String[]{ "网上报道", "现场报道", "学生档案","学生成绩", "全部"};
+    private String[] titles = new String[]{  "报道对比", "学生档案","学生成绩", "全部"};
     private String[] titles2 = new String[]{"网上报道", "现场报道", "总体对比"};
-    private int[] images = new int[]{ R.drawable.icon_online_reports,R.drawable.icon_live_reports, R.drawable.icon_file,R.drawable.icon_stu_ach, R.mipmap.icon_all};
+    private int[] images = new int[]{ R.drawable.icon_comparison, R.drawable.icon_file,R.drawable.icon_stu_ach, R.mipmap.icon_all};
     private int[] images2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_comparison};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
@@ -93,23 +94,19 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
 //            });
 //        } else {
         PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
-        gridView.setNumColumns(5);
+        gridView.setNumColumns(4);
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //设置点击事件
                 switch (position) {
-                    //网上报道
+                    //报道对比
                     case 0:
-                        startActivity(new Intent(getContext(),ColumnChartActivity.class));
-                        break;
-                    // 现场报道
-                    case 1:
-                        startActivity(new Intent(getContext(),PieChartActivity.class));
+                        startActivity(new Intent(getContext(),ClassComparedActivity.class));
                         break;
                     // 学生档案
-                    case 2:
+                    case 1:
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getContext(), "1");
                         Intent intent = new Intent(getContext(), ClassListActivity.class);
@@ -117,7 +114,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                         startActivity(intent);
                         break;
                     // 学生成绩
-                    case 3:
+                    case 2:
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getContext(), "2");
                         Intent intent1 = new Intent(getContext(), ClassListActivity.class);
@@ -125,7 +122,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                         startActivity(intent1);
                         break;
                     // 全部
-                    case 4:
+                    case 3:
                         startActivity(new Intent(getContext(), AllActivity.class));
                         break;
                 }
