@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private MyTabLayout mTabLayout;
     BaseFragment fragment;
     ScrollViewPager mViewPager;
-    ArrayList<TabItem>tabs;
+    ArrayList<TabItem> tabs;
     private ProgressDialog progressDialog;
     private static Boolean isExit = false;
     private EditText et_search;
