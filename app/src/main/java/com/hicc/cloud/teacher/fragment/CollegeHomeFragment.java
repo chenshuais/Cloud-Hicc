@@ -39,7 +39,7 @@ import java.util.List;
  * Alter by i_cassell on 2016/9/25.
  */
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener {
+public class CollegeHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
     private String[] titles = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "全部"};
@@ -62,7 +62,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_college, container, false);
 
         // 获取等级代码
         levelCode = SpUtils.getIntSp(getContext(), ConstantValue.USER_LEVEL_CODE, 0);
