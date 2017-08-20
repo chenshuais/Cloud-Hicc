@@ -26,9 +26,11 @@ import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.ExitEvent;
 import com.hicc.cloud.teacher.bean.PhoneInfo;
 import com.hicc.cloud.teacher.fragment.BaseFragment;
+import com.hicc.cloud.teacher.fragment.CollegeHomeFragment;
+import com.hicc.cloud.teacher.fragment.FacultyHomeFragment;
 import com.hicc.cloud.teacher.fragment.FriendFragment;
-import com.hicc.cloud.teacher.fragment.HomeFragment;
 import com.hicc.cloud.teacher.fragment.InformationFragment;
+import com.hicc.cloud.teacher.fragment.TeacherHomeFragment;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.PhoneInfoUtil;
@@ -56,7 +58,7 @@ import java.util.TimerTask;
 import okhttp3.Call;
 
 /**
- * 主页
+ * 学院领导主页
  */
 
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{
@@ -229,8 +231,21 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private void initData(){
         int levelCode = SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0);
         tabs=new ArrayList<TabItem>();
-        tabs.add(new TabItem(R.drawable.selector_tab_home, R.string.tab_home, HomeFragment.class));
-        if (levelCode != 11 && levelCode != 16) {
+        switch (levelCode) {
+            // 学院
+            case 11:
+                tabs.add(new TabItem(R.drawable.selector_tab_home, R.string.tab_home, CollegeHomeFragment.class));
+                break;
+            // 学部
+            case 12:
+                tabs.add(new TabItem(R.drawable.selector_tab_home, R.string.tab_home, FacultyHomeFragment.class));
+                break;
+            // 导员
+            case 13:
+                tabs.add(new TabItem(R.drawable.selector_tab_home, R.string.tab_home, TeacherHomeFragment.class));
+                break;
+        }
+        if (levelCode != 11 && levelCode != 12) {
             tabs.add(new TabItem(R.drawable.selector_tab_friend, R.string.tab_friend, FriendFragment.class));
         }
         tabs.add(new TabItem(R.drawable.selector_tab_infomation, R.string.tab_information, InformationFragment.class));

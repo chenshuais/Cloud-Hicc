@@ -136,7 +136,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         if (userName.equals("") || mPwd.equals("")) {
             ToastUtli.show(getApplicationContext(),"账号或密码不能为空");
         // TODO 接口不能用时的假数据
-        } else if (userName.equals("123") && mPwd.equals("123")){
+        } else if (userName.equals("学院") && mPwd.equals("学院")){
             checkUp(userName,mPwd);
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME,"模拟领导");
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL,"测试人员");
@@ -146,7 +146,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             SpUtils.putIntSp(getApplicationContext(),ConstantValue.NID,1);
             SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_LEVEL_CODE,11);
             enterHome();
-        } else if (userName.equals("1234") && mPwd.equals("1234")){
+        } else if (userName.equals("导员") && mPwd.equals("导员")){
             checkUp(userName,mPwd);
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME,"模拟导员");
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL,"测试人员");
@@ -155,6 +155,16 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             SpUtils.putIntSp(getApplicationContext(),ConstantValue.RECORD_CODE,1);
             SpUtils.putIntSp(getApplicationContext(),ConstantValue.NID,1);
             SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_LEVEL_CODE,13);
+            enterHome();
+        } else if (userName.equals("学部") && mPwd.equals("学部")){
+            checkUp(userName,mPwd);
+            SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME,"模拟学部");
+            SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_LEVEL,"测试人员");
+            SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_PHONE, "1024");
+            SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_NO,1);
+            SpUtils.putIntSp(getApplicationContext(),ConstantValue.RECORD_CODE,1);
+            SpUtils.putIntSp(getApplicationContext(),ConstantValue.NID,1);
+            SpUtils.putIntSp(getApplicationContext(),ConstantValue.USER_LEVEL_CODE,12);
             enterHome();
         } else {
             // 显示进度对话框
