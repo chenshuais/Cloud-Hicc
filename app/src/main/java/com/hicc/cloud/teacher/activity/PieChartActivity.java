@@ -17,7 +17,6 @@ import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +39,6 @@ public class PieChartActivity extends AppCompatActivity {
 
     private ImageView iv_back;
     private ProgressDialog progressDialog;
-    private static final String URL = "http://home.hicc.cn/PhoneInterface/SceneReportService.asmx/Getscenereportnum";
     private int all;
     private int yes;
     private int no;
@@ -53,74 +51,72 @@ public class PieChartActivity extends AppCompatActivity {
         initUI();
 
         // 请求数据
-        queryFromServer(savedInstanceState);
+        queryFromServer();
     }
 
     // 从网络请求数据
-    private void queryFromServer(final Bundle savedInstanceState) {
+    private void queryFromServer() {
         showProgressDialog();
-        // 发送GET请求
         OkHttpUtils
                 .get()
-                .url(URL)
-                .addParams("userno", "1001")
-                .addParams("num", "20465")
-                .addParams("userlevelcode", "11")
-                .addParams("account", "hicc")
-                .addParams("pas", "123")
-                .addParams("timeCode", "16")
+                .url("http://api.hicc.cn/a")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
-                        Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                        Logs.e("获取现场报道数据失败："+e.toString());
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(150,156,140,110,160)).commit();
+                        ToastUtli.show(getApplicationContext(),"获取现场报道数据失败");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Logs.i(response);
-                        // 解析json
-                        Logs.i("解析json");
-                        getJsonInfo(response,savedInstanceState);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.getBoolean("sucessed")) {
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                int rw = data.getInt("rw");
+                                int lg = data.getInt("lg");
+                                int jj = data.getInt("jj");
+                                int gj = data.getInt("gj");
+                                int gl = data.getInt("gl");
+                                getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(rw,lg,jj,gj,gl)).commit();
+                                closeProgressDialog();
+                            } else {
+                                ToastUtli.show(getApplicationContext(),jsonObject.getString("Msg"));
+                                closeProgressDialog();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            closeProgressDialog();
+                            Logs.e("获取现场报道数据失败："+e.toString());
+                            ToastUtli.show(getApplicationContext(),"获取现场报道数据失败");
+                        }
                     }
                 });
     }
 
-    // 解析json数据
-    private void getJsonInfo(String response, Bundle savedInstanceState) {
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-            for (int i=0; i < jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                all = jsonObject.getInt("All");
-                yes = jsonObject.getInt("Yes");
-                no = jsonObject.getInt("No");
-            }
-            if (savedInstanceState == null && all > 0) {
-                getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment(yes,no)).commit();
-                closeProgressDialog();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderLiveFragment extends Fragment {
         private PieChartView chart;
         private PieChartData data;
-        private int yes;
-        private int no;
+        private int rw; // 人文
+        private int lg; // 理工
+        private int jj; // 经济
+        private int gj; // 国交
+        private int gl; // 管理
 
         @SuppressLint("ValidFragment")
-        public PlaceholderFragment(int yes, int no) {
-            this.yes = yes;
-            this.no = no;
+        public PlaceholderLiveFragment(int rw, int lg, int jj, int gj, int gl) {
+            this.rw = rw;
+            this.lg = lg;
+            this.jj = jj;
+            this.gj = gj;
+            this.gl = gl;
         }
 
-        public PlaceholderFragment(){}
+        public PlaceholderLiveFragment(){}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,13 +135,25 @@ public class PieChartActivity extends AppCompatActivity {
         private void generateData() {
             List<SliceValue> values = new ArrayList<SliceValue>();
 
-            SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到"+yes+"人");
+            SliceValue sliceValue1 = new SliceValue(rw, ChartUtils.pickColor());
+            sliceValue1.setLabel("人文学部"+rw+"人");
             values.add(sliceValue1);
 
-            SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到"+no+"人");
+            SliceValue sliceValue2 = new SliceValue(lg, ChartUtils.pickColor());
+            sliceValue2.setLabel("理工学部"+lg+"人");
             values.add(sliceValue2);
+
+            SliceValue sliceValue3 = new SliceValue(jj, ChartUtils.pickColor());
+            sliceValue3.setLabel("经济学部"+jj+"人");
+            values.add(sliceValue3);
+
+            SliceValue sliceValue4 = new SliceValue(gj, ChartUtils.pickColor());
+            sliceValue4.setLabel("国交学部"+gj+"人");
+            values.add(sliceValue4);
+
+            SliceValue sliceValue5 = new SliceValue(gl, ChartUtils.pickColor());
+            sliceValue5.setLabel("管理学部"+gl+"人");
+            values.add(sliceValue5);
 
             data = new PieChartData(values);
             data.setHasLabels(true);

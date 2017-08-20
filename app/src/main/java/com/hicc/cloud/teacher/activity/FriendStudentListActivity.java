@@ -28,6 +28,7 @@ import com.hicc.cloud.teacher.bean.Student;
 import com.hicc.cloud.teacher.db.StudentInfoDB;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -51,7 +52,6 @@ public class FriendStudentListActivity extends AppCompatActivity {
     private ImageView iv_back;
     private ProgressDialog progressDialog;
     private ListView lv_student;
-    private String URL = "http://suguan.hicc.cn/hicccloudt/getInfo";
     private PopupWindow mPopupWindow;
     private Student mStudent;
     private TextView tv_title;
@@ -85,7 +85,9 @@ public class FriendStudentListActivity extends AppCompatActivity {
         // 发送GET请求
         OkHttpUtils
                 .get()
-                .url(URL)
+                .url(URLs.GetClassList)
+                .addParams("pageno", "1")
+                .addParams("pagesize", "300")
                 .addParams("timescode", String.valueOf(timesCode))
                 .addParams("divisionCode", String.valueOf(divisionCode))
                 .addParams("professionalCode", String.valueOf(professionalCode))
@@ -130,6 +132,7 @@ public class FriendStudentListActivity extends AppCompatActivity {
                             student.setStudentName(studentInfo.getString("StudentName"));
                             // 电话
                             student.setYourPhone(studentInfo.getString("YourPhone"));
+                            student.setClassId(studentInfo.getInt("ClassId"));
 
                             mStudentList.add(student);
                         }
@@ -359,6 +362,7 @@ public class FriendStudentListActivity extends AppCompatActivity {
                 startStudent.setName(mStudent.getStudentName());
                 // 将手机号加密存储
                 startStudent.setPhone(Long.valueOf(mStudent.getYourPhone())^ENCRYPTION_CODE);
+                startStudent.setClassId(mStudent.getClassId());
                 db.insertStart(startStudent);
                 // 刷新数据适配器
                 mAdapter.notifyDataSetChanged();

@@ -38,7 +38,9 @@ public class AllActivity extends AppCompatActivity {
             R.drawable.icon_file, R.drawable.icon_payment};
 
     private String[] mTitles2 = new String[]{"网上报到", "现场报到", "问卷调查"};
+    private String[] mTitles_2 = new String[]{"问卷调查"};
     private int[] mImages2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_questionnaire,};
+    private int[] mImages_2 = new int[]{R.drawable.icon_questionnaire,};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,9 @@ public class AllActivity extends AppCompatActivity {
                     case 0:
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getApplicationContext(),"2");
-                        startActivity(new Intent(getApplicationContext(),StudentMarkActivity.class));
+                        Intent intent1 = new Intent(getApplicationContext(),ClassListActivity.class);
+                        intent1.putExtra("type",2);
+                        startActivity(intent1);
                         break;
                     // 宿舍成绩
                     case 1:
@@ -116,22 +120,22 @@ public class AllActivity extends AppCompatActivity {
         });
 
         // 其他应用
-        PictureAdapter adapter2 = new PictureAdapter(mTitles2, mImages2, getApplicationContext(), 2);
+        PictureAdapter adapter2 = new PictureAdapter(mTitles_2, mImages_2, getApplicationContext(), 2);
         gv_other.setAdapter(adapter2);
         gv_other.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //点击事件
                 switch (position){
-                    // 网上报到
+                    /*// 网上报到
                     case 0:
                         startActivity(new Intent(getApplicationContext(),ColumnChartActivity.class));
                         break;
                     // 现场报到
                     case 1:
                         startActivity(new Intent(getApplicationContext(),PieChartActivity.class));
-                        break;
+                        break;*/
                     // 问卷调查
-                    case 2:
+                    case 0:
                         ToastUtli.show(getApplicationContext(),"努力开发中");
                         break;
                 }
@@ -197,7 +201,7 @@ public class AllActivity extends AppCompatActivity {
             }
 
             if(type == 2){
-                if(position == 2){
+                if(position == 0){
                     viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
                 }
             }

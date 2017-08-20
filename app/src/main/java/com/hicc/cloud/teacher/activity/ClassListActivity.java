@@ -19,6 +19,7 @@ import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -36,12 +37,12 @@ import okhttp3.Call;
  */
 
 public class ClassListActivity extends AppCompatActivity {
-    private static final String URL = "http://suguan.hicc.cn/hicccloudt/LoginT";
     private ImageView iv_back;
-    private List<TeacherClassInfo> classInfoList;
+    private List<TeacherClassInfo> classInfoList = new ArrayList<>();;
     private ListView lv_class;
     private ProgressDialog progressDialog;
     private int type;
+    private MyAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,8 @@ public class ClassListActivity extends AppCompatActivity {
 
         OkHttpUtils
                 .get()
-                .url(URL)
-                .addParams("account", SpUtils.getStringSp(this, ConstantValue.USER_NAME,""))
-                .addParams("pass", SpUtils.getStringSp(this,ConstantValue.PASS_WORD,""))
+                .url(URLs.GetClassByUserNo)
+                .addParams("teachercode", SpUtils.getIntSp(this, ConstantValue.USER_NO,0)+"")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -88,12 +88,9 @@ public class ClassListActivity extends AppCompatActivity {
             boolean sucessed = jsonObject.getBoolean("sucessed");
             if(sucessed) {
                 Logs.i("开始解析");
-                // TODO 保存用户信息
-                JSONObject data = jsonObject.getJSONObject("data");
+                // 带班信息
+                JSONArray classInfo = jsonObject.getJSONArray("data");
 
-                // TODO 带班信息
-                JSONArray classInfo = data.getJSONArray("classInfo");
-                classInfoList = new ArrayList<TeacherClassInfo>();
                 TeacherClassInfo teacherClassInfo;
                 for (int i=0; i < classInfo.length(); i++){
                     JSONObject info = classInfo.getJSONObject(i);
@@ -112,7 +109,7 @@ public class ClassListActivity extends AppCompatActivity {
                     classInfoList.add(teacherClassInfo);
                 }
 
-                lv_class.setAdapter(new MyAdapter());
+                myAdapter.notifyDataSetChanged();
                 closeProgressDialog();
             }else{
                 closeProgressDialog();
@@ -153,6 +150,9 @@ public class ClassListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        myAdapter = new MyAdapter();
+        lv_class.setAdapter(myAdapter);
     }
 
     class MyAdapter extends BaseAdapter{
