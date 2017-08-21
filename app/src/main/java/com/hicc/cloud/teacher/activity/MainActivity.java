@@ -58,7 +58,7 @@ import java.util.TimerTask;
 import okhttp3.Call;
 
 /**
- * 学院领导主页
+ * 主页
  */
 
 public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTabClickListener{

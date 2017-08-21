@@ -37,6 +37,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/9/24/024.
  * Alter by i_cassell on 2016/9/25.
+ * 学院领导
  */
 
 public class CollegeHomeFragment extends BaseFragment implements View.OnClickListener {

@@ -2,7 +2,6 @@ package com.hicc.cloud.teacher.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Family;
 import com.hicc.cloud.teacher.bean.Student;
@@ -28,7 +28,6 @@ import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.utils.URLs;
 import com.hicc.cloud.teacher.view.ScrollViewPager;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
@@ -76,23 +75,11 @@ public class StudentProfileActivity extends AppCompatActivity {
                     tv_stu_num.setText("学号：" + stuNum);
                     tv_class.setText("班级：" + classDes);
                     // 加载图片
-                    OkHttpUtils
-                            .get()
-                            .url(mStudent.getImageUrl())
-                            .build()
-                            .execute(new BitmapCallback() {
-                                @Override
-                                public void onError(Call call, Exception e, int id) {
-                                    Logs.i(e.toString());
-                                    closeProgressDialog();
-                                }
-
-                                @Override
-                                public void onResponse(Bitmap response, int id) {
-                                    iv_pic.setImageBitmap(response);
-                                    closeProgressDialog();
-                                }
-                            });
+                    Glide.with(StudentProfileActivity.this).load(mStudent.getImageUrl()).placeholder(R.drawable.icon_pic)
+                            .centerCrop()
+                            .error(R.drawable.icon_pic)
+                            .into(iv_pic);
+                    closeProgressDialog();
                     break;
                 case 1:
                     unFindStudentUI(unFindStudent);
@@ -136,24 +123,12 @@ public class StudentProfileActivity extends AppCompatActivity {
         tv_stu_num.setText("学号：" + mStudent.getStudentNu());
         tv_class.setText("班级：" + mStudent.getClassDescription());
         // 加载图片
-        OkHttpUtils
-                .get()
-                .url(mStudent.getImageUrl())
-                .build()
-                .execute(new BitmapCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Logs.i(e.toString());
-                        closeProgressDialog();
-                    }
-
-                    @Override
-                    public void onResponse(Bitmap response, int id) {
-                        iv_pic.setImageBitmap(response);
-                        closeProgressDialog();
-                        ToastUtli.show(getApplicationContext(), "该学生信息不全");
-                    }
-                });
+        Glide.with(StudentProfileActivity.this).load(mStudent.getImageUrl()).placeholder(R.drawable.icon_pic)
+                .centerCrop()
+                .error(R.drawable.icon_pic)
+                .into(iv_pic);
+        closeProgressDialog();
+        ToastUtli.show(getApplicationContext(), "该学生信息不全");
     }
 
     // 网络查询
