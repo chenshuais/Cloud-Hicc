@@ -37,10 +37,10 @@ public class URLs {
     /**
      * 获取网上报道人数
      */
-    public static final String GetOnlineNum = "http://api.hicc.cn/api/TStudentInfo/GetOnlineNum";
+    public static final String GetOnlineNum = "http://home.hicc.cn/PhoneInterface/OnlineReportService.asmx/Getonlinereportnum";
     /**
      * 获取现场报道人数
      */
-    public static final String GetLiveNum = "http://api.hicc.cn/api/TStudentInfo/GetLiveNum";
+    public static final String GetLiveNum = "http://home.hicc.cn/PhoneInterface/SceneReportService.asmx/Getscenereportnum";
 
 }

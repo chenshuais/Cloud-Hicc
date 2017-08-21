@@ -11,12 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.utils.URLs;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +29,7 @@ import java.util.List;
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.PieChartData;
@@ -41,6 +45,7 @@ public class FacultyComparedActivity extends AppCompatActivity {
 
     private ImageView iv_back;
     private ProgressDialog progressDialog;
+    private String num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,30 @@ public class FacultyComparedActivity extends AppCompatActivity {
 
         initUI();
 
+        initData();
+
         getDate();
+    }
+
+    private void initData() {
+        int userNo = SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_NO, 0);
+        switch (userNo) {
+            case 2001:
+                num = "10";
+                break;
+            case 2002:
+                num = "11";
+                break;
+            case 2003:
+                num = "12";
+                break;
+            case 2004:
+                num = "13";
+                break;
+            case 2005:
+                num = "14";
+                break;
+        }
     }
 
     private void getDate() {
@@ -59,13 +87,19 @@ public class FacultyComparedActivity extends AppCompatActivity {
         OkHttpUtils
                 .get()
                 .url(URLs.GetOnlineNum)
+                .addParams("userno", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_NO, 0) + "")
+                .addParams("num", num)
+                .addParams("userlevelcode", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0) + "")
+                .addParams("account", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
+                .addParams("pas", SpUtils.getStringSp(getApplicationContext(), ConstantValue.PASS_WORD, ""))
+                .addParams("timeCode", "17")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                        ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
                     @Override
@@ -74,23 +108,17 @@ public class FacultyComparedActivity extends AppCompatActivity {
                         // 解析json
                         Logs.i("解析json");
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getBoolean("sucessed")) {
-                                JSONObject data = jsonObject.getJSONObject("data");
-                                int all = data.getInt("all");
-                                int yes = data.getInt("yes");
-                                int no = data.getInt("no");
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(all,yes,no)).commit();
-                                closeProgressDialog();
-                            } else {
-                                ToastUtli.show(getApplicationContext(),jsonObject.getString("Msg"));
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(100,91,9)).commit();
-                                closeProgressDialog();
-                            }
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject data = jsonArray.getJSONObject(0);
+                            int all = data.getInt("All");
+                            int yes = data.getInt("Yes");
+                            int no = data.getInt("No");
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(all, yes, no)).commit();
+                            closeProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             closeProgressDialog();
-                            ToastUtli.show(getApplicationContext(),"获取信息失败");
+                            ToastUtli.show(getApplicationContext(), "获取信息失败");
                         }
                     }
                 });
@@ -99,13 +127,19 @@ public class FacultyComparedActivity extends AppCompatActivity {
         OkHttpUtils
                 .get()
                 .url(URLs.GetLiveNum)
+                .addParams("userno", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_NO, 0) + "")
+                .addParams("num", num)
+                .addParams("userlevelcode", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0) + "")
+                .addParams("account", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
+                .addParams("pas", SpUtils.getStringSp(getApplicationContext(), ConstantValue.PASS_WORD, ""))
+                .addParams("timeCode", "17")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新查询");
+                        ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
                     @Override
@@ -114,28 +148,22 @@ public class FacultyComparedActivity extends AppCompatActivity {
                         // 解析json
                         Logs.i("解析json");
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getBoolean("sucessed")) {
-                                JSONObject data = jsonObject.getJSONObject("data");
-                                int all = data.getInt("all");
-                                int yes = data.getInt("yes");
-                                int no = data.getInt("no");
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(yes,no)).commit();
-                                closeProgressDialog();
-                            } else {
-                                ToastUtli.show(getApplicationContext(),jsonObject.getString("Msg"));
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(91,9)).commit();
-                                closeProgressDialog();
-                            }
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject data = jsonArray.getJSONObject(0);
+                            int all = data.getInt("All");
+                            int yes = data.getInt("Yes");
+                            int no = data.getInt("No");
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(yes, no)).commit();
+                            closeProgressDialog();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            ToastUtli.show(getApplicationContext(),"获取信息失败");
+                            ToastUtli.show(getApplicationContext(), "获取信息失败");
                             closeProgressDialog();
                         }
                     }
                 });
     }
-
 
     private void initUI() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
@@ -168,7 +196,8 @@ public class FacultyComparedActivity extends AppCompatActivity {
             this.no = no;
         }
 
-        public PlaceholderFragment(){}
+        public PlaceholderFragment() {
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -187,7 +216,7 @@ public class FacultyComparedActivity extends AppCompatActivity {
 
         // 添加数据
         private void generateDefaultData() {
-            List<Column> columns = new ArrayList<Column>();
+            List<Column> columns = new ArrayList<>();
             List<SubcolumnValue> values;
 
             values = new ArrayList<SubcolumnValue>();
@@ -218,8 +247,12 @@ public class FacultyComparedActivity extends AppCompatActivity {
                 Axis axisX = new Axis();
                 Axis axisY = new Axis().setHasLines(true);
                 if (hasAxesNames) {
-                    axisX.setName("状态");
                     axisY.setName("人数");
+                    ArrayList<AxisValue> axisValuesX = new ArrayList<AxisValue>();
+                    axisValuesX.add(new AxisValue(0).setValue(0).setLabel("全部"));
+                    axisValuesX.add(new AxisValue(1).setValue(1).setLabel("已报到"));
+                    axisValuesX.add(new AxisValue(2).setValue(2).setLabel("未报到"));
+                    axisX.setValues(axisValuesX);//为X轴显示的刻度值设置数据集合
                 }
                 data.setAxisXBottom(axisX);
                 data.setAxisYLeft(axisY);
@@ -237,18 +270,18 @@ public class FacultyComparedActivity extends AppCompatActivity {
             public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
                 // 获取点击的条目数值
                 String vaule = value.toString();
-                int end = vaule.length()-3;
+                int end = vaule.length() - 3;
                 // 截取所需字符串
-                String subV = vaule.substring(19,end);
-                switch (columnIndex){
+                String subV = vaule.substring(19, end);
+                switch (columnIndex) {
                     case 0:
-                        ToastUtli.show(getContext(),"总共"+subV+"人");
+                        ToastUtli.show(getContext(), "总共" + subV + "人");
                         break;
                     case 1:
-                        ToastUtli.show(getContext(),"已报到"+subV+"人");
+                        ToastUtli.show(getContext(), "已报到" + subV + "人");
                         break;
                     case 2:
-                        ToastUtli.show(getContext(),"未报到"+subV+"人");
+                        ToastUtli.show(getContext(), "未报到" + subV + "人");
                         break;
                 }
             }
@@ -273,7 +306,8 @@ public class FacultyComparedActivity extends AppCompatActivity {
             this.no = no;
         }
 
-        public PlaceholderLiveFragment(){}
+        public PlaceholderLiveFragment() {
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -293,11 +327,11 @@ public class FacultyComparedActivity extends AppCompatActivity {
             List<SliceValue> values = new ArrayList<SliceValue>();
 
             SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到"+yes+"人");
+            sliceValue1.setLabel("已报到" + yes + "人");
             values.add(sliceValue1);
 
             SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到"+no+"人");
+            sliceValue2.setLabel("未报到" + no + "人");
             values.add(sliceValue2);
 
             data = new PieChartData(values);
