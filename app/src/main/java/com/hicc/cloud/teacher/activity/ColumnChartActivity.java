@@ -58,6 +58,7 @@ public class ColumnChartActivity extends AppCompatActivity {
     private void queryFromServer() {
         showProgressDialog();
         // 获取网上报道信息
+        // TODO 获取五大学部网上报道信息 周
         OkHttpUtils
                 .get()
                 .url("http://api.hicc.cn/a")

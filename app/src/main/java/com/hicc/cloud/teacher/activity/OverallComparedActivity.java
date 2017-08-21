@@ -36,8 +36,8 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
-// 班级报道对比
-public class ClassComparedActivity extends AppCompatActivity {
+// 学院总体报道对比
+public class OverallComparedActivity extends AppCompatActivity {
 
     private ImageView iv_back;
     private ProgressDialog progressDialog;
@@ -45,7 +45,7 @@ public class ClassComparedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_class_compared);
+        setContentView(R.layout.activity_overall_compared);
 
         initUI();
 
@@ -54,7 +54,8 @@ public class ClassComparedActivity extends AppCompatActivity {
 
     private void getDate() {
         showProgressDialog();
-        // TODO 获取班级报道信息 崔
+        // 获取网上报道信息
+        // TODO 获取学院总体报道信息 周
         OkHttpUtils
                 .get()
                 .url(URLs.GetOnlineNum)

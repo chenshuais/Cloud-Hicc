@@ -37,10 +37,8 @@ public class AllActivity extends AppCompatActivity {
             R.mipmap.club, R.mipmap.classes,
             R.drawable.icon_file, R.drawable.icon_payment};
 
-    private String[] mTitles2 = new String[]{"网上报到", "现场报到", "问卷调查"};
-    private String[] mTitles_2 = new String[]{"问卷调查"};
-    private int[] mImages2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_questionnaire,};
-    private int[] mImages_2 = new int[]{R.drawable.icon_questionnaire,};
+    private String[] mTitles_2 = new String[]{"报道对比","问卷调查"};
+    private int[] mImages_2 = new int[]{R.drawable.icon_comparison, R.drawable.icon_questionnaire,};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,16 +124,12 @@ public class AllActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //点击事件
                 switch (position){
-                    /*// 网上报到
+                    // 报道对比
                     case 0:
-                        startActivity(new Intent(getApplicationContext(),ColumnChartActivity.class));
+                        startActivity(new Intent(getApplicationContext(),ClassComparedActivity.class));
                         break;
-                    // 现场报到
-                    case 1:
-                        startActivity(new Intent(getApplicationContext(),PieChartActivity.class));
-                        break;*/
                     // 问卷调查
-                    case 0:
+                    case 1:
                         ToastUtli.show(getApplicationContext(),"努力开发中");
                         break;
                 }
@@ -201,7 +195,7 @@ public class AllActivity extends AppCompatActivity {
             }
 
             if(type == 2){
-                if(position == 0){
+                if(position == 1){
                     viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
                 }
             }

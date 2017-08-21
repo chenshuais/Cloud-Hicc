@@ -57,6 +57,7 @@ public class PieChartActivity extends AppCompatActivity {
     // 从网络请求数据
     private void queryFromServer() {
         showProgressDialog();
+        // TODO 获取五大学部现场报道信息 周
         OkHttpUtils
                 .get()
                 .url("http://api.hicc.cn/a")

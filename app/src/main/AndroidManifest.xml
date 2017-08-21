@@ -135,6 +135,10 @@
         <activity
             android:name=".teacher.activity.ClassComparedActivity"
             android:screenOrientation="portrait" />
+        <!--总体对比-->
+        <activity
+            android:name=".teacher.activity.OverallComparedActivity"
+            android:screenOrientation="portrait" />
         <!--新闻页-->
         <activity android:name=".teacher.activity.NewsActivity"
             android:screenOrientation="portrait" />

@@ -394,7 +394,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
             //当点击返回的按钮时执行
             @Override
             public void onCancel(DialogInterface dialog) {
-                //TODO 退出应用
                 finish();
                 System.exit(0);
             }

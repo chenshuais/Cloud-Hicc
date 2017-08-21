@@ -55,6 +55,5 @@ public class TabView extends LinearLayout implements View.OnClickListener{
 
     }
     public void onDataChanged(int badgeCount) {
-        //  TODO notify new message, change the badgeView
     }
 }

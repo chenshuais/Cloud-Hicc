@@ -136,7 +136,7 @@ public class FacultyHomeFragment extends BaseFragment implements View.OnClickLis
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    // TODO 解析后操作
+                    // 解析后操作
                     Intent intent = new Intent(getContext(), ScanResultActivity.class);
                     intent.putExtra("result", result);
                     startActivity(intent);

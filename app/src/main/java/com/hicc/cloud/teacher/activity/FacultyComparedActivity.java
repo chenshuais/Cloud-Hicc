@@ -36,7 +36,7 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
-
+// 学部报道对比
 public class FacultyComparedActivity extends AppCompatActivity {
 
     private ImageView iv_back;
@@ -55,6 +55,7 @@ public class FacultyComparedActivity extends AppCompatActivity {
     private void getDate() {
         showProgressDialog();
         // 获取网上报道信息
+        // TODO 获取学部报道信息 陈
         OkHttpUtils
                 .get()
                 .url(URLs.GetOnlineNum)

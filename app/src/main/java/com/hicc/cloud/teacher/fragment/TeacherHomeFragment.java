@@ -2,7 +2,6 @@ package com.hicc.cloud.teacher.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,23 +11,18 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.AllActivity;
 import com.hicc.cloud.teacher.activity.ClassComparedActivity;
 import com.hicc.cloud.teacher.activity.ClassListActivity;
-import com.hicc.cloud.teacher.activity.ColumnChartActivity;
-import com.hicc.cloud.teacher.activity.FacultyComparedActivity;
-import com.hicc.cloud.teacher.activity.PieChartActivity;
-import com.hicc.cloud.teacher.activity.ScanActivity;
+import com.hicc.cloud.teacher.activity.NewsActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.bean.Picture;
-import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
-import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -45,14 +39,12 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
     private static final int SCAN_CODE = 0;
     private GridView gridView;
     private String[] titles = new String[]{  "报道对比", "学生档案","学生成绩", "全部"};
-    private String[] titles2 = new String[]{"网上报道", "现场报道", "总体对比"};
     private int[] images = new int[]{ R.drawable.icon_comparison, R.drawable.icon_file,R.drawable.icon_stu_ach, R.mipmap.icon_all};
-    private int[] images2 = new int[]{ R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_comparison};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
     private LinearLayout ll_record;
     private LinearLayout ll_classrecord;
-    private int levelCode;
+
 
     // 加载数据
     @Override
@@ -63,36 +55,8 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_teacher, container, false);
 
-        // 获取等级代码
-        levelCode = SpUtils.getIntSp(getContext(), ConstantValue.USER_LEVEL_CODE, 0);
-
         initUI(view);
 
-//        if (levelCode == 11 || levelCode == 16) {
-//            gridView.setNumColumns(3);
-//            PictureAdapter adapter = new PictureAdapter(titles2, images2, getContext());
-//            gridView.setAdapter(adapter);
-//
-//            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//                    //设置点击事件
-//                    switch (position){
-//                        // 网上报道
-//                        case 0:
-//                            startActivity(new Intent(getContext(),ColumnChartActivity.class));
-//                            break;
-//                        // 现场报道
-//                        case 1:
-//                            startActivity(new Intent(getContext(),PieChartActivity.class));
-//                            break;
-//                        // 学部对比
-//                        case 2:
-//                            startActivity(new Intent(getContext(),FacultyComparedActivity.class));
-//                            break;
-//                    }
-//                }
-//            });
-//        } else {
         PictureAdapter adapter = new PictureAdapter(titles, images, getContext());
         gridView.setNumColumns(4);
         gridView.setAdapter(adapter);
@@ -128,7 +92,6 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                 }
             }
         });
-    //}
 
         return view;
     }
@@ -141,6 +104,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
         ll_record = (LinearLayout) view.findViewById(R.id.ll_record);
 
         ll_classrecord = (LinearLayout) view.findViewById(R.id.ll_classrecord);
+        RelativeLayout rl_news = (RelativeLayout) view.findViewById(R.id.rl_news);
 
         ImageView iv_scan = (ImageView) view.findViewById(R.id.iv_scan);
         ImageView iv_shake = (ImageView) view.findViewById(R.id.iv_shake);
@@ -155,6 +119,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
         iv_record.setOnClickListener(this);
 
         ll_classrecord.setOnClickListener(this);
+        rl_news.setOnClickListener(this);
     }
 
     @Override
@@ -163,8 +128,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
             // 扫一扫
             case R.id.ll_scan:
             case R.id.iv_scan:
-                ToastUtli.show(getContext(),"您没有此权限！");
-//                startActivityForResult(new Intent(getContext(), ScanActivity.class),SCAN_CODE);
+                ToastUtli.show(getContext(),"努力开发中");
                 break;
             // 摇一摇
             case R.id.ll_shake:
@@ -176,10 +140,13 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
             case R.id.iv_record:
                 ToastUtli.show(getContext(),"努力开发中");
                 break;
-
             // 记录班级成长
             case R.id.ll_classrecord:
                 ToastUtli.show(getContext(),"努力开发中");
+                break;
+            // 新闻
+            case R.id.rl_news:
+                startActivity(new Intent(getContext(), NewsActivity.class));
                 break;
         }
     }
@@ -199,7 +166,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    // TODO 解析后操作
+                    // 解析后操作
                     Intent intent = new Intent(getContext(),ScanResultActivity.class);
                     intent.putExtra("result",result);
                     startActivity(intent);

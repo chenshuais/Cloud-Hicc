@@ -135,7 +135,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         mPwd = et_pwd.getText().toString().trim();
         if (userName.equals("") || mPwd.equals("")) {
             ToastUtli.show(getApplicationContext(),"账号或密码不能为空");
-        // TODO 接口不能用时的假数据
+        // 接口不能用时的假数据
         } else if (userName.equals("学院") && mPwd.equals("学院")){
             checkUp(userName,mPwd);
             SpUtils.putStringSp(getApplicationContext(),ConstantValue.TEACHER_NAME,"模拟领导");
@@ -288,7 +288,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     //检查是否已经登陆
     private void checkEnter() {
         if (SpUtils.getBoolSp(this, ConstantValue.IS_REMBER_PWD,false)) {
-            // TODO 向服务器发送请求登录  获取用户数据
+            // 向服务器发送请求登录  获取用户数据
             enterHome();
         }
     }
