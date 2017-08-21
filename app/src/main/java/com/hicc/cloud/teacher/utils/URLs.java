@@ -9,7 +9,7 @@ public class URLs {
     /**
      * 登录
      */
-    public static final String Login = "http://api.hicc.cn/api/TUserInfo/Login";
+    public static final String Login = "http://home.hicc.cn/PhoneInterface/LoginService.asmx/LoginNew";
     /**
      * 获取用户信息
      */

@@ -116,53 +116,37 @@
                     android:orientation="vertical"
                     android:padding="15dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_num"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:padding="4dp"
+                        android:text="学号："
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/tv_num"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            android:text="学号："
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            android:text="姓名："
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:padding="4dp"
+                        android:text="姓名："
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/tv_faculty"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            android:text="学部："
-                            android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/tv_faculty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="学部："
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/tv_profession"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            android:text="专业："
-                            android:textSize="16sp" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_profession"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="专业："
+                        android:textSize="14sp" />
 
 
                     <TextView
@@ -171,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:padding="4dp"
                         android:text="班级："
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_dormitory"
@@ -179,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:padding="4dp"
                         android:text="宿舍信息："
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_pay_status"
@@ -187,15 +171,15 @@
                         android:layout_height="wrap_content"
                         android:padding="4dp"
                         android:text="交费状态："
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_reported_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="报道状态："
-                        android:textSize="16sp" />
+                        android:text="报到状态："
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -211,8 +195,32 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bt_in"
-                android:text="修改报道状态"
+                android:text="报    到"
                 android:textColor="#ffffff" />
+
+            <LinearLayout
+                android:id="@+id/ll_chenggong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/chenggong" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="报到成功"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

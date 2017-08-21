@@ -3,21 +3,26 @@ package com.hicc.cloud.teacher.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hicc.cloud.R;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import okhttp3.Call;
 
@@ -40,6 +45,10 @@ public class ScanResultActivity extends AppCompatActivity {
     private Button bt_reported;
     private String result;
     private ProgressDialog progressDialog;
+    private boolean changeReport = false;
+    private boolean changePhone = false;
+    private AlertDialog dialog;
+    private LinearLayout ll_chenggong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,86 +68,129 @@ public class ScanResultActivity extends AppCompatActivity {
         showDialog();
         OkHttpUtils
                 .get()
-                .url("http://api.hicc.cn/ll")
-                .addParams("","")
+                .url("http://home.hicc.cn/PhoneInterface/OnlineRegister.asmx/getData")
+                .addParams("studentNu", result)
+                .addParams("userno", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_NO, 0) + "")
+                .addParams("levelcode", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0) + "")
+                .addParams("account", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
+                .addParams("pas", SpUtils.getStringSp(getApplicationContext(), ConstantValue.PASS_WORD, ""))
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ToastUtli.show(getApplicationContext(),"获取学生信息失败，请稍后重试");
+                        ToastUtli.show(getApplicationContext(), "获取学生信息失败，请稍后重试");
                         // 隐藏按钮
                         bt_reported.setVisibility(View.INVISIBLE);
                         closeDialog();
-                        Logs.e("获取学生信息失败:"+e.toString());
+                        Logs.e("获取学生信息失败:" + e.toString());
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Logs.d(response);
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getBoolean("ssss")) {
-                                JSONObject data = jsonObject.getJSONObject("data");
-                                String num = data.getString("name");
-                                String name = data.getString("num");
-                                String faculty = data.getString("de");
-                                String profession = data.getString("de");
-                                String classs = data.getString("de");
-                                String dormitory = data.getString("de");
-                                String oldImg = data.getString("de");
-                                String newImg = data.getString("de");
-                                int payStatusCode = data.getInt("de");
-                                int reportedStatus = data.getInt("de");
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONArray data = jsonArray.getJSONArray(1);
+                            // 学号
+                            String num = data.getString(0);
+                            // 姓名
+                            String name = data.getString(1);
+                            // 学部
+                            String faculty = data.getString(2);
+                            // 专业
+                            String profession = data.getString(3);
+                            // 班级
+                            String classs = data.getString(4);
+                            //String classs = clas.substring(0,clas.indexOf("\\"));
+                            // 新照片
+                            String newI = data.getString(5);
+                            String newImg = newI.substring(newI.indexOf("/") + 1);
+                            // 旧照片
+                            String old = data.getString(6);
+                            String oldImg = old.substring(old.indexOf("/") + 1);
+                            // 宿舍楼
+                            String dormitoryBuild = data.getString(8);
+                            // 宿舍号
+                            String dormitoryCode = data.getString(9);
+                            // 床号
+                            String build = data.getString(10);
+                            // 交费状态码
+                            int payStatusCode = Integer.valueOf(data.getString(7));
+                            // 报道状态码
+                            int reportedStatus = Integer.valueOf(data.getString(11));
+                            // 交费状态
+                            String payStatus = data.getString(12);
+                            // 报道状态
+                            String reported = data.getString(13);
 
-                                String oldImgUrl = "http://home.hicc.cn/OldImage/" + oldImg;
-                                String newImgUrl = "http://home.hicc.cn/StudentImage/" + newImg;
+                            String oldImgUrl = "http://home.hicc.cn/OldImage/" + oldImg;
+                            String newImgUrl = "http://home.hicc.cn/StudentImage/" + newImg;
 
-                                Glide.with(ScanResultActivity.this).load(oldImgUrl).placeholder(R.drawable.icon_pic)
-                                        .centerCrop()
-                                        .error(R.drawable.icon_pic)
-                                        .into(iv_old_pic);
-                                Glide.with(ScanResultActivity.this).load(newImgUrl).placeholder(R.drawable.icon_pic)
-                                        .centerCrop()
-                                        .error(R.drawable.icon_pic)
-                                        .into(iv_new_pic);
-                                tv_num.setText("学号："+num);
-                                tv_name.setText("姓名："+name);
-                                tv_faculty.setText("学部："+faculty);
-                                tv_profession.setText("专业："+profession);
-                                tv_class.setText("班级："+classs);
-                                tv_dormitory.setText("宿舍信息："+dormitory);
+                            Glide.with(ScanResultActivity.this).load(oldImgUrl).placeholder(R.drawable.icon_pic)
+                                    .centerCrop()
+                                    .error(R.drawable.icon_pic)
+                                    .into(iv_old_pic);
+                            Glide.with(ScanResultActivity.this).load(newImgUrl).placeholder(R.drawable.icon_pic)
+                                    .centerCrop()
+                                    .error(R.drawable.icon_pic)
+                                    .into(iv_new_pic);
+                            tv_num.setText("学号：" + num);
+                            tv_name.setText("姓名：" + name);
+                            tv_faculty.setText("学部：" + faculty);
+                            tv_profession.setText("专业：" + profession);
+                            tv_class.setText("班级：" + classs);
+                            tv_dormitory.setText("宿舍信息：" + dormitoryBuild + " " + dormitoryCode + "号 " + build + "号床");
+                            tv_pay_status.setText("交费状态：" + payStatus);
+                            tv_reported_status.setText("报道状态：" + reported);
 
-                                switch (payStatusCode) {
-                                    case 0:
-                                        tv_pay_status.setText("交费状态：已交费");
-                                        break;
-                                    case 1:
-                                        tv_pay_status.setText("交费状态：未交费");
-                                        // 隐藏按钮
-                                        bt_reported.setVisibility(View.INVISIBLE);
-                                        break;
-                                    case 2:
-                                        tv_pay_status.setText("交费状态：缓交");
-                                        break;
-                                }
-                                switch (reportedStatus) {
-                                    case 0:
-                                        tv_reported_status.setText("报道状态：已报道");
-                                        // 隐藏按钮
-                                        bt_reported.setVisibility(View.INVISIBLE);
-                                        break;
-                                    case 1:
-                                        tv_reported_status.setText("报道状态：未报道");
-                                        break;
-                                }
-                            } else {
-                                closeDialog();
-                                ToastUtli.show(getApplicationContext(),"获取学生信息失败："+jsonObject.getString("Msg"));
+                            switch (payStatusCode) {
+                                // 缓交
+                                case 10:
+                                    bt_reported.setVisibility(View.VISIBLE);
+                                    break;
+                                // 贷款
+                                case 11:
+                                    bt_reported.setVisibility(View.VISIBLE);
+                                    break;
+                                // 未缴费
+                                case 12:
+                                    // 隐藏按钮
+                                    bt_reported.setVisibility(View.INVISIBLE);
+                                    break;
+                                // 已缴费
+                                case 13:
+                                    bt_reported.setVisibility(View.VISIBLE);
+                                    break;
+                                // 保留学籍
+                                case 14:
+                                    bt_reported.setVisibility(View.VISIBLE);
+                                    break;
+                                // 待处理
+                                case 15:
+                                    // 隐藏按钮
+                                    bt_reported.setVisibility(View.INVISIBLE);
+                                    break;
                             }
+
+                            switch (reportedStatus) {
+                                case 1:
+                                    break;
+                                // 已报到
+                                case 0:
+                                    // 隐藏按钮
+                                    bt_reported.setVisibility(View.GONE);
+                                    ll_chenggong.setVisibility(View.VISIBLE);
+                                    break;
+                            }
+
+                            closeDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             closeDialog();
-                            ToastUtli.show(getApplicationContext(),"获取学生信息失败，请稍后重试");
-                            Logs.e("解析数据失败:"+e.toString());
+                            ToastUtli.show(getApplicationContext(), "该学生不在本学部，请该学生到所在学部报到");
+                            // 隐藏按钮
+                            bt_reported.setVisibility(View.INVISIBLE);
+                            Logs.e("解析数据失败:" + e.toString());
                         }
                     }
                 });
@@ -164,48 +216,137 @@ public class ScanResultActivity extends AppCompatActivity {
         tv_pay_status = (TextView) findViewById(R.id.tv_pay_status);
         tv_reported_status = (TextView) findViewById(R.id.tv_reported_status);
 
+        ll_chenggong = (LinearLayout) findViewById(R.id.ll_chenggong);
+
         bt_reported = (Button) findViewById(R.id.bt_reported);
         // 报道按钮点击事件
         bt_reported.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeReportStatus();
+                // 显示输入手机号对话框
+                showInputPhoneDialog();
             }
         });
     }
 
-    private void changeReportStatus() {
+    private void showInputPhoneDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        View view = View.inflate(this, R.layout.dialog_input_phone, null);
+        dialog.setView(view, 0, 0, 0, 0);
+
+        final EditText et_phone = (EditText) view.findViewById(R.id.et_phone);
+        Button bt_cancel = (Button) view.findViewById(R.id.bt_cancel);
+        Button bt_confirm = (Button) view.findViewById(R.id.bt_confirm);
+
+        // 取消按钮
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        // 确认按钮
+        bt_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone = et_phone.getText().toString().trim();
+                if (!phone.equals("")) {
+                    // 匹配正则 看是否是手机号
+                    if (phone.matches("^((\\(\\d{2,3}\\))|(\\d{3}\\-))?13\\d{9}$")) {
+                        // 修改手机号
+                        changeNewPhone(phone);
+                        dialog.dismiss();
+                    } else {
+                        ToastUtli.show(getApplicationContext(), "请检查手机号是否正确");
+                    }
+                } else {
+                    ToastUtli.show(getApplicationContext(), "手机号不能为空");
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    // 修改新手机号
+    private void changeNewPhone(String phone) {
         showDialog();
         OkHttpUtils
                 .get()
-                .url("http://api.hicc.cn/dd")
-                .addParams("","")
+                .url("http://home.hicc.cn/PhoneInterface/OnlineRegister.asmx/queding")
+                .addParams("studentNu", result)
+                .addParams("newphone", phone)
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        changePhone = false;
                         closeDialog();
-                        ToastUtli.show(getApplicationContext(),"修改报道状态失败，请稍后重试");
-                        Logs.e("修改报道状态失败:"+e.toString());
+                        Logs.e("修改手机失败："+e.toString());
+                        ToastUtli.show(getApplicationContext(), "报到失败，请稍后重试");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getBoolean("dsd")) {
-                                closeDialog();
-                                ToastUtli.show(getApplicationContext(),"修改报道状态成功");
-                                finish();
-                            } else {
-                                closeDialog();
-                                ToastUtli.show(getApplicationContext(),"修改报道失败："+jsonObject.getString("Msg"));
-                            }
+                            JSONArray jsonArray = new JSONArray(response);
+                            changePhone = true;
+                            // 修改报到
+                            changeReportStatus();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             closeDialog();
-                            ToastUtli.show(getApplicationContext(),"修改报道状态失败，请稍后重试");
-                            Logs.e("解析异常:"+e.toString());
+                            changePhone = false;
+                            ToastUtli.show(getApplicationContext(), "报到失败，请稍后重试");
+                            Logs.e("解析失败："+e.toString());
+                        }
+                    }
+                });
+    }
+
+    // 修改报道状态
+    private void changeReportStatus() {
+        showDialog();
+        OkHttpUtils
+                .get()
+                .url("http://home.hicc.cn/PhoneInterface/OnlineRegister.asmx/tijiao")
+                .addParams("studentNu", result)
+                .addParams("code", "0")
+                .addParams("account", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
+                .addParams("pas", SpUtils.getStringSp(getApplicationContext(), ConstantValue.PASS_WORD, ""))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        changeReport = false;
+                        closeDialog();
+                        ToastUtli.show(getApplicationContext(), "报到失败，请稍后重试");
+                        Logs.e("报到失败:" + e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            changeReport = true;
+                            if (changeReport && changePhone) {
+                                closeDialog();
+                                tv_reported_status.setText("报到状态：已报到");
+                                ToastUtli.show(getApplicationContext(), "报到成功");
+                                bt_reported.setVisibility(View.GONE);
+                                ll_chenggong.setVisibility(View.VISIBLE);
+                            } else {
+                                Logs.e("失败");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            changeReport = false;
+                            closeDialog();
+                            ToastUtli.show(getApplicationContext(), "报到失败，请稍后重试");
+                            Logs.e("解析异常:" + e.toString());
                         }
                     }
                 });
@@ -216,7 +357,9 @@ public class ScanResultActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
         }
         progressDialog.setMessage("加载中...");
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
 
     private void closeDialog() {

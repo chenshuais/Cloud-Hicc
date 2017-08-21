@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         setContentView(R.layout.activity_main);
 
         // 获取用户信息
-        getUserInfo();
+        //getUserInfo();
 
         initView();
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         checkVersionCode();
 
         // 每次登陆将手机信息上传到服务器
-       // postPhoneInfo();
+       //postPhoneInfo();
 
         // 注册监听退出登录的事件
         EventBus.getDefault().register(this);
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
 
     private void initData(){
         int levelCode = SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0);
-        tabs=new ArrayList<TabItem>();
+        tabs=new ArrayList<>();
         switch (levelCode) {
             // 学院
             case 11:
