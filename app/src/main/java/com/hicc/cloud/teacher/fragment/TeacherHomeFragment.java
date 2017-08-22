@@ -38,7 +38,7 @@ import java.util.List;
 public class TeacherHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
-    private String[] titles = new String[]{  "报道情况", "学生档案","学生成绩", "全部"};
+    private String[] titles = new String[]{  "报到情况", "学生档案","学生成绩", "全部"};
     private int[] images = new int[]{ R.drawable.icon_comparison, R.drawable.icon_file,R.drawable.icon_stu_ach, R.mipmap.icon_all};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
