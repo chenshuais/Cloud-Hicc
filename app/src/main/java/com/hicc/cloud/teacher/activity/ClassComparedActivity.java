@@ -49,6 +49,7 @@ public class ClassComparedActivity extends AppCompatActivity {
     public static int notLive;
     public static int onLine;
     public static int notOnLine;
+    private static List<Integer> flag = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,9 @@ public class ClassComparedActivity extends AppCompatActivity {
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             int length = jsonArray.length();
+                            for (int j=0; j < length; j++) {
+                                flag.add(0);
+                            }
                             for (int i = 0; i < length; i++) {
                                 JSONObject data = jsonArray.getJSONObject(i);
                                 int ClassCode = data.getInt("ClassCode");
@@ -141,7 +145,8 @@ public class ClassComparedActivity extends AppCompatActivity {
                             notLive += NotLive;
                             onLine += Online;
                             notOnLine += NotOnline;
-                            if (i == (length-1)) {
+                            flag.remove(0);
+                            if (i == (length-1) && flag.size()==0) {
                                 getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(AllStuNum, onLine, notOnLine)).commit();
                                 getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(live, notLive)).commit();
                                 closeProgressDialog();
