@@ -110,13 +110,17 @@
             android:name=".teacher.activity.ScanResultActivity"
             android:screenOrientation="portrait" />
 
-        <!-- 网上报到 -->
+        <!-- 学院学部对比 -->
         <activity
-            android:name=".teacher.activity.ColumnChartActivity"
+            android:name=".teacher.activity.CollegeFacultyComparedActivity"
             android:screenOrientation="portrait" />
         <!-- 现场报到 -->
         <activity
-            android:name=".teacher.activity.PieChartActivity"
+            android:name=".teacher.activity.LiveReportsActivity"
+            android:screenOrientation="portrait" />
+        <!--网上报到-->
+        <activity
+            android:name=".teacher.activity.OnlineReportActivity"
             android:screenOrientation="portrait" />
 
         <!-- 网络中心介绍 -->
@@ -134,10 +138,6 @@
         <!-- 班级对比 -->
         <activity
             android:name=".teacher.activity.ClassComparedActivity"
-            android:screenOrientation="portrait" />
-        <!--总体对比-->
-        <activity
-            android:name=".teacher.activity.OverallComparedActivity"
             android:screenOrientation="portrait" />
         <!--新闻页-->
         <activity android:name=".teacher.activity.NewsActivity"

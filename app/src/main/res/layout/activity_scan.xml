@@ -8,14 +8,14 @@
         android:id="@+id/fl_my_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
-    </FrameLayout>
+        android:visibility="visible"></FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_gravity="top|center_horizontal"
         android:background="#e02c93de"
         android:gravity="center_vertical"
-        android:layout_gravity="top|center_horizontal"
         android:orientation="horizontal">
 
         <ImageView
@@ -32,14 +32,31 @@
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </LinearLayout>
+
     <Button
         android:id="@+id/linear1"
-        android:layout_width="match_parent"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="35dp"
+        android:background="@drawable/icon_light"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="10dp"
-        android:background="@drawable/selector_news_bg"
-        android:text="闪光灯"
-        android:textSize="18sp" />
+        android:layout_marginBottom="10dp"
+        android:text="手电筒"
+        android:textColor="#dedede"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="220dp"
+        android:text="请将扫描框对准条形码"
+        android:textColor="#ebebeb" />
 
 </FrameLayout>

@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
+import com.hicc.cloud.teacher.utils.URLs;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -39,21 +41,22 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
-// 班级报道对比
-public class ClassComparedActivity extends AppCompatActivity {
-
+/**
+ * Created by Administrator on 2016/10/15/008.
+ * 现场报到
+ */
+public class LiveReportsActivity extends AppCompatActivity {
     private ImageView iv_back;
     private ProgressDialog progressDialog;
-    public static int AllStuNum;
-    public static int live;
-    public static int notLive;
-    public static int onLine;
-    public static int notOnLine;
+    private TextView tv_all;
+    private TextView tv_yes;
+    private TextView tv_no;
+    private TextView tv_ratio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_class_compared);
+        setContentView(R.layout.activity_live_reports);
 
         initUI();
 
@@ -62,63 +65,24 @@ public class ClassComparedActivity extends AppCompatActivity {
 
     private void getDate() {
         showProgressDialog();
-        // 获取班级报道信息 崔
-        OkHttpUtils
-                .get()
-                .url("http://home.hicc.cn/PhoneInterface/LoginService.asmx/ClassInfoByuserNo")
-                .addParams("userNo", SpUtils.getIntSp(getApplication(), ConstantValue.USER_NO, 0) + "")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        closeProgressDialog();
-                        Logs.i(e.toString());
-                        ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        Logs.i(response);
-                        // 解析json
-                        Logs.i("解析json");
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            int length = jsonArray.length();
-                            for (int i = 0; i < length; i++) {
-                                JSONObject data = jsonArray.getJSONObject(i);
-                                int ClassCode = data.getInt("ClassCode");
-                                int Grade = data.getInt("TimeCode");
-                                ClassInformation(ClassCode, Grade,i,length);
-                            }
-
-                            notLive = 0;
-                            live = 0;
-                            AllStuNum = 0;
-                            onLine = 0;
-                            notOnLine = 0;
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            closeProgressDialog();
-                            ToastUtli.show(getApplicationContext(), "11获取信息失败");
-                        }
-                    }
-                });
-
-    }
-
-    private void ClassInformation(int ClassCode, int Grade, final int i, final int length) {
         // 获取现场报道信息
         OkHttpUtils
                 .get()
-                .url("http://home.hicc.cn/PhoneInterface/CoacherContrast.asmx/getclassreportsnum")
-                .addParams("ClassID", ClassCode + "")
-                .addParams("Grade", Grade + "")
+                .url(URLs.GetLiveNum)
+                .addParams("userno", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_NO, 0) + "")
+                .addParams("num", "0")
+                .addParams("userlevelcode", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0) + "")
+                .addParams("account", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
+                .addParams("pas", SpUtils.getStringSp(getApplicationContext(), ConstantValue.PASS_WORD, ""))
+                .addParams("timeCode", "17")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_live_c, new PlaceholderFragment(0,0,0)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(0, 0)).commit();
                         ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
@@ -130,25 +94,23 @@ public class ClassComparedActivity extends AppCompatActivity {
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             JSONObject data = jsonArray.getJSONObject(0);
+                            int all = data.getInt("All");
+                            int yes = data.getInt("Yes");
+                            int no = data.getInt("No");
 
-                            int Online = data.getInt("Online");
-                            int Live = data.getInt("Live");
-                            int NotOnline = data.getInt("NotOnline");
-                            int NotLive = data.getInt("NotLive");
-                            int all = data.getInt("AllStuNum");
-                            AllStuNum += all;
-                            live += Live;
-                            notLive += NotLive;
-                            onLine += Online;
-                            notOnLine += NotOnline;
-                            if (i == (length-1)) {
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(AllStuNum, onLine, notOnLine)).commit();
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(live, notLive)).commit();
-                                closeProgressDialog();
-                            }
+                            tv_all.setText(all+"");
+                            tv_yes.setText(yes+"");
+                            tv_no.setText(no+"");
+                            tv_ratio.setText(((double)yes/all)*100 + "%");
+
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_c, new PlaceholderFragment(all,yes,no)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(yes, no)).commit();
+                            closeProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             ToastUtli.show(getApplicationContext(), "获取信息失败");
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_c, new PlaceholderFragment(0,0,0)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(0, 0)).commit();
                             closeProgressDialog();
                         }
                     }
@@ -165,10 +127,13 @@ public class ClassComparedActivity extends AppCompatActivity {
             }
         });
 
+        tv_all = (TextView) findViewById(R.id.tv_all);
+        tv_yes = (TextView) findViewById(R.id.tv_yes);
+        tv_no = (TextView) findViewById(R.id.tv_no);
+        tv_ratio = (TextView) findViewById(R.id.tv_ratio);
     }
 
-
-    // 网上报道 柱状图
+    // 柱状图
     public static class PlaceholderFragment extends Fragment {
         private ColumnChartView chart;
         private ColumnChartData data;
@@ -177,6 +142,7 @@ public class ClassComparedActivity extends AppCompatActivity {
         private boolean hasAxesNames = true;
         private boolean hasLabels = true;
         private boolean hasLabelForSelected = false;
+
         private int all;
         private int yes;
         private int no;
@@ -188,9 +154,7 @@ public class ClassComparedActivity extends AppCompatActivity {
             this.no = no;
         }
 
-        @SuppressLint("ValidFragment")
-        public PlaceholderFragment() {
-        }
+        public PlaceholderFragment(){}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -212,14 +176,12 @@ public class ClassComparedActivity extends AppCompatActivity {
             List<Column> columns = new ArrayList<Column>();
             List<SubcolumnValue> values;
 
-
             values = new ArrayList<SubcolumnValue>();
             values.add(new SubcolumnValue(all, ChartUtils.pickColor()));
-            Column column1 = new Column(values);
-            column1.setHasLabels(hasLabels);
-            column1.setHasLabelsOnlyForSelected(hasLabelForSelected);
-            columns.add(column1);
-
+            Column column = new Column(values);
+            column.setHasLabels(hasLabels);
+            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column);
 
             values = new ArrayList<SubcolumnValue>();
             values.add(new SubcolumnValue(yes, ChartUtils.pickColor()));
@@ -228,15 +190,14 @@ public class ClassComparedActivity extends AppCompatActivity {
             column2.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column2);
 
-
             values = new ArrayList<SubcolumnValue>();
             values.add(new SubcolumnValue(no, ChartUtils.pickColor()));
             Column column3 = new Column(values);
             column3.setHasLabels(hasLabels);
             column3.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column3);
-            data = new ColumnChartData(columns);
 
+            data = new ColumnChartData(columns);
 
             // 坐标
             if (hasAxes) {
@@ -245,11 +206,10 @@ public class ClassComparedActivity extends AppCompatActivity {
                 if (hasAxesNames) {
                     axisY.setName("人数");
                     ArrayList<AxisValue> axisValuesX = new ArrayList<AxisValue>();
-
-                    axisValuesX.add(new AxisValue(0).setValue(0).setLabel("总人数"));
+                    axisValuesX.add(new AxisValue(0).setValue(0).setLabel("总数"));
                     axisValuesX.add(new AxisValue(1).setValue(1).setLabel("已报到"));
                     axisValuesX.add(new AxisValue(2).setValue(2).setLabel("未报到"));
-                    axisX.setValues(axisValuesX);
+                    axisX.setValues(axisValuesX);//为X轴显示的刻度值设置数据集合
                 }
                 data.setAxisXBottom(axisX);
                 data.setAxisYLeft(axisY);
@@ -267,18 +227,18 @@ public class ClassComparedActivity extends AppCompatActivity {
             public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
                 // 获取点击的条目数值
                 String vaule = value.toString();
-                int end = vaule.length() - 3;
+                int end = vaule.length()-3;
                 // 截取所需字符串
-                String subV = vaule.substring(19, end);
-                switch (columnIndex) {
+                String subV = vaule.substring(19,end);
+                switch (columnIndex){
                     case 0:
-                        ToastUtli.show(getContext(), "总共" + subV + "人");
+                        ToastUtli.show(getContext(),"总共"+subV+"人");
                         break;
                     case 1:
-                        ToastUtli.show(getContext(), "已报到" + subV + "人");
+                        ToastUtli.show(getContext(),"已报到"+subV+"人");
                         break;
                     case 2:
-                        ToastUtli.show(getContext(), "未报到" + subV + "人");
+                        ToastUtli.show(getContext(),"未报到"+subV+"人");
                         break;
                 }
             }
@@ -290,7 +250,7 @@ public class ClassComparedActivity extends AppCompatActivity {
     }
 
 
-    // 现场报道 饼状图
+    // 饼状图
     public static class PlaceholderLiveFragment extends Fragment {
         private PieChartView chart;
         private PieChartData data;
@@ -303,9 +263,7 @@ public class ClassComparedActivity extends AppCompatActivity {
             this.no = no;
         }
 
-
-        public PlaceholderLiveFragment() {
-        }
+        public PlaceholderLiveFragment(){}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -322,26 +280,24 @@ public class ClassComparedActivity extends AppCompatActivity {
 
         // 设置数据
         private void generateData() {
-
             List<SliceValue> values = new ArrayList<SliceValue>();
 
             SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到" + yes + "人");
+            sliceValue1.setLabel("已报到"+yes+"人");
             values.add(sliceValue1);
+
             SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到" + no + "人");
+            sliceValue2.setLabel("未报到"+no+"人");
             values.add(sliceValue2);
+
             data = new PieChartData(values);
             data.setHasLabels(true);
             data.setHasLabelsOnlyForSelected(false);
             data.setHasLabelsOutside(false);
             chart.setValueSelectionEnabled(true);
             chart.setCircleFillRatio(1.0f);
+
             chart.setPieChartData(data);
-
-            //Toast.makeText(getContext(), "总人数"+AllStuNum, Toast.LENGTH_SHORT).show();
-
-            ;
         }
 
         private class ValueTouchListener implements PieChartOnValueSelectListener {
@@ -372,5 +328,4 @@ public class ClassComparedActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-
 }

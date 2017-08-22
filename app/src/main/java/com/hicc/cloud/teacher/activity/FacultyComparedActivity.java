@@ -40,7 +40,7 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
-// 学部报道对比
+// 本学部报道情况对比
 public class FacultyComparedActivity extends AppCompatActivity {
 
     private ImageView iv_back;

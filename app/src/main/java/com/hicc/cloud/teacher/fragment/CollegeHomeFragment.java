@@ -15,10 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hicc.cloud.R;
-import com.hicc.cloud.teacher.activity.ColumnChartActivity;
-import com.hicc.cloud.teacher.activity.FacultyComparedActivity;
+import com.hicc.cloud.teacher.activity.CollegeFacultyComparedActivity;
+import com.hicc.cloud.teacher.activity.LiveReportsActivity;
 import com.hicc.cloud.teacher.activity.NewsActivity;
-import com.hicc.cloud.teacher.activity.PieChartActivity;
+import com.hicc.cloud.teacher.activity.OnlineReportActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.bean.Picture;
@@ -38,7 +38,7 @@ import java.util.List;
 public class CollegeHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
-    private String[] titles2 = new String[]{"网上报道", "现场报道", "总体对比"};
+    private String[] titles2 = new String[]{"网上报道", "现场报道", "学部对比"};
     private int[] images2 = new int[]{R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_comparison};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
@@ -66,15 +66,15 @@ public class CollegeHomeFragment extends BaseFragment implements View.OnClickLis
                 switch (position) {
                     // 网上报道
                     case 0:
-                        startActivity(new Intent(getContext(), ColumnChartActivity.class));
+                        startActivity(new Intent(getContext(), OnlineReportActivity.class));
                         break;
                     // 现场报道
                     case 1:
-                        startActivity(new Intent(getContext(), PieChartActivity.class));
+                        startActivity(new Intent(getContext(), LiveReportsActivity.class));
                         break;
                     // 学部对比
                     case 2:
-                        startActivity(new Intent(getContext(), FacultyComparedActivity.class));
+                        startActivity(new Intent(getContext(), CollegeFacultyComparedActivity.class));
                         break;
                 }
             }
