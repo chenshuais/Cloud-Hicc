@@ -67,15 +67,18 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                 switch (position) {
                     //报道对比
                     case 0:
-                        startActivity(new Intent(getContext(),ClassComparedActivity.class));
+//                        Intent intent = new Intent(getContext(), ClassListActivity.class);
+//                        intent.putExtra("type", 0);
+                        Intent intent = new Intent(getContext(), ClassComparedActivity.class);
+                        startActivity(intent);
                         break;
                     // 学生档案
                     case 1:
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getContext(), "1");
-                        Intent intent = new Intent(getContext(), ClassListActivity.class);
-                        intent.putExtra("type", 1);
-                        startActivity(intent);
+                        Intent intent0 = new Intent(getContext(), ClassListActivity.class);
+                        intent0.putExtra("type", 1);
+                        startActivity(intent0);
                         break;
                     // 学生成绩
                     case 2:
@@ -133,7 +136,8 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
             // 摇一摇
             case R.id.ll_shake:
             case R.id.iv_shake:
-                startActivity(new Intent(getContext(), ShakeActivity.class));
+                //startActivity(new Intent(getContext(), ShakeActivity.class));
+                ToastUtli.show(getContext(),"努力开发中");
                 break;
             // 记录
             case R.id.ll_record:
