@@ -21,6 +21,7 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
 
         initUI();
+
     }
 
     private void initUI() {

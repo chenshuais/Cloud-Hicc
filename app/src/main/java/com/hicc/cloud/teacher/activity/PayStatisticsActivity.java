@@ -47,6 +47,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String num;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +65,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
         switch (userNo) {
             case 1001:
                 num = "0";
+                break;
             case 2001:
                 num = "10";
                 break;
@@ -100,8 +102,8 @@ public class PayStatisticsActivity extends AppCompatActivity {
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0, 0, 0)).commit();
-                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0,0,0,0,0,null,null,null,null)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0,0,0,0)).commit();
                         ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
@@ -112,19 +114,43 @@ public class PayStatisticsActivity extends AppCompatActivity {
                         Logs.i("解析json");
                         try {
                             JSONArray jsonArray = new JSONArray(response);
-                            JSONObject data = jsonArray.getJSONObject(0);
-                            int all = data.getInt("All");
-                            int yes = data.getInt("Yes");
-                            int no = data.getInt("No");
-
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all, yes, no)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yes, no)).commit();
+                            int yesPay = 0;
+                            int noPay=0;
+                            int loan=0;
+                            int late=0;
+                            String pay=null;
+                            String notPay=null;
+                            String loadPay=null;
+                            String latePay=null;
+                            int all = 0;
+                            int y=0;
+                            if(y!=jsonArray.length()){
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONArray data = jsonArray.getJSONArray(i);
+                                if (i == 0) {
+                                    yesPay = data.getInt(1);
+                                    noPay = data.getInt(0);
+                                    loan = data.getInt(2);
+                                    late = data.getInt(3);
+                                } else if (i == 1) {
+                                    pay = data.getString(1);
+                                    notPay = data.getString(0);
+                                    loadPay = data.getString(2);
+                                    latePay = data.getString(3);
+                                } else if (i == 2) {
+                                    all = data.getInt(0);
+                                }
+                                y++;
+                            }
+                            }
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all,yesPay,noPay,loan,late,pay,notPay,loadPay,latePay)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay,noPay,loan,late)).commit();
                             closeProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             closeProgressDialog();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0, 0, 0)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0,0,0,0,0,null,null,null,null)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0,0,0,0)).commit();
                             ToastUtli.show(getApplicationContext(), "获取信息失败");
                         }
                     }
@@ -155,12 +181,24 @@ public class PayStatisticsActivity extends AppCompatActivity {
         private int all;
         private int yes;
         private int no;
+        private int loan;
+        private int late;
+        String pay;
+        String notPay;
+        String loadPay;
+        String latePay;
 
         @SuppressLint("ValidFragment")
-        public PlaceholderFragment(int all, int yes, int no) {
+        public PlaceholderFragment(int all, int yes, int no,int loan,int late,String pay,String notPay,String loadPay,String latePay) {
             this.all = all;
             this.yes = yes;
             this.no = no;
+            this.loan=loan;
+            this.late=late;
+            this.latePay=latePay;
+            this.loadPay=loadPay;
+            this.pay=pay;
+            this.notPay=notPay;
         }
 
         public PlaceholderFragment() {
@@ -207,6 +245,20 @@ public class PayStatisticsActivity extends AppCompatActivity {
             column3.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column3);
 
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(loan, ChartUtils.pickColor()));
+            Column column4 = new Column(values);
+            column4.setHasLabels(hasLabels);
+            column4.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column4);
+
+            values = new ArrayList<SubcolumnValue>();
+            values.add(new SubcolumnValue(late, ChartUtils.pickColor()));
+            Column column5 = new Column(values);
+            column5.setHasLabels(hasLabels);
+            column5.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column5);
+
             data = new ColumnChartData(columns);
 
             // 坐标
@@ -217,8 +269,10 @@ public class PayStatisticsActivity extends AppCompatActivity {
                     axisY.setName("人数");
                     ArrayList<AxisValue> axisValuesX = new ArrayList<AxisValue>();
                     axisValuesX.add(new AxisValue(0).setValue(0).setLabel("总数"));
-                    axisValuesX.add(new AxisValue(1).setValue(1).setLabel("已报到"));
-                    axisValuesX.add(new AxisValue(2).setValue(2).setLabel("未报到"));
+                    axisValuesX.add(new AxisValue(1).setValue(1).setLabel(this.pay));
+                    axisValuesX.add(new AxisValue(2).setValue(2).setLabel(this.notPay));
+                    axisValuesX.add(new AxisValue(3).setValue(3).setLabel(this.loadPay));
+                    axisValuesX.add(new AxisValue(4).setValue(4).setLabel(this.latePay));
                     axisX.setValues(axisValuesX);//为X轴显示的刻度值设置数据集合
                 }
                 data.setAxisXBottom(axisX);
@@ -245,10 +299,16 @@ public class PayStatisticsActivity extends AppCompatActivity {
                         ToastUtli.show(getContext(), "总共" + subV + "人");
                         break;
                     case 1:
-                        ToastUtli.show(getContext(), "已报到" + subV + "人");
+                        ToastUtli.show(getContext(), "已缴费" + subV + "人");
                         break;
                     case 2:
-                        ToastUtli.show(getContext(), "未报到" + subV + "人");
+                        ToastUtli.show(getContext(), "待处理" + subV + "人");
+                        break;
+                    case 3:
+                        ToastUtli.show(getContext(), "贷款缴费" + subV + "人");
+                        break;
+                    case 4:
+                        ToastUtli.show(getContext(), "缓缴费" + subV + "人");
                         break;
                 }
             }
@@ -266,11 +326,14 @@ public class PayStatisticsActivity extends AppCompatActivity {
         private PieChartData data;
         private int yes;
         private int no;
-
+        private int loanPay;
+        private int latePay;
         @SuppressLint("ValidFragment")
-        public PlaceholderLiveFragment(int yes, int no) {
+        public PlaceholderLiveFragment(int yes, int no,int loanPay,int latePay) {
             this.yes = yes;
             this.no = no;
+            this.loanPay=loanPay;
+            this.latePay=latePay;
         }
 
         public PlaceholderLiveFragment() {
@@ -294,12 +357,20 @@ public class PayStatisticsActivity extends AppCompatActivity {
             List<SliceValue> values = new ArrayList<SliceValue>();
 
             SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到" + yes + "人");
+            sliceValue1.setLabel("已缴费" + yes + "人");
             values.add(sliceValue1);
 
             SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到" + no + "人");
+            sliceValue2.setLabel("待处理" + no + "人");
             values.add(sliceValue2);
+
+            SliceValue sliceValue3 = new SliceValue(loanPay, ChartUtils.pickColor());
+            sliceValue3.setLabel("贷款" + loanPay + "人");
+            values.add(sliceValue3);
+
+            SliceValue sliceValue4 = new SliceValue(latePay, ChartUtils.pickColor());
+            sliceValue4.setLabel("缓交" + latePay+ "人");
+            values.add(sliceValue4);
 
             data = new PieChartData(values);
             data.setHasLabels(true);
