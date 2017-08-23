@@ -42,5 +42,9 @@ public class URLs {
      * 获取现场报道人数
      */
     public static final String GetLiveNum = "http://home.hicc.cn/PhoneInterface/SceneReportService.asmx/Getscenereportnum";
+    /**
+     * 交费统计
+     */
+    public static final String GetPayCostNum = "http://home.hicc.cn/PhoneInterface/SceneReportService.asmx/Getpaycostnum";
 
 }

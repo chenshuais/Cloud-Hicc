@@ -19,6 +19,7 @@ import com.hicc.cloud.teacher.activity.CollegeFacultyComparedActivity;
 import com.hicc.cloud.teacher.activity.LiveReportsActivity;
 import com.hicc.cloud.teacher.activity.NewsActivity;
 import com.hicc.cloud.teacher.activity.OnlineReportActivity;
+import com.hicc.cloud.teacher.activity.PayStatisticsActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.bean.Picture;
@@ -38,8 +39,8 @@ import java.util.List;
 public class CollegeHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
-    private String[] titles2 = new String[]{"网上报道", "现场报道", "学部对比"};
-    private int[] images2 = new int[]{R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_comparison};
+    private String[] titles2 = new String[]{"网上报道", "现场报道", "学部对比", "交费统计"};
+    private int[] images2 = new int[]{R.drawable.icon_online_reports, R.drawable.icon_live_reports, R.drawable.icon_comparison, R.drawable.icon_payment};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
     private LinearLayout ll_record;
@@ -56,7 +57,7 @@ public class CollegeHomeFragment extends BaseFragment implements View.OnClickLis
 
         initUI(view);
 
-        gridView.setNumColumns(3);
+        gridView.setNumColumns(4);
         PictureAdapter adapter = new PictureAdapter(titles2, images2, getContext());
         gridView.setAdapter(adapter);
 
@@ -75,6 +76,10 @@ public class CollegeHomeFragment extends BaseFragment implements View.OnClickLis
                     // 学部对比
                     case 2:
                         startActivity(new Intent(getContext(), CollegeFacultyComparedActivity.class));
+                        break;
+                    // 交费统计
+                    case 3:
+                        startActivity(new Intent(getContext(), PayStatisticsActivity.class));
                         break;
                 }
             }

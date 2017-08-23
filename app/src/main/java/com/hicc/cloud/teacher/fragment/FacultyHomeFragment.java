@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.activity.FacultyComparedActivity;
 import com.hicc.cloud.teacher.activity.NewsActivity;
+import com.hicc.cloud.teacher.activity.PayStatisticsActivity;
 import com.hicc.cloud.teacher.activity.ScanActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
 import com.hicc.cloud.teacher.activity.ShakeActivity;
@@ -36,8 +37,8 @@ import java.util.List;
 public class FacultyHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
-    private String[] titles2 = new String[]{"报道对比"};
-    private int[] images2 = new int[]{R.drawable.icon_comparison};
+    private String[] titles2 = new String[]{"报道对比","交费统计"};
+    private int[] images2 = new int[]{R.drawable.icon_comparison,R.drawable.icon_payment};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
     private LinearLayout ll_record;
@@ -54,7 +55,7 @@ public class FacultyHomeFragment extends BaseFragment implements View.OnClickLis
 
         initUI(view);
 
-        gridView.setNumColumns(1);
+        gridView.setNumColumns(2);
         PictureAdapter adapter = new PictureAdapter(titles2, images2, getContext());
         gridView.setAdapter(adapter);
 
@@ -65,6 +66,10 @@ public class FacultyHomeFragment extends BaseFragment implements View.OnClickLis
                     // 报道对比
                     case 0:
                         startActivity(new Intent(getContext(), FacultyComparedActivity.class));
+                        break;
+                    // 交费统计
+                    case 1:
+                        startActivity(new Intent(getContext(), PayStatisticsActivity.class));
                         break;
                 }
             }
