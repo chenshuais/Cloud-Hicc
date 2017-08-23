@@ -145,6 +145,9 @@ public class PayStatisticsActivity extends AppCompatActivity {
                                     y++;
                                 }
                             }
+                            if (yesPay==0&&noPay==0&&loan==0&&late==0){
+                                ToastUtli.show(PayStatisticsActivity.this,"暂无数据");
+                            }
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all, yesPay, noPay, loan, late, pay, notPay, loadPay, latePay)).commit();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay, noPay, loan, late)).commit();
                             closeProgressDialog();
