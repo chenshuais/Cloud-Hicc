@@ -82,7 +82,7 @@ public class LiveReportsActivity extends AppCompatActivity {
                         closeProgressDialog();
                         Logs.i(e.toString());
                         getSupportFragmentManager().beginTransaction().add(R.id.container_live_c, new PlaceholderFragment(0,0,0)).commit();
-                        getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(0, 0)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(0,0, 0)).commit();
                         ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
@@ -101,16 +101,17 @@ public class LiveReportsActivity extends AppCompatActivity {
                             tv_all.setText(all+"");
                             tv_yes.setText(yes+"");
                             tv_no.setText(no+"");
-                            tv_ratio.setText(((double)yes/all)*100 + "%");
+                            String s = String.format("%.2f", ((double) yes / all) * 100);
+                            tv_ratio.setText(s + "%");
 
                             getSupportFragmentManager().beginTransaction().add(R.id.container_live_c, new PlaceholderFragment(all,yes,no)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(yes, no)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(all,yes, no)).commit();
                             closeProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             ToastUtli.show(getApplicationContext(), "获取信息失败");
                             getSupportFragmentManager().beginTransaction().add(R.id.container_live_c, new PlaceholderFragment(0,0,0)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(0, 0)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live_p, new PlaceholderLiveFragment(0,0, 0)).commit();
                             closeProgressDialog();
                         }
                     }
@@ -254,11 +255,13 @@ public class LiveReportsActivity extends AppCompatActivity {
     public static class PlaceholderLiveFragment extends Fragment {
         private PieChartView chart;
         private PieChartData data;
+        private int all;
         private int yes;
         private int no;
 
         @SuppressLint("ValidFragment")
-        public PlaceholderLiveFragment(int yes, int no) {
+        public PlaceholderLiveFragment(int all, int yes, int no) {
+            this.all = all;
             this.yes = yes;
             this.no = no;
         }
@@ -282,12 +285,14 @@ public class LiveReportsActivity extends AppCompatActivity {
         private void generateData() {
             List<SliceValue> values = new ArrayList<SliceValue>();
 
+            String s1 = String.format("%.2f", ((double) yes / all) * 100);
             SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到"+yes+"人");
+            sliceValue1.setLabel("已报到"+s1+"%");
             values.add(sliceValue1);
 
+            String s2 = String.format("%.2f", ((double) no / all) * 100);
             SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到"+no+"人");
+            sliceValue2.setLabel("未报到"+s2+"%");
             values.add(sliceValue2);
 
             data = new PieChartData(values);

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
@@ -49,6 +50,18 @@ public class CollegeFacultyComparedActivity extends AppCompatActivity {
     public List<String> liveDivisionarryList = new ArrayList<>();
     private List<Integer> liveReportarryList = new ArrayList<>();
     private List<Integer> liveNoReportarryList = new ArrayList<>();
+    private List<String> onlinePercentageList = new ArrayList<>();
+    private List<String> livePercentageList = new ArrayList<>();
+    private TextView tv_online_percentage1;
+    private TextView tv_online_percentage2;
+    private TextView tv_online_percentage3;
+    private TextView tv_online_percentage4;
+    private TextView tv_online_percentage5;
+    private TextView tv_live_percentage1;
+    private TextView tv_live_percentage2;
+    private TextView tv_live_percentage3;
+    private TextView tv_live_percentage4;
+    private TextView tv_live_percentage5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +117,19 @@ public class CollegeFacultyComparedActivity extends AppCompatActivity {
                             for (int i=0; i<noReportarry.length(); i++) {
                                 liveNoReportarryList.add(noReportarry.getInt(i));
                             }
+                            // 计算各个学部报道率
+                            for (int i=0; i<divisionarry.length(); i++) {
+                                int all = liveReportarryList.get(i)+liveNoReportarryList.get(i);
+                                int yes = liveReportarryList.get(i);
+                                String s = String.format("%.2f", ((double) yes / all) * 100);
+                                livePercentageList.add(s + "%");
+                            }
+                            tv_live_percentage1.setText(livePercentageList.get(0));
+                            tv_live_percentage2.setText(livePercentageList.get(1));
+                            tv_live_percentage3.setText(livePercentageList.get(2));
+                            tv_live_percentage4.setText(livePercentageList.get(3));
+                            tv_live_percentage5.setText(livePercentageList.get(4));
+
                             getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderFragment(liveDivisionarryList, liveReportarryList, liveNoReportarryList)).commit();
                             closeProgressDialog();
 
@@ -158,6 +184,20 @@ public class CollegeFacultyComparedActivity extends AppCompatActivity {
                             for (int i=0; i<noReportarry.length(); i++) {
                                 onlineNoReportarryList.add(noReportarry.getInt(i));
                             }
+
+                            // 计算各个学部报道率
+                            for (int i=0; i<divisionarry.length(); i++) {
+                                int all = onlineReportarryList.get(i)+onlineNoReportarryList.get(i);
+                                int yes = onlineReportarryList.get(i);
+                                String s = String.format("%.2f", ((double) yes / all) * 100);
+                                onlinePercentageList.add(s + "%");
+                            }
+                            tv_online_percentage1.setText(onlinePercentageList.get(0));
+                            tv_online_percentage2.setText(onlinePercentageList.get(1));
+                            tv_online_percentage3.setText(onlinePercentageList.get(2));
+                            tv_online_percentage4.setText(onlinePercentageList.get(3));
+                            tv_online_percentage5.setText(onlinePercentageList.get(4));
+
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(onlineDivisionarryList, onlineReportarryList, onlineNoReportarryList)).commit();
                             closeProgressDialog();
 
@@ -317,5 +357,17 @@ public class CollegeFacultyComparedActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        tv_online_percentage1 = (TextView) findViewById(R.id.tv_online_percentage1);
+        tv_online_percentage2 = (TextView) findViewById(R.id.tv_online_percentage2);
+        tv_online_percentage3 = (TextView) findViewById(R.id.tv_online_percentage3);
+        tv_online_percentage4 = (TextView) findViewById(R.id.tv_online_percentage4);
+        tv_online_percentage5 = (TextView) findViewById(R.id.tv_online_percentage5);
+
+        tv_live_percentage1 = (TextView) findViewById(R.id.tv_live_percentage1);
+        tv_live_percentage2 = (TextView) findViewById(R.id.tv_live_percentage2);
+        tv_live_percentage3 = (TextView) findViewById(R.id.tv_live_percentage3);
+        tv_live_percentage4 = (TextView) findViewById(R.id.tv_live_percentage4);
+        tv_live_percentage5 = (TextView) findViewById(R.id.tv_live_percentage5);
     }
 }

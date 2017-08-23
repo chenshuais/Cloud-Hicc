@@ -139,6 +139,7 @@ public class ClassListActivity extends AppCompatActivity {
                 Logs.i("timescode:"+classInfoList.get(position).getGradeCode()+"\ndivisionCode:"+classInfoList.get(position).getDivisionCode()+
                         "\nprofessionalCode:"+classInfoList.get(position).getProfessionalId()+"\nclasscode:"+classInfoList.get(position).getNid());
 
+                // TODO 增加宿舍成绩
                 Intent intent = new Intent(getApplicationContext(),StudentListActivity.class);
                 intent.putExtra("classcode",classInfoList.get(position).getNid());
                 intent.putExtra("timescode",classInfoList.get(position).getGradeCode());

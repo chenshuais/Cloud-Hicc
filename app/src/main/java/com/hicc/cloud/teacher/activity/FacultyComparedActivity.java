@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
@@ -46,6 +47,14 @@ public class FacultyComparedActivity extends AppCompatActivity {
     private ImageView iv_back;
     private ProgressDialog progressDialog;
     private String num;
+    private TextView tv_online_all;
+    private TextView tv_online_yes;
+    private TextView tv_online_no;
+    private TextView tv_online_ratio;
+    private TextView tv_live_all;
+    private TextView tv_live_yes;
+    private TextView tv_live_no;
+    private TextView tv_live_ratio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,7 @@ public class FacultyComparedActivity extends AppCompatActivity {
         getDate();
     }
 
+    // 根据userNo获取对应的num
     private void initData() {
         int userNo = SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_NO, 0);
         switch (userNo) {
@@ -83,7 +93,6 @@ public class FacultyComparedActivity extends AppCompatActivity {
     private void getDate() {
         showProgressDialog();
         // 获取网上报道信息
-        // TODO 获取学部报道信息 陈
         OkHttpUtils
                 .get()
                 .url(URLs.GetOnlineNum)
@@ -113,6 +122,13 @@ public class FacultyComparedActivity extends AppCompatActivity {
                             int all = data.getInt("All");
                             int yes = data.getInt("Yes");
                             int no = data.getInt("No");
+
+                            tv_online_all.setText(all+"");
+                            tv_online_yes.setText(yes+"");
+                            tv_online_no.setText(no+"");
+                            String s = String.format("%.2f", ((double) yes / all) * 100);
+                            tv_online_ratio.setText(s + "%");
+
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(all, yes, no)).commit();
                             closeProgressDialog();
                         } catch (JSONException e) {
@@ -139,6 +155,7 @@ public class FacultyComparedActivity extends AppCompatActivity {
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(0, 0, 0)).commit();
                         ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
@@ -153,12 +170,20 @@ public class FacultyComparedActivity extends AppCompatActivity {
                             int all = data.getInt("All");
                             int yes = data.getInt("Yes");
                             int no = data.getInt("No");
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(yes, no)).commit();
+
+                            tv_live_all.setText(all+"");
+                            tv_live_yes.setText(yes+"");
+                            tv_live_no.setText(no+"");
+                            String s = String.format("%.2f", ((double) yes / all) * 100);
+                            tv_live_ratio.setText(s + "%");
+
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(all, yes, no)).commit();
                             closeProgressDialog();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                             ToastUtli.show(getApplicationContext(), "获取信息失败");
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(0, 0, 0)).commit();
                             closeProgressDialog();
                         }
                     }
@@ -173,6 +198,16 @@ public class FacultyComparedActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        tv_online_all = (TextView) findViewById(R.id.tv_online_all);
+        tv_online_yes = (TextView) findViewById(R.id.tv_online_yes);
+        tv_online_no = (TextView) findViewById(R.id.tv_online_no);
+        tv_online_ratio = (TextView) findViewById(R.id.tv_online_ratio);
+
+        tv_live_all = (TextView) findViewById(R.id.tv_live_all);
+        tv_live_yes = (TextView) findViewById(R.id.tv_live_yes);
+        tv_live_no = (TextView) findViewById(R.id.tv_live_no);
+        tv_live_ratio = (TextView) findViewById(R.id.tv_live_ratio);
     }
 
     // 网上报道 柱状图
@@ -297,11 +332,13 @@ public class FacultyComparedActivity extends AppCompatActivity {
     public static class PlaceholderLiveFragment extends Fragment {
         private PieChartView chart;
         private PieChartData data;
+        private int all;
         private int yes;
         private int no;
 
         @SuppressLint("ValidFragment")
-        public PlaceholderLiveFragment(int yes, int no) {
+        public PlaceholderLiveFragment(int all, int yes, int no) {
+            this.all = all;
             this.yes = yes;
             this.no = no;
         }
@@ -326,12 +363,14 @@ public class FacultyComparedActivity extends AppCompatActivity {
         private void generateData() {
             List<SliceValue> values = new ArrayList<SliceValue>();
 
+            String s1 = String.format("%.2f", ((double) yes / all) * 100);
             SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到" + yes + "人");
+            sliceValue1.setLabel("已报到" + s1 + "%");
             values.add(sliceValue1);
 
+            String s2 = String.format("%.2f", ((double) no / all) * 100);
             SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到" + no + "人");
+            sliceValue2.setLabel("未报到" + s2 + "%");
             values.add(sliceValue2);
 
             data = new PieChartData(values);
