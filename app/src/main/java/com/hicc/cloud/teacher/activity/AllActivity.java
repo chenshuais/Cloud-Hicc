@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 
@@ -31,7 +32,7 @@ public class AllActivity extends AppCompatActivity {
     private ImageView iv_back;
     private GridView gv_menu;
     private GridView gv_other;
-    private String[] mTitles1 = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "学生缴费"};
+    private String[] mTitles1 = new String[]{"学生成绩", "宿舍成绩", "请销假", "课堂签到", "学生社团", "班级成长", "学生档案", "交费统计"};
     private int[] mImages1 = new int[]{ R.drawable.icon_stu_ach, R.drawable.icon_room_ach,
             R.mipmap.leaveback, R.drawable.icon_check,
             R.mipmap.club, R.mipmap.classes,
@@ -72,7 +73,7 @@ public class AllActivity extends AppCompatActivity {
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getApplicationContext(),"2");
                         Intent intent1 = new Intent(getApplicationContext(),ClassListActivity.class);
-                        intent1.putExtra("type",2);
+                        intent1.putExtra("type",ConstantValue.STUDENT_MARK);
                         startActivity(intent1);
                         break;
                     // 宿舍成绩
@@ -105,13 +106,14 @@ public class AllActivity extends AppCompatActivity {
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getApplicationContext(),"1");
                         Intent intent = new Intent(getApplicationContext(),ClassListActivity.class);
-                        intent.putExtra("type",1);
+                        intent.putExtra("type", ConstantValue.STUDENT_PROFILE);
                         startActivity(intent);
                         break;
                     // 学生缴费
                     case 7:
-                        ToastUtli.show(getApplicationContext(),"努力开发中");
-                        //startActivity(new Intent(getApplicationContext(),PaymentActivity.class));
+                        Intent intent2 = new Intent(getApplicationContext(), ClassListActivity.class);
+                        intent2.putExtra("type", ConstantValue.PAY_STATISTICS);
+                        startActivity(intent2);
                         break;
                 }
             }
@@ -189,7 +191,7 @@ public class AllActivity extends AppCompatActivity {
             viewHolder.image.setImageResource(pictures.get(position).getImageId());
 
             if(type == 1){
-                if(position == 1 || position == 2 || position == 3 || position == 4 || position == 5 || position == 7){
+                if(position == 2 || position == 3 || position == 4 || position == 5){
                     viewHolder.title.setTextColor(Color.parseColor("#d5d2d2"));
                 }
             }

@@ -20,8 +20,8 @@ import com.hicc.cloud.teacher.activity.ClassComparedActivity;
 import com.hicc.cloud.teacher.activity.ClassListActivity;
 import com.hicc.cloud.teacher.activity.NewsActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
-import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.bean.Picture;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.NetworkRequestUtil;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -38,8 +38,8 @@ import java.util.List;
 public class TeacherHomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int SCAN_CODE = 0;
     private GridView gridView;
-    private String[] titles = new String[]{  "报到情况", "学生档案","学生成绩", "全部"};
-    private int[] images = new int[]{ R.drawable.icon_comparison, R.drawable.icon_file,R.drawable.icon_stu_ach, R.mipmap.icon_all};
+    private String[] titles = new String[]{"报到情况", "学生档案", "学生成绩", "全部"};
+    private int[] images = new int[]{R.drawable.icon_comparison, R.drawable.icon_file, R.drawable.icon_stu_ach, R.mipmap.icon_all};
     private LinearLayout ll_scan;
     private LinearLayout ll_shake;
     private LinearLayout ll_record;
@@ -67,8 +67,6 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                 switch (position) {
                     //报道对比
                     case 0:
-//                        Intent intent = new Intent(getContext(), ClassListActivity.class);
-//                        intent.putExtra("type", 0);
                         Intent intent = new Intent(getContext(), ClassComparedActivity.class);
                         startActivity(intent);
                         break;
@@ -77,7 +75,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getContext(), "1");
                         Intent intent0 = new Intent(getContext(), ClassListActivity.class);
-                        intent0.putExtra("type", 1);
+                        intent0.putExtra("type", ConstantValue.STUDENT_PROFILE);
                         startActivity(intent0);
                         break;
                     // 学生成绩
@@ -85,7 +83,7 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                         // 向服务器发送点击的功能
                         NetworkRequestUtil.postClickFunction(getContext(), "2");
                         Intent intent1 = new Intent(getContext(), ClassListActivity.class);
-                        intent1.putExtra("type", 2);
+                        intent1.putExtra("type", ConstantValue.STUDENT_MARK);
                         startActivity(intent1);
                         break;
                     // 全部
@@ -127,26 +125,26 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             // 扫一扫
             case R.id.ll_scan:
             case R.id.iv_scan:
-                ToastUtli.show(getContext(),"努力开发中");
+                ToastUtli.show(getContext(), "努力开发中");
                 break;
             // 摇一摇
             case R.id.ll_shake:
             case R.id.iv_shake:
                 //startActivity(new Intent(getContext(), ShakeActivity.class));
-                ToastUtli.show(getContext(),"努力开发中");
+                ToastUtli.show(getContext(), "努力开发中");
                 break;
             // 记录
             case R.id.ll_record:
             case R.id.iv_record:
-                ToastUtli.show(getContext(),"努力开发中");
+                ToastUtli.show(getContext(), "努力开发中");
                 break;
             // 记录班级成长
             case R.id.ll_classrecord:
-                ToastUtli.show(getContext(),"努力开发中");
+                ToastUtli.show(getContext(), "努力开发中");
                 break;
             // 新闻
             case R.id.rl_news:
@@ -171,11 +169,11 @@ public class TeacherHomeFragment extends BaseFragment implements View.OnClickLis
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     // 解析后操作
-                    Intent intent = new Intent(getContext(),ScanResultActivity.class);
-                    intent.putExtra("result",result);
+                    Intent intent = new Intent(getContext(), ScanResultActivity.class);
+                    intent.putExtra("result", result);
                     startActivity(intent);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    ToastUtli.show(getContext(),"解析二维码失败");
+                    ToastUtli.show(getContext(), "解析二维码失败");
                 }
             }
         }

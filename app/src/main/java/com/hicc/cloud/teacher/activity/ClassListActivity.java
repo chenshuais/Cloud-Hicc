@@ -1,7 +1,6 @@
 package com.hicc.cloud.teacher.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -52,7 +51,63 @@ public class ClassListActivity extends AppCompatActivity {
 
         initUI();
 
-        initData();
+        switch (type) {
+            case ConstantValue.PAY_STATISTICS:
+                initTemData();
+                break;
+            default:
+                initData();
+                break;
+        }
+    }
+
+    // 临时数据
+    private void initTemData() {
+        showProgressDialog();
+
+        OkHttpUtils
+                .get()
+                .url("http://home.hicc.cn/PhoneInterface/LoginService.asmx/ClassInfoByuserNo")
+                .addParams("userNo", SpUtils.getIntSp(this, ConstantValue.USER_NO,0)+"")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        closeProgressDialog();
+                        Logs.i(e.toString());
+                        ToastUtli.show(getApplicationContext(),"服务器繁忙，请重新选择");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Logs.i(response);
+                        // 解析json
+                        Logs.i("解析json");
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for (int i=0; i<jsonArray.length(); i++) {
+                                JSONObject info = jsonArray.getJSONObject(i);
+
+                                TeacherClassInfo teacherClassInfo = new TeacherClassInfo();
+                                teacherClassInfo.setClassDescription(info.getString("ClassDescription"));
+                                teacherClassInfo.setDivisionCode(info.getInt("DivisionCode"));
+                                teacherClassInfo.setDivisionDescription(info.getString("DivisionDescription"));
+                                teacherClassInfo.setGradeCode(info.getInt("TimeCode"));
+                                teacherClassInfo.setNid(Integer.valueOf(info.getString("ClassCode")));
+                                teacherClassInfo.setProfessionalDescription(info.getString("ProfessionalDescription"));
+                                teacherClassInfo.setProfessionalId(info.getInt("ProfessionalCode"));
+
+                                classInfoList.add(teacherClassInfo);
+                            }
+                            myAdapter.notifyDataSetChanged();
+                            closeProgressDialog();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            closeProgressDialog();
+                            ToastUtli.show(getApplicationContext(),"选择失败");
+                        }
+                    }
+                });
     }
 
     private void initData() {
@@ -136,19 +191,30 @@ public class ClassListActivity extends AppCompatActivity {
         lv_class.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Logs.i("timescode:"+classInfoList.get(position).getGradeCode()+"\ndivisionCode:"+classInfoList.get(position).getDivisionCode()+
-                        "\nprofessionalCode:"+classInfoList.get(position).getProfessionalId()+"\nclasscode:"+classInfoList.get(position).getNid());
-
                 // TODO 增加宿舍成绩
-                Intent intent = new Intent(getApplicationContext(),StudentListActivity.class);
-                intent.putExtra("classcode",classInfoList.get(position).getNid());
-                intent.putExtra("timescode",classInfoList.get(position).getGradeCode());
-                intent.putExtra("divisionCode",classInfoList.get(position).getDivisionCode());
-                intent.putExtra("professionalCode",classInfoList.get(position).getProfessionalId());
-                String title = classInfoList.get(position).getGradeCode()+"级"+classInfoList.get(position).getClassDescription();
-                intent.putExtra("title",title);
-                intent.putExtra("type",type);
-                startActivity(intent);
+                switch (type) {
+                    // 交费
+                    case ConstantValue.PAY_STATISTICS:
+                        Intent intentPay = new Intent(ClassListActivity.this,PayStatisticsActivity.class);
+                        intentPay.putExtra("num",classInfoList.get(position).getNid()+"");
+                        startActivity(intentPay);
+                        break;
+                    // 宿舍成绩
+                    case ConstantValue.DORMITORY_SCORE:
+                        break;
+                    // 档案，成绩
+                    default:
+                        Intent intent = new Intent(getApplicationContext(),StudentListActivity.class);
+                        intent.putExtra("classcode",classInfoList.get(position).getNid());
+                        intent.putExtra("timescode",classInfoList.get(position).getGradeCode());
+                        intent.putExtra("divisionCode",classInfoList.get(position).getDivisionCode());
+                        intent.putExtra("professionalCode",classInfoList.get(position).getProfessionalId());
+                        String title = classInfoList.get(position).getGradeCode()+"级"+classInfoList.get(position).getClassDescription();
+                        intent.putExtra("title",title);
+                        intent.putExtra("type",type);
+                        startActivity(intent);
+                        break;
+                }
             }
         });
 
@@ -199,12 +265,6 @@ public class ClassListActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("加载中...");
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    return;
-                }
-            });
         }
         progressDialog.show();
     }

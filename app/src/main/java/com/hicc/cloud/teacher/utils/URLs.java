@@ -19,7 +19,7 @@ public class URLs {
      */
     public static final String GetClassByUserNo = "http://api.hicc.cn/api/TClass/GetclassByUserNo";
     /**
-     * 获取班级列表
+     * 获取班级学生列表
      */
     public static final String GetClassList = "http://api.hicc.cn/api/TStudentInfo/Getpagestudentinfo";
     /**

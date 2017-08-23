@@ -55,5 +55,21 @@ public class ConstantValue {
     /**
      * 更新应用下载保存路径
      */
-    public static String downloadpathName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/云上工商.apk";
+    public static final String downloadpathName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/云上工商.apk";
+    /**
+     * 学生档案标记
+     */
+    public static final int STUDENT_PROFILE = 1;
+    /**
+     * 学生成绩标记
+     */
+    public static final int STUDENT_MARK = 2;
+    /**
+     * 宿舍成绩标记
+     */
+    public static final int DORMITORY_SCORE = 3;
+    /**
+     * 交费统计标记
+     */
+    public static final int PAY_STATISTICS = 4;
 }

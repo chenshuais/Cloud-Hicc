@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.bean.Student;
+import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.utils.URLs;
@@ -203,13 +204,13 @@ public class StudentListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Logs.i(mStudentList.get(position).getStudentNu());
                 // 学生档案
-                if (type == 1) {
+                if (type == ConstantValue.STUDENT_PROFILE) {
                     Intent intent = new Intent(getApplicationContext(), StudentProfileActivity.class);
                     intent.putExtra("studentNu", mStudentList.get(position).getStudentNu());
                     intent.putExtra("student", (Serializable) mStudentList.get(position));
                     startActivity(intent);
                     // 学生成绩
-                } else if (type == 2) {
+                } else if (type == ConstantValue.STUDENT_MARK) {
                     Intent intent = new Intent(getApplicationContext(), StudentMarkActivity.class);
                     intent.putExtra("studentNu", mStudentList.get(position).getStudentNu());
                     startActivity(intent);

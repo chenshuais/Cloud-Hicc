@@ -253,9 +253,10 @@ public class ScanResultActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String phone = et_phone.getText().toString().trim();
+
                 if (!phone.equals("")) {
                     // 匹配正则 看是否是手机号
-                    if (phone.matches("^((\\(\\d{2,3}\\))|(\\d{3}\\-))?13\\d{9}$")) {
+                    if (phone.matches("^(13[0-9]|14[579]|15[0-3,5-9]|17[0135678]|18[0-9])\\d{8}$")) {
                         // 修改手机号
                         changeNewPhone(phone);
                         dialog.dismiss();

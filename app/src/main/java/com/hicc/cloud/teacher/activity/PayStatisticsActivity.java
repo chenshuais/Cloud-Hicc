@@ -21,7 +21,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +80,9 @@ public class PayStatisticsActivity extends AppCompatActivity {
             case 2005:
                 num = "14";
                 break;
+            default:
+                num = getIntent().getStringExtra("num");
+                break;
         }
     }
 
@@ -102,55 +104,55 @@ public class PayStatisticsActivity extends AppCompatActivity {
                     public void onError(Call call, Exception e, int id) {
                         closeProgressDialog();
                         Logs.i(e.toString());
-                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0,0,0,0,0,null,null,null,null)).commit();
-                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0,0,0,0)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0, 0, 0, 0, 0, null, null, null, null)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0, 0, 0)).commit();
                         ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         Logs.i(response);
-                        // TODO 解析json 崔
+                        // 解析json 崔
                         Logs.i("解析json");
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             int yesPay = 0;
-                            int noPay=0;
-                            int loan=0;
-                            int late=0;
-                            String pay=null;
-                            String notPay=null;
-                            String loadPay=null;
-                            String latePay=null;
+                            int noPay = 0;
+                            int loan = 0;
+                            int late = 0;
+                            String pay = null;
+                            String notPay = null;
+                            String loadPay = null;
+                            String latePay = null;
                             int all = 0;
-                            int y=0;
-                            if(y!=jsonArray.length()){
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONArray data = jsonArray.getJSONArray(i);
-                                if (i == 0) {
-                                    yesPay = data.getInt(1);
-                                    noPay = data.getInt(0);
-                                    loan = data.getInt(2);
-                                    late = data.getInt(3);
-                                } else if (i == 1) {
-                                    pay = data.getString(1);
-                                    notPay = data.getString(0);
-                                    loadPay = data.getString(2);
-                                    latePay = data.getString(3);
-                                } else if (i == 2) {
-                                    all = data.getInt(0);
+                            int y = 0;
+                            if (y != jsonArray.length()) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONArray data = jsonArray.getJSONArray(i);
+                                    if (i == 0) {
+                                        yesPay = data.getInt(1);
+                                        noPay = data.getInt(0);
+                                        loan = data.getInt(2);
+                                        late = data.getInt(3);
+                                    } else if (i == 1) {
+                                        pay = data.getString(1);
+                                        notPay = data.getString(0);
+                                        loadPay = data.getString(2);
+                                        latePay = data.getString(3);
+                                    } else if (i == 2) {
+                                        all = data.getInt(0);
+                                    }
+                                    y++;
                                 }
-                                y++;
                             }
-                            }
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all,yesPay,noPay,loan,late,pay,notPay,loadPay,latePay)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay,noPay,loan,late)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all, yesPay, noPay, loan, late, pay, notPay, loadPay, latePay)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay, noPay, loan, late)).commit();
                             closeProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             closeProgressDialog();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0,0,0,0,0,null,null,null,null)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0,0,0,0)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0, 0, 0, 0, 0, null, null, null, null)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0, 0, 0)).commit();
                             ToastUtli.show(getApplicationContext(), "获取信息失败");
                         }
                     }
@@ -189,16 +191,16 @@ public class PayStatisticsActivity extends AppCompatActivity {
         String latePay;
 
         @SuppressLint("ValidFragment")
-        public PlaceholderFragment(int all, int yes, int no,int loan,int late,String pay,String notPay,String loadPay,String latePay) {
+        public PlaceholderFragment(int all, int yes, int no, int loan, int late, String pay, String notPay, String loadPay, String latePay) {
             this.all = all;
             this.yes = yes;
             this.no = no;
-            this.loan=loan;
-            this.late=late;
-            this.latePay=latePay;
-            this.loadPay=loadPay;
-            this.pay=pay;
-            this.notPay=notPay;
+            this.loan = loan;
+            this.late = late;
+            this.latePay = latePay;
+            this.loadPay = loadPay;
+            this.pay = pay;
+            this.notPay = notPay;
         }
 
         public PlaceholderFragment() {
@@ -328,12 +330,13 @@ public class PayStatisticsActivity extends AppCompatActivity {
         private int no;
         private int loanPay;
         private int latePay;
+
         @SuppressLint("ValidFragment")
-        public PlaceholderLiveFragment(int yes, int no,int loanPay,int latePay) {
+        public PlaceholderLiveFragment(int yes, int no, int loanPay, int latePay) {
             this.yes = yes;
             this.no = no;
-            this.loanPay=loanPay;
-            this.latePay=latePay;
+            this.loanPay = loanPay;
+            this.latePay = latePay;
         }
 
         public PlaceholderLiveFragment() {
@@ -369,7 +372,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
             values.add(sliceValue3);
 
             SliceValue sliceValue4 = new SliceValue(latePay, ChartUtils.pickColor());
-            sliceValue4.setLabel("缓交" + latePay+ "人");
+            sliceValue4.setLabel("缓交" + latePay + "人");
             values.add(sliceValue4);
 
             data = new PieChartData(values);

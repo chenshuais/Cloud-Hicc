@@ -55,9 +55,6 @@
             android:name=".teacher.activity.ClassGrowUpActivity"
             android:screenOrientation="portrait" />
         <!-- 学生缴费 -->
-        <activity
-            android:name=".teacher.activity.PaymentActivity"
-            android:screenOrientation="portrait" />
         <!-- 宿舍成绩 -->
         <activity
             android:name=".teacher.activity.DormitoryScoreActivity"
