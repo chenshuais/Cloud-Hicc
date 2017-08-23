@@ -45,6 +45,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
     private ImageView iv_back;
     private ProgressDialog progressDialog;
     private String num;
+    private String timeCode;
 
 
     @Override
@@ -64,24 +65,31 @@ public class PayStatisticsActivity extends AppCompatActivity {
         switch (userNo) {
             case 1001:
                 num = "0";
+                timeCode = "17";
                 break;
             case 2001:
                 num = "10";
+                timeCode = "17";
                 break;
             case 2002:
                 num = "11";
+                timeCode = "17";
                 break;
             case 2003:
                 num = "12";
+                timeCode = "17";
                 break;
             case 2004:
                 num = "13";
+                timeCode = "17";
                 break;
             case 2005:
                 num = "14";
+                timeCode = "17";
                 break;
             default:
                 num = getIntent().getStringExtra("num");
+                timeCode = getIntent().getStringExtra("timeCode");
                 break;
         }
     }
@@ -97,7 +105,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
                 .addParams("userlevelcode", SpUtils.getIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 0) + "")
                 .addParams("account", SpUtils.getStringSp(getApplicationContext(), ConstantValue.USER_NAME, ""))
                 .addParams("pas", SpUtils.getStringSp(getApplicationContext(), ConstantValue.PASS_WORD, ""))
-                .addParams("timeCode", "17")
+                .addParams("timeCode", timeCode)
                 .build()
                 .execute(new StringCallback() {
                     @Override

@@ -197,6 +197,7 @@ public class ClassListActivity extends AppCompatActivity {
                     case ConstantValue.PAY_STATISTICS:
                         Intent intentPay = new Intent(ClassListActivity.this,PayStatisticsActivity.class);
                         intentPay.putExtra("num",classInfoList.get(position).getNid()+"");
+                        intentPay.putExtra("timeCode",classInfoList.get(position).getGradeCode()+"");
                         startActivity(intentPay);
                         break;
                     // 宿舍成绩
