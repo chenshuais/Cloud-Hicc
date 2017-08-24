@@ -3,6 +3,8 @@ package com.hicc.cloud.teacher.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -49,6 +51,8 @@ public class ScanResultActivity extends AppCompatActivity {
     private boolean changePhone = false;
     private AlertDialog dialog;
     private LinearLayout ll_chenggong;
+    private String oldImgUrl;
+    private String newImgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +127,8 @@ public class ScanResultActivity extends AppCompatActivity {
                             // 报道状态
                             String reported = data.getString(13);
 
-                            String oldImgUrl = "http://home.hicc.cn/OldImage/" + oldImg;
-                            String newImgUrl = "http://home.hicc.cn/StudentImage/" + newImg;
+                            oldImgUrl = "http://home.hicc.cn/OldImage/" + oldImg;
+                            newImgUrl = "http://home.hicc.cn/StudentImage/" + newImg;
 
                             Glide.with(ScanResultActivity.this).load(oldImgUrl).placeholder(R.drawable.icon_pic)
                                     .centerCrop()
@@ -225,6 +229,40 @@ public class ScanResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 显示输入手机号对话框
                 showInputPhoneDialog();
+            }
+        });
+
+        // 设置图片点击事件
+        iv_old_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScanResultActivity.this, ImageDetailsActivity.class);
+                intent.putExtra("image_path", oldImgUrl);
+                //android V4包的类,用于两个activity转场时的缩放效果实现
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        ScanResultActivity.this, iv_old_pic, "image");
+                try {
+                    ActivityCompat.startActivity(ScanResultActivity.this, intent, optionsCompat.toBundle());
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                    startActivity(intent);
+                }
+            }
+        });
+        iv_new_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScanResultActivity.this, ImageDetailsActivity.class);
+                intent.putExtra("image_path", newImgUrl);
+                //android V4包的类,用于两个activity转场时的缩放效果实现
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        ScanResultActivity.this, iv_new_pic, "image");
+                try {
+                    ActivityCompat.startActivity(ScanResultActivity.this, intent, optionsCompat.toBundle());
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                    startActivity(intent);
+                }
             }
         });
     }

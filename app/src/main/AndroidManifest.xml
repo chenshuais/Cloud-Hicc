@@ -145,7 +145,12 @@
             android:name=".teacher.activity.ClassComparedActivity"
             android:screenOrientation="portrait" />
         <!--新闻页-->
-        <activity android:name=".teacher.activity.NewsActivity"
+        <activity
+            android:name=".teacher.activity.NewsActivity"
+            android:screenOrientation="portrait" />
+        <!--图片放大-->
+        <activity
+            android:name=".teacher.activity.ImageDetailsActivity"
             android:screenOrientation="portrait" />
 
         <service android:name=".teacher.service.UpdataService" />

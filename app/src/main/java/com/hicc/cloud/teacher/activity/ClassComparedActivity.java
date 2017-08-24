@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
@@ -50,6 +51,14 @@ public class ClassComparedActivity extends AppCompatActivity {
     public static int onLine;
     public static int notOnLine;
     private static List<Integer> flag = new ArrayList<>();
+    private TextView tv_online_all;
+    private TextView tv_online_yes;
+    private TextView tv_online_no;
+    private TextView tv_online_ratio;
+    private TextView tv_live_all;
+    private TextView tv_live_yes;
+    private TextView tv_live_no;
+    private TextView tv_live_ratio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,8 +156,20 @@ public class ClassComparedActivity extends AppCompatActivity {
                             notOnLine += NotOnline;
                             flag.remove(0);
                             if (i == (length-1) && flag.size()==0) {
+                                tv_online_all.setText(AllStuNum+"");
+                                tv_online_yes.setText(onLine+"");
+                                tv_online_no.setText(notOnLine+"");
+                                String s1 = String.format("%.2f", ((double) onLine / AllStuNum) * 100);
+                                tv_online_ratio.setText(s1+"%");
+
+                                tv_live_all.setText(AllStuNum+"");
+                                tv_live_yes.setText(live+"");
+                                tv_live_no.setText(notLive+"");
+                                tv_live_ratio.setText(AllStuNum+"");
+                                String s2 = String.format("%.2f", ((double) live / AllStuNum) * 100);
+                                tv_live_ratio.setText(s2+"%");
                                 getSupportFragmentManager().beginTransaction().add(R.id.container_online, new PlaceholderFragment(AllStuNum, onLine, notOnLine)).commit();
-                                getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(live, notLive)).commit();
+                                getSupportFragmentManager().beginTransaction().add(R.id.container_live, new PlaceholderLiveFragment(AllStuNum,live, notLive)).commit();
                                 closeProgressDialog();
                             }
                         } catch (JSONException e) {
@@ -170,6 +191,15 @@ public class ClassComparedActivity extends AppCompatActivity {
             }
         });
 
+        tv_online_all = (TextView) findViewById(R.id.tv_online_all);
+        tv_online_yes = (TextView) findViewById(R.id.tv_online_yes);
+        tv_online_no = (TextView) findViewById(R.id.tv_online_no);
+        tv_online_ratio = (TextView) findViewById(R.id.tv_online_ratio);
+
+        tv_live_all = (TextView) findViewById(R.id.tv_live_all);
+        tv_live_yes = (TextView) findViewById(R.id.tv_live_yes);
+        tv_live_no = (TextView) findViewById(R.id.tv_live_no);
+        tv_live_ratio = (TextView) findViewById(R.id.tv_live_ratio);
     }
 
 
@@ -299,11 +329,13 @@ public class ClassComparedActivity extends AppCompatActivity {
     public static class PlaceholderLiveFragment extends Fragment {
         private PieChartView chart;
         private PieChartData data;
+        private int all;
         private int yes;
         private int no;
 
         @SuppressLint("ValidFragment")
-        public PlaceholderLiveFragment(int yes, int no) {
+        public PlaceholderLiveFragment(int all,int yes, int no) {
+            this.all = all;
             this.yes = yes;
             this.no = no;
         }
@@ -330,12 +362,16 @@ public class ClassComparedActivity extends AppCompatActivity {
 
             List<SliceValue> values = new ArrayList<SliceValue>();
 
+            String s1 = String.format("%.2f", ((double) yes / all) * 100);
             SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已报到" + yes + "人");
+            sliceValue1.setLabel("已报到" + s1 + "%");
             values.add(sliceValue1);
+
+            String s2 = String.format("%.2f", ((double) no / all) * 100);
             SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("未报到" + no + "人");
+            sliceValue2.setLabel("未报到" + s2 + "%");
             values.add(sliceValue2);
+
             data = new PieChartData(values);
             data.setHasLabels(true);
             data.setHasLabelsOnlyForSelected(false);
@@ -343,10 +379,6 @@ public class ClassComparedActivity extends AppCompatActivity {
             chart.setValueSelectionEnabled(true);
             chart.setCircleFillRatio(1.0f);
             chart.setPieChartData(data);
-
-            //Toast.makeText(getContext(), "总人数"+AllStuNum, Toast.LENGTH_SHORT).show();
-
-            ;
         }
 
         private class ValueTouchListener implements PieChartOnValueSelectListener {

@@ -95,7 +95,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="3dp"
-                android:src="@drawable/icon_pic" />
+                android:src="@drawable/icon_pic"
+                android:transitionName="image" />
         </RelativeLayout>
 
 

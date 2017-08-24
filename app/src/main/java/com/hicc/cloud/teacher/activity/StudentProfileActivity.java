@@ -2,11 +2,14 @@ package com.hicc.cloud.teacher.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -371,6 +374,23 @@ public class StudentProfileActivity extends AppCompatActivity {
         tv_sex = (TextView) findViewById(R.id.tv_sex);
         tv_stu_num = (TextView) findViewById(R.id.tv_stu_num);
         iv_pic = (ImageView) findViewById(R.id.iv_pic);
+
+        iv_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentProfileActivity.this, ImageDetailsActivity.class);
+                intent.putExtra("image_path", mStudent.getImageUrl());
+                //android V4包的类,用于两个activity转场时的缩放效果实现
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        StudentProfileActivity.this, iv_pic, "image");
+                try {
+                    ActivityCompat.startActivity(StudentProfileActivity.this, intent, optionsCompat.toBundle());
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initUI() {
