@@ -312,10 +312,10 @@ public class PayStatisticsActivity extends AppCompatActivity {
                         ToastUtli.show(getContext(), "总共" + subV + "人");
                         break;
                     case 1:
-                        ToastUtli.show(getContext(), "已缴费" + subV + "人");
+                        ToastUtli.show(getContext(), "未交费" + subV + "人");
                         break;
                     case 2:
-                        ToastUtli.show(getContext(), "待处理" + subV + "人");
+                        ToastUtli.show(getContext(), "已缴费" + subV + "人");
                         break;
                     case 3:
                         ToastUtli.show(getContext(), "贷款缴费" + subV + "人");
