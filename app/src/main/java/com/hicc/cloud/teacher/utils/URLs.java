@@ -46,5 +46,16 @@ public class URLs {
      * 交费统计
      */
     public static final String GetPayCostNum = "http://home.hicc.cn/PhoneInterface/SceneReportService.asmx/Getpaycostnum";
-
+    /**
+     * 获取班级宿舍信息
+     */
+    public static final String GetDormitory = "http://api.hicc.cn/api/TDormitory/GetDormitoryByClassCode";
+    /**
+     * 获取宿舍成绩
+     */
+    public static final String GetDormitoryScore = "http://api.hicc.cn/api/TDormitoryScore/GetDormitoryScoreByNo";
+    /**
+     * 获取宿舍成员
+     */
+    public static final String GetDormitoryMember = "http://api.hicc.cn/api/TDormitory/GetDormitoryByClassCode";
 }

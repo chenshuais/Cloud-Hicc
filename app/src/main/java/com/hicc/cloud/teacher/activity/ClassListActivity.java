@@ -191,7 +191,6 @@ public class ClassListActivity extends AppCompatActivity {
         lv_class.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO 增加宿舍成绩
                 switch (type) {
                     // 交费
                     case ConstantValue.PAY_STATISTICS:
@@ -202,6 +201,9 @@ public class ClassListActivity extends AppCompatActivity {
                         break;
                     // 宿舍成绩
                     case ConstantValue.DORMITORY_SCORE:
+                        Intent intentDor = new Intent(ClassListActivity.this,DormitoryListActivity.class);
+                        intentDor.putExtra("ClassCode",classInfoList.get(position).getNid()+"");
+                        startActivity(intentDor);
                         break;
                     // 档案，成绩
                     default:

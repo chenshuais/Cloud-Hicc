@@ -78,8 +78,9 @@ public class AllActivity extends AppCompatActivity {
                         break;
                     // 宿舍成绩
                     case 1:
-                        ToastUtli.show(getApplicationContext(),"努力开发中");
-                        //startActivity(new Intent(getApplicationContext(),DormitoryScoreActivity.class));
+                        Intent intentD = new Intent(getApplicationContext(), ClassListActivity.class);
+                        intentD.putExtra("type", ConstantValue.DORMITORY_SCORE);
+                        startActivity(intentD);
                         break;
                     // 请销假
                     case 2:

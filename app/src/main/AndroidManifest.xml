@@ -123,6 +123,10 @@
         <activity
             android:name=".teacher.activity.PayStatisticsActivity"
             android:screenOrientation="portrait" />
+        <!--宿舍列表-->
+        <activity
+            android:name=".teacher.activity.DormitoryListActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络中心介绍 -->
         <activity
