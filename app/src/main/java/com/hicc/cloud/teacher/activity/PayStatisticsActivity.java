@@ -153,8 +153,8 @@ public class PayStatisticsActivity extends AppCompatActivity {
                                     y++;
                                 }
                             }
-                            if (yesPay==0&&noPay==0&&loan==0&&late==0){
-                                ToastUtli.show(PayStatisticsActivity.this,"暂无数据");
+                            if (yesPay == 0 && noPay == 0 && loan == 0 && late == 0) {
+                                ToastUtli.show(PayStatisticsActivity.this, "暂无数据");
                             }
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all, yesPay, noPay, loan, late, pay, notPay, loadPay, latePay)).commit();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay, noPay, loan, late)).commit();
@@ -369,22 +369,28 @@ public class PayStatisticsActivity extends AppCompatActivity {
         // 设置数据
         private void generateData() {
             List<SliceValue> values = new ArrayList<SliceValue>();
+            if (yes != 0) {
+                SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
+                sliceValue1.setLabel("已缴费" + yes + "人");
+                values.add(sliceValue1);
+            }
+            if (no != 0) {
+                SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
+                sliceValue2.setLabel("待处理" + no + "人");
+                values.add(sliceValue2);
+            }
 
-            SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-            sliceValue1.setLabel("已缴费" + yes + "人");
-            values.add(sliceValue1);
+            if (loanPay != 0) {
+                SliceValue sliceValue3 = new SliceValue(loanPay, ChartUtils.pickColor());
+                sliceValue3.setLabel("贷款" + loanPay + "人");
+                values.add(sliceValue3);
+            }
 
-            SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-            sliceValue2.setLabel("待处理" + no + "人");
-            values.add(sliceValue2);
-
-            SliceValue sliceValue3 = new SliceValue(loanPay, ChartUtils.pickColor());
-            sliceValue3.setLabel("贷款" + loanPay + "人");
-            values.add(sliceValue3);
-
-            SliceValue sliceValue4 = new SliceValue(latePay, ChartUtils.pickColor());
-            sliceValue4.setLabel("缓交" + latePay + "人");
-            values.add(sliceValue4);
+            if (latePay != 0) {
+                SliceValue sliceValue4 = new SliceValue(latePay, ChartUtils.pickColor());
+                sliceValue4.setLabel("缓交" + latePay + "人");
+                values.add(sliceValue4);
+            }
 
             data = new PieChartData(values);
             data.setHasLabels(true);
