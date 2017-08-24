@@ -113,7 +113,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
                         closeProgressDialog();
                         Logs.i(e.toString());
                         getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0, 0, 0, 0, 0, null, null, null, null)).commit();
-                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0, 0, 0)).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0, 0, 0, null, null, null, null)).commit();
                         ToastUtli.show(getApplicationContext(), "服务器繁忙，请重新查询");
                     }
 
@@ -130,7 +130,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
                             int late = 0;
                             String pay = null;
                             String notPay = null;
-                            String loadPay = null;
+                            String loanPay = null;
                             String latePay = null;
                             int all = 0;
                             int y = 0;
@@ -145,7 +145,7 @@ public class PayStatisticsActivity extends AppCompatActivity {
                                     } else if (i == 1) {
                                         pay = data.getString(1);
                                         notPay = data.getString(0);
-                                        loadPay = data.getString(2);
+                                        loanPay = data.getString(2);
                                         latePay = data.getString(3);
                                     } else if (i == 2) {
                                         all = data.getInt(0);
@@ -156,14 +156,14 @@ public class PayStatisticsActivity extends AppCompatActivity {
                             if (yesPay == 0 && noPay == 0 && loan == 0 && late == 0) {
                                 ToastUtli.show(PayStatisticsActivity.this, "暂无数据");
                             }
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all, yesPay, noPay, loan, late, pay, notPay, loadPay, latePay)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay, noPay, loan, late)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(all, yesPay, noPay, loan, late, pay, notPay, loanPay, latePay)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(yesPay, noPay, loan, late, pay, notPay, loanPay, latePay)).commit();
                             closeProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             closeProgressDialog();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_online_c, new PlaceholderFragment(0, 0, 0, 0, 0, null, null, null, null)).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0, 0, 0)).commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_online_p, new PlaceholderLiveFragment(0, 0, 0, 0, null, null, null, null)).commit();
                             ToastUtli.show(getApplicationContext(), "获取信息失败");
                         }
                     }
@@ -341,13 +341,21 @@ public class PayStatisticsActivity extends AppCompatActivity {
         private int no;
         private int loanPay;
         private int latePay;
+        String pay;
+        String notPay ;
+        String loanPay1 ;
+        String latePay1 ;
 
         @SuppressLint("ValidFragment")
-        public PlaceholderLiveFragment(int yes, int no, int loanPay, int latePay) {
+        public PlaceholderLiveFragment(int yes, int no, int loanPay, int latePay, String pay, String notPay, String loanPay1, String latePay1) {
             this.yes = yes;
             this.no = no;
             this.loanPay = loanPay;
             this.latePay = latePay;
+            this.pay=pay;
+            this.notPay=notPay;
+            this.latePay1=latePay1;
+            this.loanPay1=loanPay1;
         }
 
         public PlaceholderLiveFragment() {
@@ -371,24 +379,24 @@ public class PayStatisticsActivity extends AppCompatActivity {
             List<SliceValue> values = new ArrayList<SliceValue>();
             if (yes != 0) {
                 SliceValue sliceValue1 = new SliceValue(yes, ChartUtils.pickColor());
-                sliceValue1.setLabel("已缴费" + yes + "人");
+                sliceValue1.setLabel(this.pay + yes + "人");
                 values.add(sliceValue1);
             }
             if (no != 0) {
                 SliceValue sliceValue2 = new SliceValue(no, ChartUtils.pickColor());
-                sliceValue2.setLabel("待处理" + no + "人");
+                sliceValue2.setLabel(this.notPay+ no + "人");
                 values.add(sliceValue2);
             }
 
             if (loanPay != 0) {
                 SliceValue sliceValue3 = new SliceValue(loanPay, ChartUtils.pickColor());
-                sliceValue3.setLabel("贷款" + loanPay + "人");
+                sliceValue3.setLabel(this.loanPay1 + loanPay + "人");
                 values.add(sliceValue3);
             }
 
             if (latePay != 0) {
                 SliceValue sliceValue4 = new SliceValue(latePay, ChartUtils.pickColor());
-                sliceValue4.setLabel("缓交" + latePay + "人");
+                sliceValue4.setLabel(this.latePay1 + latePay + "人");
                 values.add(sliceValue4);
             }
 
