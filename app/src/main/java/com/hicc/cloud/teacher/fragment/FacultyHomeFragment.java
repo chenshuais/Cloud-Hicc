@@ -132,23 +132,28 @@ public class FacultyHomeFragment extends BaseFragment implements View.OnClickLis
         /**
          * 处理二维码扫描结果
          */
-        if (requestCode == SCAN_CODE) {
-            //处理扫描结果（在界面上显示）
-            if (null != data) {
-                Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
+        switch (requestCode) {
+            case SCAN_CODE:
+                //处理扫描结果（在界面上显示）
+                if (null != data) {
+                    Bundle bundle = data.getExtras();
+                    if (bundle == null) {
+                        return;
+                    }
+                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                        String result = bundle.getString(CodeUtils.RESULT_STRING);
+                        // 解析后操作
+                        Intent intent = new Intent(getContext(), ScanResultActivity.class);
+                        intent.putExtra("result", result);
+                        startActivityForResult(intent, 2);
+                    } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                        ToastUtli.show(getContext(), "解析二维码失败");
+                    }
                 }
-                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    // 解析后操作
-                    Intent intent = new Intent(getContext(), ScanResultActivity.class);
-                    intent.putExtra("result", result);
-                    startActivity(intent);
-                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    ToastUtli.show(getContext(), "解析二维码失败");
-                }
-            }
+                break;
+            case 2:
+                startActivityForResult(new Intent(getContext(), ScanActivity.class), SCAN_CODE);
+                break;
         }
     }
 
