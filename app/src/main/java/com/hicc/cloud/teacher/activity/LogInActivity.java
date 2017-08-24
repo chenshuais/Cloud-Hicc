@@ -97,7 +97,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 if (grantResults.length > 0) {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            ToastUtli.show(getApplicationContext(), "我们需要获取手机的信息，来提供更好的服务");
+                            ToastUtli.show(getApplicationContext(), "我们需要一些权限，来提供更好的服务");
                             return;
                         }
                     }
