@@ -20,7 +20,6 @@ import com.hicc.cloud.teacher.activity.NewsActivity;
 import com.hicc.cloud.teacher.activity.PayStatisticsActivity;
 import com.hicc.cloud.teacher.activity.ScanActivity;
 import com.hicc.cloud.teacher.activity.ScanResultActivity;
-import com.hicc.cloud.teacher.activity.ShakeActivity;
 import com.hicc.cloud.teacher.bean.Picture;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -112,7 +111,8 @@ public class FacultyHomeFragment extends BaseFragment implements View.OnClickLis
             // 摇一摇
             case R.id.ll_shake:
             case R.id.iv_shake:
-                startActivity(new Intent(getContext(), ShakeActivity.class));
+                //startActivity(new Intent(getContext(), ShakeActivity.class));
+                ToastUtli.show(getContext(), "努力开发中");
                 break;
             // 记录
             case R.id.ll_record:

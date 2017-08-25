@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
     private ProgressDialog progressDialog;
     private static Boolean isExit = false;
     private EditText et_search;
-    private boolean isCheck = true;
     private String mAppUrl;
 
     @Override
@@ -199,13 +198,7 @@ public class MainActivity extends AppCompatActivity implements MyTabLayout.OnTab
         et_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isCheck){
-                    et_search.setHint("");
-                    isCheck = !isCheck;
-                }else{
-                    et_search.setHint("搜索");
-                    isCheck = !isCheck;
-                }
+                ToastUtli.show(getApplicationContext(),"努力开发中");
             }
         });
 

@@ -53,11 +53,14 @@ public class ScanResultActivity extends AppCompatActivity {
     private LinearLayout ll_chenggong;
     private String oldImgUrl;
     private String newImgUrl;
+    private int reportedCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_result);
+
+        reportedCount = SpUtils.getIntSp(this, ConstantValue.REPORTED_COUNT, 0);
 
         initUI();
 
@@ -374,11 +377,15 @@ public class ScanResultActivity extends AppCompatActivity {
                             if (changeReport && changePhone) {
                                 closeDialog();
                                 tv_reported_status.setText("报到状态：已报到");
-                                ToastUtli.show(getApplicationContext(), "报到成功");
                                 bt_reported.setVisibility(View.GONE);
                                 ll_chenggong.setVisibility(View.VISIBLE);
+
+                                reportedCount++;
+                                SpUtils.putIntSp(ScanResultActivity.this,ConstantValue.REPORTED_COUNT,reportedCount);
+
+                                ToastUtli.show(getApplicationContext(), "报到成功，该摊位第"+reportedCount+"人");
                             } else {
-                                Logs.e("失败");
+                                Logs.e("报到失败");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

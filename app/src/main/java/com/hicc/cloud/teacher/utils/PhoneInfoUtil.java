@@ -1,6 +1,8 @@
 package com.hicc.cloud.teacher.utils;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
 import com.hicc.cloud.teacher.bean.PhoneInfo;
@@ -62,5 +64,19 @@ public class PhoneInfoUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // 获取包信息
+    public static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
+        try {
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_CONFIGURATIONS);
+            return pi;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pi;
     }
 }

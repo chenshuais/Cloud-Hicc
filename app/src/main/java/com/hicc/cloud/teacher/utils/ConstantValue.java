@@ -51,6 +51,10 @@ public class ConstantValue {
      * UserLevelCode
      */
     public static final String USER_LEVEL_CODE = "user_level_code";
+    /**
+     * 报道计数
+     */
+    public static final String REPORTED_COUNT = "reported_count";
 
     /**
      * 更新应用下载保存路径

@@ -6,21 +6,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hicc.cloud.R;
 import com.hicc.cloud.teacher.utils.ConstantValue;
 import com.hicc.cloud.teacher.utils.Logs;
+import com.hicc.cloud.teacher.utils.PhoneInfoUtil;
 import com.hicc.cloud.teacher.utils.SpUtils;
 import com.hicc.cloud.teacher.utils.ToastUtli;
 import com.hicc.cloud.teacher.utils.URLs;
@@ -46,17 +49,17 @@ import okhttp3.Call;
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener {
     private static Boolean isExit = false;
     private CheckBox cb_rember;
-    private EditText et_username;
-    private EditText et_pwd;
-    private ImageView iv_image;
+    private TextInputLayout et_username;
+    private TextInputLayout et_pwd;
     private ProgressDialog progressDialog;
     private String userName;
     private String mPwd;
+    private boolean isLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login2);
         // 初始化控件
         initUI();
 
@@ -116,6 +119,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             // 登录按钮
             case R.id.bt_login:
                 // 登录
+                isLogin = true;
                 loginButton();
                 break;
             // 注册按钮
@@ -131,17 +135,68 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     // 登录
     private void loginButton() {
-        userName = et_username.getText().toString().trim();
-        mPwd = et_pwd.getText().toString().trim();
-        if (userName.equals("") || mPwd.equals("")) {
-            ToastUtli.show(getApplicationContext(), "账号或密码不能为空");
-            // 接口不能用时的假数据
-        } else if (userName.equals("学院") && mPwd.equals("学院")) {
+        userName = et_username.getEditText().getText().toString().trim();
+        mPwd = et_pwd.getEditText().getText().toString().trim();
+
+        if (TextUtils.isEmpty(userName)) {
+            et_username.setError("用户名为空");
+            isLogin = false;
+        }
+        if (TextUtils.isEmpty(mPwd)) {
+            et_pwd.setError("密码为空");
+            isLogin = false;
+        }
+
+        if (isLogin){
+            // 检查是否登录成功
+            checkLoginForService(userName, mPwd);
+        }
+
+        // 给输入框设置文字改变监听事件，如果输入框文字改变，并且不为空，就将错误信息置空
+        et_username.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    et_username.setError("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // 给输入框设置文字改变监听事件，如果输入框文字改变，并且不为空，就将错误信息置空
+        et_pwd.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    et_pwd.setError("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void checkLoginForService(String userName, String mPwd) {
+        // 接口不能用时的假数据
+        if (userName.equals("学院") && mPwd.equals("学院")) {
             checkUp(userName, mPwd);
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_NAME, "模拟领导");
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_LEVEL, "测试人员");
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_PHONE, "1024");
-            SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_NO, 1);
+            SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_NO, 1001);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.RECORD_CODE, 1);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.NID, 1);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 11);
@@ -151,7 +206,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_NAME, "模拟导员");
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_LEVEL, "测试人员");
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_PHONE, "1024");
-            SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_NO, 1);
+            SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_NO, 3143);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.RECORD_CODE, 1);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.NID, 1);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 13);
@@ -161,7 +216,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_NAME, "模拟学部");
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_LEVEL, "测试人员");
             SpUtils.putStringSp(getApplicationContext(), ConstantValue.TEACHER_PHONE, "1024");
-            SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_NO, 1);
+            SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_NO, 2001);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.RECORD_CODE, 1);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.NID, 1);
             SpUtils.putIntSp(getApplicationContext(), ConstantValue.USER_LEVEL_CODE, 12);
@@ -326,11 +381,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     //检测是否记住了密码 如果是就填充
     private void checkUpDown() {
         if (SpUtils.getBoolSp(this, ConstantValue.IS_REMBER_PWD, false)) {
-            et_username.setText(SpUtils.getStringSp(this, ConstantValue.USER_NAME, ""));
-            et_pwd.setText(SpUtils.getStringSp(this, ConstantValue.PASS_WORD, ""));
+            et_username.getEditText().setText(SpUtils.getStringSp(this, ConstantValue.USER_NAME, ""));
+            et_pwd.getEditText().setText(SpUtils.getStringSp(this, ConstantValue.PASS_WORD, ""));
             cb_rember.setChecked(SpUtils.getBoolSp(this, ConstantValue.IS_REMBER_PWD, false));
         } else {
-            et_username.setText(SpUtils.getStringSp(this, ConstantValue.USER_NAME, ""));
+            et_username.getEditText().setText(SpUtils.getStringSp(this, ConstantValue.USER_NAME, ""));
         }
     }
 
@@ -356,13 +411,14 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     // 初始化控件
     private void initUI() {
-        et_username = (EditText) findViewById(R.id.et_username);
-        et_pwd = (EditText) findViewById(R.id.et_pwd);
+        et_username = (TextInputLayout) findViewById(R.id.et_username);
+        et_pwd = (TextInputLayout) findViewById(R.id.et_pwd);
         cb_rember = (CheckBox) findViewById(R.id.cb_rember);
-        iv_image = (ImageView) findViewById(R.id.iv_image);
         Button bt_login = (Button) findViewById(R.id.bt_login);
         TextView tv_register = (TextView) findViewById(R.id.tv_register);
         TextView tv_find_pwd = (TextView) findViewById(R.id.tv_find_pwd);
+        TextView tv_version = (TextView) findViewById(R.id.tv_version);
+        tv_version.setText("v " + PhoneInfoUtil.getPackageInfo(this).versionName);
 
         // 设置点击事件
         bt_login.setOnClickListener(this);

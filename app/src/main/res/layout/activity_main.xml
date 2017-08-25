@@ -43,6 +43,8 @@
             android:drawableLeft="@drawable/icon_search"
             android:gravity="center"
             android:hint="搜索"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
             android:textColor="#ffffff"
